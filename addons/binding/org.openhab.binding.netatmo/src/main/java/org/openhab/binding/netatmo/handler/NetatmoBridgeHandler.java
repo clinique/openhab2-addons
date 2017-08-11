@@ -65,6 +65,7 @@ public class NetatmoBridgeHandler extends BaseBridgeHandler {
             getPartnerApi().partnerdevices();
         } catch (RetrofitError e) {
             if (e.getCause() instanceof IOException) {
+                logger.error("Unable to connect Netatmo API : {}", e.getMessage(), e);
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                         "Unable to connect Netatmo API : " + e.getMessage());
                 return;
@@ -135,9 +136,13 @@ public class NetatmoBridgeHandler extends BaseBridgeHandler {
     public NAStationDataBody getStationsDataBody(String equipmentId) {
         if (getStationApi() != null) {
             try {
-                return getStationApi().getstationsdata(equipmentId).getBody();
+                NAStationDataBody data = getStationApi().getstationsdata(equipmentId).getBody();
+                updateStatus(ThingStatus.ONLINE);
+                return data;
             } catch (Exception e) {
-                logger.error("An error occurred while calling station API : {}", e.getMessage());
+                logger.error("An error occurred while calling station API : {}", e.getMessage(), e);
+                updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
+                        "An error occurred while calling station API : " + e.getMessage());
             }
         }
         return null;
@@ -146,9 +151,13 @@ public class NetatmoBridgeHandler extends BaseBridgeHandler {
     public NAThermostatDataBody getThermostatsDataBody(String equipmentId) {
         if (getThermostatApi() != null) {
             try {
-                return getThermostatApi().getthermostatsdata(equipmentId).getBody();
+                NAThermostatDataBody data = getThermostatApi().getthermostatsdata(equipmentId).getBody();
+                updateStatus(ThingStatus.ONLINE);
+                return data;
             } catch (Exception e) {
-                logger.error("An error occurred while calling thermostat API : {}", e.getMessage());
+                logger.error("An error occurred while calling thermostat API : {}", e.getMessage(), e);
+                updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
+                        "An error occurred while calling thermostat API : " + e.getMessage());
             }
         }
         return null;
