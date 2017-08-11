@@ -136,6 +136,7 @@ Number Netatmo_Indoor2_Temperature "Temperature" { channel = "netatmo:NAModule4:
 
 * Co2
 * Temperature
+* TemperatureTrend
 * Humidity
 * RfStatus
 * BatteryVP
@@ -146,6 +147,10 @@ Number Netatmo_Indoor2_Temperature "Temperature" { channel = "netatmo:NAModule4:
 * DewpointDepression
 * LastMessage
 * LowBattery
+* MinTemp
+* MaxTemp
+* DateMinTemp
+* DateMaxTemp
 
 ### Rain
 
