@@ -16,6 +16,7 @@ import static org.openhab.binding.mail.internal.MailBindingConstants.*;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
@@ -44,8 +45,10 @@ public class MailHandlerFactory extends BaseThingHandlerFactory {
 
         if (THING_TYPE_SMTPSERVER.equals(thingTypeUID)) {
             return new SMTPHandler(thing);
-        } else if (THING_TYPE_IMAPSERVER.equals(thingTypeUID) || THING_TYPE_POP3SERVER.equals(thingTypeUID)) {
-            return new POP3IMAPHandler(thing);
+        } else if (THING_TYPE_POP3SERVER.equals(thingTypeUID)) {
+            return new POP3Handler(thing);
+        } else if (THING_TYPE_IMAPSERVER.equals(thingTypeUID)) {
+            return new IMAPHandler((Bridge) thing);
         }
 
         return null;

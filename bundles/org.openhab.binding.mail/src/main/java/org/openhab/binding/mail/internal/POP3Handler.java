@@ -32,32 +32,30 @@ import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
-import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
-import org.openhab.binding.mail.internal.config.POP3IMAPChannelConfig;
-import org.openhab.binding.mail.internal.config.POP3IMAPConfig;
+import org.openhab.binding.mail.internal.config.POP3ChannelConfig;
+import org.openhab.binding.mail.internal.config.POP3Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link POP3IMAPHandler} is responsible for handling commands, which are
+ * The {@link POP3Handler} is responsible for handling commands, which are
  * sent to one of the channels.
  *
  * @author Jan N. Klug - Initial contribution
  */
 @NonNullByDefault
-public class POP3IMAPHandler extends BaseThingHandler {
-    private final Logger logger = LoggerFactory.getLogger(POP3IMAPHandler.class);
+public class POP3Handler extends BaseThingHandler {
+    private static final String BASE_PROTOCOL = "pop3";
+    private final Logger logger = LoggerFactory.getLogger(POP3Handler.class);
 
-    private @NonNullByDefault({}) POP3IMAPConfig config;
+    private @NonNullByDefault({}) POP3Config config;
     private @Nullable ScheduledFuture<?> refreshTask;
-    private final String baseProtocol;
-    private String protocol = "imap";
+    private String protocol = BASE_PROTOCOL;
 
-    public POP3IMAPHandler(Thing thing) {
+    public POP3Handler(Thing thing) {
         super(thing);
-        baseProtocol = thing.getThingTypeUID().getId(); // pop3 or imap
     }
 
     @Override
@@ -66,9 +64,7 @@ public class POP3IMAPHandler extends BaseThingHandler {
 
     @Override
     public void initialize() {
-        config = getConfigAs(POP3IMAPConfig.class);
-
-        protocol = baseProtocol;
+        config = getConfigAs(POP3Config.class);
 
         if (config.security == ServerSecurity.SSL) {
             protocol.concat("s");
@@ -76,21 +72,12 @@ public class POP3IMAPHandler extends BaseThingHandler {
 
         if (config.port == 0) {
             switch (protocol) {
-                case "imap":
-                    config.port = 143;
-                    break;
-                case "imaps":
-                    config.port = 993;
-                    break;
                 case "pop3":
                     config.port = 110;
                     break;
                 case "pop3s":
                     config.port = 995;
                     break;
-                default:
-                    updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR);
-                    return;
             }
         }
 
@@ -110,7 +97,7 @@ public class POP3IMAPHandler extends BaseThingHandler {
 
     private void refresh() {
         Properties props = new Properties();
-        props.setProperty("mail." + baseProtocol + ".starttls.enable", "true");
+        props.setProperty("mail." + BASE_PROTOCOL + ".starttls.enable", "true");
         props.setProperty("mail.store.protocol", protocol);
         Session session = Session.getInstance(props);
 
@@ -119,8 +106,7 @@ public class POP3IMAPHandler extends BaseThingHandler {
 
             for (Channel channel : thing.getChannels()) {
                 if (CHANNEL_TYPE_UID_FOLDER_MAILCOUNT.equals(channel.getChannelTypeUID())) {
-                    final POP3IMAPChannelConfig channelConfig = channel.getConfiguration()
-                            .as(POP3IMAPChannelConfig.class);
+                    final POP3ChannelConfig channelConfig = channel.getConfiguration().as(POP3ChannelConfig.class);
                     final String folderName = channelConfig.folder;
                     if (folderName == null || folderName.isEmpty()) {
                         logger.info("missing or empty folder name in channel {}", channel.getUID());
@@ -140,7 +126,7 @@ public class POP3IMAPHandler extends BaseThingHandler {
                 }
             }
         } catch (MessagingException e) {
-            logger.info("error when trying to refresh IMAP: {}", e.getMessage());
+            logger.info("error when trying to refresh POP3: {}", e.getMessage());
         }
     }
 }

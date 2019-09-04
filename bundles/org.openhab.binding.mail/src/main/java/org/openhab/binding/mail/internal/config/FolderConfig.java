@@ -15,12 +15,13 @@ package org.openhab.binding.mail.internal.config;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
- * The {@link POP3IMAPConfig} class contains fields mapping thing configuration parameters.
+ * The {@link FolderConfig} class contains fields mapping thing configuration parameters.
  *
- * @author Jan N. Klug - Initial contribution
+ * @author Gaël L'hopital - Initial contribution
  */
 
 @NonNullByDefault
-public class POP3IMAPConfig extends BaseConfig {
+public class FolderConfig {
+    public String folder = "inbox";
     public int refresh = 60;
 }

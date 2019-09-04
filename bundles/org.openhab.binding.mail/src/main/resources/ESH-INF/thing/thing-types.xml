@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <thing:thing-descriptions bindingId="mail"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:thing="http://openhab.org/schemas/thing-description/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:thing="http://openhab.org/schemas/thing-description/v1.0.0"
 	xsi:schemaLocation="http://openhab.org/schemas/thing-description/v1.0.0 http://openhab.org/schemas/thing-description-1.0.0.xsd">
 
 	<thing-type id="smtp">
@@ -39,41 +38,7 @@
 			</parameter>
 		</config-description>
 	</thing-type>
-	<thing-type id="imap" extensible="mailcount">
-		<label>IMAP server</label>
-		<description>Used for receiving mail</description>
-		<config-description>
-			<parameter name="hostname" type="text" required="true">
-				<label>Server hostname</label>
-			</parameter>
-			<parameter name="port" type="text" required="false">
-				<label>Server port</label>
-				<description>Default values are 143 for plain/TLS and 993 for SSL</description>
-				<advanced>true</advanced>
-			</parameter>
-			<parameter name="security" type="text" required="false">
-				<label>SMTP server security protocol</label>
-				<options>
-					<option value="PLAIN">plain</option>
-					<option value="SSL">SSL</option>
-					<option value="TLS">TLS</option>
-				</options>
-				<limitToOptions>true</limitToOptions>
-				<default>PLAIN</default>
-			</parameter>
-			<parameter name="username" type="text" required="true">
-				<label>SMTP server username</label>
-			</parameter>
-			<parameter name="password" type="text" required="true">
-				<label>SMTP server password</label>
-				<context>password</context>
-			</parameter>
-			<parameter name="refresh" type="integer" required="false">
-				<label>refresh time for this account in s</label>
-				<default>60</default>
-			</parameter>
-		</config-description>
-	</thing-type>
+	
 	<thing-type id="pop3" extensible="mailcount">
 		<label>POP3 server</label>
 		<description>Used for receiving mail</description>
@@ -109,7 +74,65 @@
 			</parameter>
 		</config-description>
 	</thing-type>
-
+	
+    <bridge-type id="imap">
+        <label>IMAP server</label>
+        <description>Used for receiving mail</description>
+        <config-description>
+            <parameter name="hostname" type="text" required="true">
+                <label>Server hostname</label>
+            </parameter>
+            <parameter name="port" type="text" required="false">
+                <label>Server port</label>
+                <description>Default values are 143 for plain/TLS and 993 for SSL</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="security" type="text" required="false">
+                <label>SMTP server security protocol</label>
+                <options>
+                    <option value="PLAIN">plain</option>
+                    <option value="SSL">SSL</option>
+                    <option value="TLS">TLS</option>
+                </options>
+                <limitToOptions>true</limitToOptions>
+                <default>PLAIN</default>
+            </parameter>
+            <parameter name="username" type="text" required="true">
+                <label>SMTP server username</label>
+            </parameter>
+            <parameter name="password" type="text" required="true">
+                <label>SMTP server password</label>
+                <context>password</context>
+            </parameter>
+            <parameter name="refresh" type="integer" required="false">
+                <label>refresh time for this account in s</label>
+                <default>60</default>
+            </parameter>
+        </config-description>
+    </bridge-type>
+    
+    <thing-type id="folder" extensible="mailcount">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="imap" />
+        </supported-bridge-type-refs>
+        <label>Mail folder</label>
+        <description>Folder hosted on the Imap Server</description>
+        <config-description>
+            <parameter name="folder" type="text" required="true">
+                <label>Folder name</label>
+                <default>inbox</default>
+                <required>true</required>
+            </parameter>
+            <parameter name="refresh" type="integer" required="false">
+                <label>refresh time for this account in s</label>
+                <default>60</default>
+            </parameter>
+        </config-description>
+        <channels>
+            <channel id="publishTrigger" typeId="publishTrigger" />
+        </channels>
+    </thing-type>
+    
 	<channel-type id="mailcount">
 		<item-type>Number</item-type>
 		<label>Mail count</label>
@@ -130,4 +153,11 @@
 			</parameter>
 		</config-description>
 	</channel-type>
+	
+    <channel-type id="publishTrigger">
+        <kind>trigger</kind>
+        <label>Publish Trigger</label>
+        <description>This channel is triggered when a message is received on the configured folder. The event payload will be the received text.</description>
+        <event></event>
+    </channel-type>
 </thing:thing-descriptions>

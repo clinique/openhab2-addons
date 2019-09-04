@@ -13,17 +13,14 @@
 package org.openhab.binding.mail.internal.config;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.binding.mail.internal.MailCountChannelType;
 
 /**
- * The {@link POP3IMAPChannelConfig} class contains fields mapping thing configuration parameters.
+ * The {@link POP3Config} class contains fields mapping thing configuration parameters.
  *
  * @author Jan N. Klug - Initial contribution
  */
 
 @NonNullByDefault
-public class POP3IMAPChannelConfig {
-    public @Nullable String folder;
-    public MailCountChannelType type = MailCountChannelType.TOTAL;
+public class POP3Config extends BaseConfig {
+    public int refresh = 60;
 }
