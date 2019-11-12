@@ -14,10 +14,10 @@
 
   <dependencies>
     <dependency>
-        <groupId>net.sourceforge.cardme</groupId>
-        <artifactId>cardme</artifactId>
-        <version>0.4.0</version>
-        <scope>compile</scope>
+      <groupId>net.sourceforge.cardme</groupId>
+      <artifactId>cardme</artifactId>
+      <version>0.4.0</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.openhab.addons.bundles</groupId>
