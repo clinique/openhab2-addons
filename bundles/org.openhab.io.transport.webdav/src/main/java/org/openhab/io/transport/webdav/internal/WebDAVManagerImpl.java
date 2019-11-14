@@ -15,7 +15,6 @@ package org.openhab.io.transport.webdav.internal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,11 +61,11 @@ public class WebDAVManagerImpl implements WebDAVManager {
         List<DavResource> result1 = getSardine(path).list(path);
         List<Resource> result2 = new ArrayList<>();
         result1.forEach(r -> {
-            try {
-                result2.add(new Resource(r));
-            } catch (URISyntaxException e) {
-                logger.warn("Error on DAVResource : {}", e.getMessage());
-            }
+            Resource resource = new Resource();
+            resource.setDirectory(r.isDirectory());
+            resource.setHref(r.getHref());
+            resource.setName(r.getName());
+            result2.add(resource);
 
         });
         return result2;

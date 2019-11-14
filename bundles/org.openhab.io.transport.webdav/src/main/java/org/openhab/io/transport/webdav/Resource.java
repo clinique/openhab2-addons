@@ -13,34 +13,38 @@
 package org.openhab.io.transport.webdav;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.eclipse.jdt.annotation.NonNullByDefault;
-
-import com.github.sardine.DavResource;
 
 /**
  * This service provides functionalities to access WebDAV resources
  *
  * @author Gaël L'hopital - Initial contribution
  */
-@NonNullByDefault
 public final class Resource {
-    final DavResource resource;
-
-    public Resource(DavResource davResource) throws URISyntaxException {
-        this.resource = davResource;
-    }
+    private boolean directory;
+    private String name;
+    private URI Href;
 
     public boolean isDirectory() {
-        return resource.isDirectory();
+        return this.directory;
     }
 
     public String getName() {
-        return resource.getName();
+        return this.name;
     }
 
     public URI getHref() {
-        return resource.getHref();
+        return this.Href;
+    }
+
+    public void setDirectory(boolean directory) {
+        this.directory = directory;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setHref(URI href) {
+        Href = href;
     }
 }
