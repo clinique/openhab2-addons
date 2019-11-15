@@ -46,10 +46,9 @@ import com.github.sardine.SardineFactory;
         Constants.SERVICE_PID + "=org.openhab.io.transport.webdav" })
 @NonNullByDefault
 public class WebDAVManagerImpl implements WebDAVManager {
-
     private final Logger logger = LoggerFactory.getLogger(WebDAVManagerImpl.class);
 
-    private final Map<WebDAVEndpoint, Sardine> factories = new HashMap<>();
+    private final Map<String, Sardine> factories = new HashMap<>();
 
     @Activate
     public WebDAVManagerImpl() {
@@ -80,8 +79,8 @@ public class WebDAVManagerImpl implements WebDAVManager {
 
     private Sardine getSardine(String address) throws IOException {
         WebDAVEndpoint endpoint = new WebDAVEndpoint(address);
-        if (factories.containsKey(endpoint)) {
-            return factories.get(endpoint);
+        if (factories.containsKey(endpoint.getHost())) {
+            return factories.get(endpoint.getHost());
         }
         throw new IOException(String.format("Domain '{}' not found", endpoint.toString()));
     }
@@ -89,7 +88,7 @@ public class WebDAVManagerImpl implements WebDAVManager {
     @Override
     public void defineEnpoint(String url, String username, String password) throws MalformedURLException {
         WebDAVEndpoint endpoint = new WebDAVEndpoint(url, username, password);
-        factories.getOrDefault(endpoint, SardineFactory.begin(username, password));
+        factories.put(endpoint.getHost(), SardineFactory.begin(username, password));
     }
 
     @Override

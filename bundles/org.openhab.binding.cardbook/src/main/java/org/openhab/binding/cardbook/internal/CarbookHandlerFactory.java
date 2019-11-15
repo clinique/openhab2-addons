@@ -25,7 +25,9 @@ import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
 import org.openhab.binding.cardbook.internal.handler.CardDAVHandler;
 import org.openhab.binding.cardbook.internal.handler.DirectoryHandler;
+import org.openhab.io.transport.webdav.WebDAVManager;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * The {@link CarbookHandlerFactory} is responsible for creating things and thing
@@ -34,8 +36,10 @@ import org.osgi.service.component.annotations.Component;
  * @author Gaël L'hopital - Initial contribution
  */
 @NonNullByDefault
-@Component(service = ThingHandlerFactory.class, configurationPid = "binding.carbook")
+@Component(service = ThingHandlerFactory.class, configurationPid = "binding.cardbook")
 public class CarbookHandlerFactory extends BaseThingHandlerFactory {
+    private @NonNullByDefault({}) WebDAVManager webDAVManager;
+
     // List of all supported things
     public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Stream
             .of(CardbookBindingConstants.THING_TYPE_CARDDAV, CardbookBindingConstants.THING_TYPE_DIRECTORY)
@@ -51,11 +55,19 @@ public class CarbookHandlerFactory extends BaseThingHandlerFactory {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
         if (thingTypeUID.equals(CardbookBindingConstants.THING_TYPE_CARDDAV)) {
-            return new CardDAVHandler(thing);
+            return new CardDAVHandler(thing, webDAVManager);
         } else if (thingTypeUID.equals(CardbookBindingConstants.THING_TYPE_DIRECTORY)) {
             return new DirectoryHandler(thing);
         }
         return null;
     }
 
+    @Reference
+    protected void setWebDAVManager(WebDAVManager webDAVManager) {
+        this.webDAVManager = webDAVManager;
+    }
+
+    protected void unsetWebDAVManager(WebDAVManager webDAVManager) {
+        this.webDAVManager = null;
+    }
 }

@@ -4,34 +4,15 @@
 		<label>CardDav</label>
 		<description>Provides access to vCard hosted on a WebDAV server</description>
 		<config-description>
-			<parameter name="hostname" type="text" required="true">
-				<label>CardDAV Server hostname</label>
+			<parameter name="url" type="text" required="true">
+				<label>CardDAV folder address</label>
 			</parameter>
-			 <parameter name="port" type="integer" required="true">
-				<label>CardDAV Server port</label>
-				<advanced>true</advanced>
-				<default>80</default>
-			 </parameter>
-			 <parameter name="rootDirectory" type="text" required="true">
-				<label>VCard Directory</label>
-				<description>Path to the directory holding your vcf files.</description>
-			 </parameter>
 			 <parameter name="username" type="text" required="false">
 				<label>CardDAV server username</label>
 			 </parameter>
 			 <parameter name="password" type="text" required="false">
 				<label>CardDAV server password</label>
 				<context>password</context>
-			 </parameter>
-			 <parameter name="protocol" type="text" required="true">
-				<label>CardDAV Server Protocol</label>
-				<description>Protocol to connect to the CardDAV server (http or https).</description>
-				<default>https</default>
-				<options>
-					<option value="http">HTTP</option>
-					<option value="https">HTTPS</option>
-				</options>
-				<advanced>true</advanced>
 			 </parameter>
 			 <parameter name="refresh" type="integer" unit="h">
 				<label>Update Interval</label>

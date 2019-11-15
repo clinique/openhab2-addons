@@ -14,7 +14,7 @@
   <name>openHAB Add-ons :: Bundles :: IO :: WebDAV Transport</name>
 
   <properties>
-    <dep.noembedding>httpcore-osgi,httpclient-osgi</dep.noembedding>
+    <dep.noembedding>httpcore-osgi,httpclient-osgi,commons-logging</dep.noembedding>
     <bnd.importpackage>org.apache.tools.ant.*;resolution:="optional"</bnd.importpackage>
   </properties>
 
@@ -35,6 +35,12 @@
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient-osgi</artifactId>
       <version>4.5.5</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

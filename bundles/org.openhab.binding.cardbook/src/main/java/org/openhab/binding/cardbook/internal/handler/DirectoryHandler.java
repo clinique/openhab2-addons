@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 @NonNullByDefault
 /**
- * The {@link CardDAVHandler} is for getting informations from a local directory
+ * The {@link DirectoryHandler} is for getting informations from a local directory
  * and making them available to OH2
  *
  * @author Gaël L'hopital - Initial contribution

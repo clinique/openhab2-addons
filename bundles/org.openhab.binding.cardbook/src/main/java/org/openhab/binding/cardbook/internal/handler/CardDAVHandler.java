@@ -27,7 +27,6 @@ import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.openhab.binding.cardbook.internal.CardDAVConfiguration;
 import org.openhab.io.transport.webdav.Resource;
 import org.openhab.io.transport.webdav.WebDAVManager;
-import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,11 +39,12 @@ import org.slf4j.LoggerFactory;
  */
 public class CardDAVHandler extends CardBookHandler {
     private final Logger logger = LoggerFactory.getLogger(CardDAVHandler.class);
-    private @NonNullByDefault({}) WebDAVManager webDAVManager;
+    private final WebDAVManager webDAVManager;
     private @NonNullByDefault({}) CardDAVConfiguration config;
 
-    public CardDAVHandler(Thing thing) {
+    public CardDAVHandler(Thing thing, WebDAVManager webDAVManager) {
         super(thing);
+        this.webDAVManager = webDAVManager;
     }
 
     @Override
@@ -86,15 +86,6 @@ public class CardDAVHandler extends CardBookHandler {
             logger.warn("Error accessing CardDAV folder '{}' : {}", config.url, e.getMessage());
         }
         return result;
-    }
-
-    @Reference
-    protected void setWebDAVManager(WebDAVManager webDAVManager) {
-        this.webDAVManager = webDAVManager;
-    }
-
-    protected void unsetWebDAVManager(WebDAVManager webDAVManager) {
-        this.webDAVManager = null;
     }
 
 }

@@ -27,9 +27,9 @@ import org.eclipse.jdt.annotation.Nullable;
 public final class WebDAVEndpoint {
     private final String hostname;
     private final String protocol;
-    private int port = 80;
-    private @Nullable String username;
-    private @Nullable String password;
+    private final int port;
+    private final @Nullable String username;
+    private final @Nullable String password;
 
     /** Cache the hash code for the string */
     private int hash; // Default to 0
@@ -59,11 +59,15 @@ public final class WebDAVEndpoint {
 
     @Override
     public String toString() {
-        return protocol + "://" + hostname + ":" + Integer.toString(port);
+        return protocol + "://" + hostname + (port != -1 ? (":" + Integer.toString(port)) : "");
     }
 
     @Override
     public int hashCode() {
         return hash;
+    }
+
+    public String getHost() {
+        return this.hostname;
     }
 }

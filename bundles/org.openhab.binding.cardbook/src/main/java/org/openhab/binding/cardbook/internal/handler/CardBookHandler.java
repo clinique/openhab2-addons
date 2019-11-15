@@ -15,7 +15,6 @@ package org.openhab.binding.cardbook.internal.handler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -52,8 +51,9 @@ import net.sourceforge.cardme.vcard.types.params.TelParamType;
 @NonNullByDefault
 public abstract class CardBookHandler extends BaseThingHandler {
     private final Logger logger = LoggerFactory.getLogger(CardBookHandler.class);
-    private static final VCardEngine vCardEngine = new VCardEngine();
+    private final VCardEngine vCardEngine = new VCardEngine();
     private final List<Contact> contactList = new ArrayList<Contact>();
+    private @NonNullByDefault({}) DirectoryConfiguration config;
 
     public CardBookHandler(Thing thing) {
         super(thing);
@@ -61,13 +61,11 @@ public abstract class CardBookHandler extends BaseThingHandler {
 
     protected abstract List<String> getRawCards();
 
-    @Override
-    public void initialize() {
-        logger.debug("Initializing thing {}", getThing().getUID());
-        DirectoryConfiguration config = getConfigAs(DirectoryConfiguration.class);
-        scheduler.scheduleWithFixedDelay(() -> {
+    private final Runnable updateCards = new Runnable() {
+        @Override
+        public void run() {
+            logger.info("Loading contacts");
             List<String> rawContacts = getRawCards();
-            logger.debug("{} Contacts read", rawContacts.size());
 
             final List<Contact> contacts = new ArrayList<Contact>();
             rawContacts.forEach(rawData -> {
@@ -128,18 +126,25 @@ public abstract class CardBookHandler extends BaseThingHandler {
 
             });
 
-            logger.debug("Number of contacts loaded : {}, now filtering", contacts.size());
-            String match = config.matchCategory.trim();
+            logger.info("Number of contacts loaded : {}, now filtering", contacts.size());
+            String match = config.matchCategory;
             Predicate<Contact> isQualified = c -> c.hasFullName()
                     && (c.hasBirthday() || c.hasEmails() || c.hasPhoneNumbers())
-                    && (c.ofCategory(match) || match.isEmpty());
+                    && (match.isEmpty() || c.ofCategory(match));
 
             contactList.clear();
             contactList.addAll(contacts.stream().filter(isQualified).collect(Collectors.toList()));
 
-            logger.debug("Number of contacts kept : {}.", contactList.size());
+            logger.info("Number of contacts kept : {}.", contactList.size());
 
-        }, 0, config.refresh, TimeUnit.HOURS);
+        }
+    };
+
+    @Override
+    public void initialize() {
+        logger.debug("Initializing thing {}", getThing().getUID());
+        config = getConfigAs(DirectoryConfiguration.class);
+        // scheduler.scheduleWithFixedDelay(updateCards, 0, config.refresh, TimeUnit.HOURS);
         updateStatus(ThingStatus.ONLINE);
     }
 

@@ -22,7 +22,7 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
  */
 @NonNullByDefault
 public class CardDAVConfiguration extends DirectoryConfiguration {
-    public String url = "https://lhopital.org/nextcloud/remote.php/dav/addressbooks/users/gael/contacts/";
+    public String url = "";
     public String username = "";
     public String password = "";
 }
