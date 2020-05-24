@@ -34,13 +34,13 @@ public class SncfBindingConstants {
     public static final String VIN = "vin";
 
     // The URL to use to connect to VocAPI with.
-    public static final String SERVICE_URL = "https://vocapi.wirelesscar.net/customerapi/rest/v3.0/";
+    public static final String SERVICE_URL = "https://api.sncf.com/v1/coverage/sncf/";
 
     // The JSON content type used when talking to VocAPI.
     public static final String JSON_CONTENT_TYPE = "application/json";
 
     // List of Thing Type UIDs
-    public static final ThingTypeUID APIBRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, "sncf");
+    public static final ThingTypeUID APIBRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, "api");
     public static final ThingTypeUID STATION_THING_TYPE = new ThingTypeUID(BINDING_ID, "station");
 
     // List of all adressable things in OH = SUPPORTED_DEVICE_THING_TYPES_UIDS + the virtual bridge
