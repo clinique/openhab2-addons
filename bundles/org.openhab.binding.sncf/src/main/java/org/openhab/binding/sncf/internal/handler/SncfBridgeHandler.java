@@ -24,8 +24,6 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.smarthome.core.library.types.OnOffType;
-import org.eclipse.smarthome.core.library.types.OpenClosedType;
 import org.eclipse.smarthome.core.library.types.PointType;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -71,13 +69,6 @@ public class SncfBridgeHandler extends BaseBridgeHandler {
                 .registerTypeAdapter(ZonedDateTime.class,
                         (JsonDeserializer<ZonedDateTime>) (json, type, jsonDeserializationContext) -> ZonedDateTime
                                 .parse(json.getAsJsonPrimitive().getAsString().concat("+0200"), NAVITIA_DATE_FORMAT))
-                .registerTypeAdapter(OpenClosedType.class,
-                        (JsonDeserializer<OpenClosedType>) (json, type,
-                                jsonDeserializationContext) -> json.getAsBoolean() ? OpenClosedType.OPEN
-                                        : OpenClosedType.CLOSED)
-                .registerTypeAdapter(OnOffType.class,
-                        (JsonDeserializer<OnOffType>) (json, type,
-                                jsonDeserializationContext) -> json.getAsBoolean() ? OnOffType.ON : OnOffType.OFF)
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
     }
 
