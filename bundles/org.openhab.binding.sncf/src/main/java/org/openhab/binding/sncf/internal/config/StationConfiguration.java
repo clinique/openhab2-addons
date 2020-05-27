@@ -22,6 +22,5 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
  */
 @NonNullByDefault
 public class StationConfiguration {
-    public String vin = "";
-    public Integer refresh = 5;
+    public String stopPointId = "";
 }

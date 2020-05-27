@@ -14,17 +14,16 @@ package org.openhab.binding.sncf.internal.discovery;
 
 import static org.openhab.binding.sncf.internal.SncfBindingConstants.*;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
 import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
 import org.eclipse.smarthome.core.i18n.LocationProvider;
+import org.eclipse.smarthome.core.library.types.PointType;
 import org.eclipse.smarthome.core.thing.ThingUID;
+import org.openhab.binding.sncf.internal.dto.PlaceNearby;
 import org.openhab.binding.sncf.internal.handler.SncfBridgeHandler;
-import org.openhab.binding.volvooncall.internal.VolvoOnCallException;
-import org.openhab.binding.volvooncall.internal.dto.AccountVehicleRelation;
-import org.openhab.binding.volvooncall.internal.dto.Vehicles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +36,7 @@ import org.slf4j.LoggerFactory;
 @NonNullByDefault
 public class SncfDiscoveryService extends AbstractDiscoveryService {
     private static final int SEARCH_TIME = 2;
+    private int searchRange = 2500;
     private final Logger logger = LoggerFactory.getLogger(SncfDiscoveryService.class);
     private final SncfBridgeHandler bridgeHandler;
     private final LocationProvider locationProvider;
@@ -49,26 +49,17 @@ public class SncfDiscoveryService extends AbstractDiscoveryService {
 
     @Override
     public void startScan() {
-        String[] relations = bridgeHandler.getVehiclesRelationsURL();
-        Arrays.stream(relations).forEach(relationURL -> {
-            try {
-                AccountVehicleRelation accountVehicle = bridgeHandler.getURL(relationURL, AccountVehicleRelation.class);
-                logger.debug("Found vehicle : {}", accountVehicle.vehicleId);
-
-                Vehicles vehicle = bridgeHandler.getURL(accountVehicle.vehicleURL, Vehicles.class);
-                Attributes attributes = bridgeHandler.getURL(Attributes.class, vehicle.vehicleId);
-
-                thingDiscovered(
-                        DiscoveryResultBuilder.create(new ThingUID(VEHICLE_THING_TYPE, accountVehicle.vehicleId))
-                                .withLabel(attributes.vehicleType + " " + attributes.registrationNumber)
-                                .withBridge(bridgeHandler.getThing().getUID()).withProperty(VIN, attributes.vin)
-                                .withRepresentationProperty(accountVehicle.vehicleId).build());
-
-            } catch (VolvoOnCallException e) {
-                logger.warn("Error while discovering vehicle: {}", e.getMessage());
-            }
-        });
-
+        PointType location = locationProvider.getLocation();
+        if (location != null) {
+            List<PlaceNearby> places = bridgeHandler.discoverNearby(location, searchRange);
+            places.forEach(place -> {
+                String thingId = place.getId().replace(":", "_").replace("-", "_").replace("stop_point_", "");
+                thingDiscovered(DiscoveryResultBuilder.create(new ThingUID(STATION_THING_TYPE, thingId))
+                        .withLabel(place.getName()).withBridge(bridgeHandler.getThing().getUID())
+                        .withProperty(STOP_POINT_ID, place.getId()).build());
+            });
+            searchRange += 500;
+        }
         stopScan();
     }
 }

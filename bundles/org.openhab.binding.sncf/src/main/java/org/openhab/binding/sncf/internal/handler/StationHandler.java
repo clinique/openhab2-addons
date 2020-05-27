@@ -12,70 +12,46 @@
  */
 package org.openhab.binding.sncf.internal.handler;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import static org.openhab.binding.sncf.internal.SncfBindingConstants.*;
+
+import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.smarthome.core.i18n.TimeZoneProvider;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
-import org.eclipse.smarthome.core.library.types.RawType;
 import org.eclipse.smarthome.core.library.types.StringType;
+import org.eclipse.smarthome.core.thing.Bridge;
+import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
+import org.eclipse.smarthome.core.thing.binding.BridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.RefreshType;
+import org.eclipse.smarthome.core.types.State;
 import org.eclipse.smarthome.core.types.UnDefType;
-import org.eclipse.smarthome.io.net.http.HttpUtil;
-import org.openhab.binding.sncf.internal.SncfConfiguration;
-import org.openhab.binding.sncf.internal.json.ApiResponse;
-import org.osgi.framework.FrameworkUtil;
+import org.openhab.binding.sncf.internal.config.StationConfiguration;
+import org.openhab.binding.sncf.internal.dto.Passage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-
 /**
- * The {@link SncfHandler} is responsible for updating channels
- * and querying the API
+ * The {@link StationHandler} is responsible for handling commands, which are sent
+ * to one of the channels.
  *
  * @author Gaël L'hopital - Initial contribution
  */
 @NonNullByDefault
 public class StationHandler extends BaseThingHandler {
-
-    https://api.sncf.com/v1/coverage/sncf/coord/2.0092054373189705;48.999493706051396/places_nearby?distance=2500&type[]=stop_point
-
-
-    private static final String URL = "https://public.opendatasoft.com/api/records/1.0/search/?dataset=risques-meteorologiques-copy&"
-            + "facet=etat_vent&facet=etat_pluie_inondation&facet=etat_orage&facet=etat_inondation&facet=etat_neige&facet=etat_canicule&"
-            + "facet=etat_grand_froid&facet=etat_avalanches&refine.nom_dept=";
-    private static final int TIMEOUT_MS = 30000;
-    private static final List<String> ALERT_LEVELS = Arrays.asList("Vert", "Jaune", "Orange", "Rouge");
-    private final Logger logger = LoggerFactory.getLogger(SncfHandler.class);
-    private final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(ZonedDateTime.class, (JsonDeserializer<ZonedDateTime>) (json, type,
-                    jsonDeserializationContext) -> ZonedDateTime.parse(json.getAsJsonPrimitive().getAsString()))
-            .create();
-
-    // Time zone provider representing time zone configured in openHAB configuration
-    private final TimeZoneProvider timeZoneProvider;
-
-    private String queryUrl = "";
+    private final Logger logger = LoggerFactory.getLogger(StationHandler.class);
+    private @Nullable ScheduledFuture<?> refreshJob;
+    private @NonNullByDefault({}) StationConfiguration configuration;
 
     public StationHandler(Thing thing) {
         super(thing);
@@ -83,135 +59,115 @@ public class StationHandler extends BaseThingHandler {
 
     @Override
     public void initialize() {
-        logger.debug("Initializing Météo Alerte handler.");
+        logger.trace("Initializing the Station handler for {}", getThing().getUID());
 
-        SncfConfiguration config = getConfigAs(SncfConfiguration.class);
-        logger.debug("config department = {}", config.department);
-        logger.debug("config refresh = {}", config.refresh);
+        SncfBridgeHandler bridgeHandler = getBridgeHandler();
+        if (bridgeHandler != null) {
+            configuration = getConfigAs(StationConfiguration.class);
 
-        updateStatus(ThingStatus.UNKNOWN);
-        queryUrl = URL + config.department;
-        refreshJob = scheduler.scheduleWithFixedDelay(this::updateAndPublish, 0, config.refresh, TimeUnit.HOURS);
+            updateStatus(ThingStatus.ONLINE);
+            refreshJob = scheduler.schedule(this::queryApiAndUpdateChannels, 10, TimeUnit.SECONDS);
+        }
     }
 
-    @Override
-    public void dispose() {
-        logger.debug("Disposing the Météo Alerte handler.");
+    private void queryApiAndUpdateChannels() {
+        SncfBridgeHandler bridgeHandler = getBridgeHandler();
+        if (bridgeHandler != null) {
+            ZonedDateTime nextEvent = null;
+            List<Passage> departures = bridgeHandler.getDepartures(configuration.stopPointId);
+            if (departures.size() > 0) {
+                getThing().getChannels().stream().map(Channel::getUID)
+                        .filter(channelUID -> isLinked(channelUID) && GROUP_DEPARTURE.equals(channelUID.getGroupId()))
+                        .forEach(channelUID -> {
+                            State state = getValue(channelUID.getIdWithoutGroup(), departures.get(0));
+                            updateState(channelUID, state);
+                        });
+                nextEvent = departures.get(0).getStopDateTime().getDepartureDateTime();
+            }
+            ZonedDateTime nextArrival = null;
+            List<Passage> arrivals = bridgeHandler.getArrivals(configuration.stopPointId);
+            if (arrivals.size() > 0) {
+                getThing().getChannels().stream().map(Channel::getUID)
+                        .filter(channelUID -> isLinked(channelUID) && GROUP_ARRIVAL.equals(channelUID.getGroupId()))
+                        .forEach(channelUID -> {
+                            State state = getValue(channelUID.getIdWithoutGroup(), arrivals.get(0));
+                            updateState(channelUID, state);
+                        });
+                nextArrival = arrivals.get(0).getStopDateTime().getArrivalDateTime();
+                if (nextArrival.isBefore(nextEvent)) {
+                    nextEvent = nextArrival;
+                }
+            }
+            updateStatus(ThingStatus.ONLINE);
+
+            Duration untilNextEvent = Duration.between(ZonedDateTime.now(),
+                    nextEvent != null ? nextEvent : ZonedDateTime.now().plusMinutes(10));
+            freeRefreshJob();
+            refreshJob = scheduler.schedule(this::queryApiAndUpdateChannels, untilNextEvent.getSeconds(),
+                    TimeUnit.SECONDS);
+            /*
+             * try {
+             * } catch (SncfException e) {
+             * logger.warn("Exception occurred during execution: {}", e.getMessage(), e);
+             * updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
+             * freeRefreshJob();
+             * startAutomaticRefresh(5);
+             * }
+             */
+        }
+    }
+
+    private State getValue(String channelId, Passage passage) {
+        switch (channelId) {
+            case DIRECTION:
+                return new StringType(passage.getRoute().getDirection().getName());
+            case CODE:
+                return new StringType(passage.getDisplayInformations().getCode());
+            case COMMERCIAL_MODE:
+                return new StringType(passage.getDisplayInformations().getCommercialMode());
+            case NAME:
+                return new StringType(passage.getDisplayInformations().getName());
+            case NETWORK:
+                return new StringType(passage.getDisplayInformations().getNetwork());
+            case ARRIVAL:
+                return new DateTimeType(passage.getStopDateTime().getArrivalDateTime());
+            case DEPARTURE:
+                return new DateTimeType(passage.getStopDateTime().getDepartureDateTime());
+        }
+        return UnDefType.NULL;
+    }
+
+    private void freeRefreshJob() {
         ScheduledFuture<?> refreshJob = this.refreshJob;
-        if (refreshJob != null && !refreshJob.isCancelled()) {
+        if (refreshJob != null) {
             refreshJob.cancel(true);
             this.refreshJob = null;
         }
     }
 
     @Override
+    public void dispose() {
+        freeRefreshJob();
+        super.dispose();
+    }
+
+    @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
         if (command instanceof RefreshType) {
-            updateAndPublish();
-        } else {
-            logger.debug("The Meteo Alerte binding is read-only and can not handle command {}", command);
+            queryApiAndUpdateChannels();
         }
     }
 
-    private void updateAndPublish() {
-        try {
-            if (queryUrl.isEmpty()) {
-                throw new MalformedURLException();
-            }
-            try {
-                String response = HttpUtil.executeUrl("GET", queryUrl, TIMEOUT_MS);
-                updateStatus(ThingStatus.ONLINE);
-                ApiResponse apiResponse = gson.fromJson(response, ApiResponse.class);
-                updateChannels(apiResponse);
-            } catch (IOException e) {
-                logger.warn("Error opening connection to Meteo Alerte webservice : {}", e.getMessage());
-                updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR);
-            }
-        } catch (MalformedURLException e) {
-            logger.warn("Malformed URL in Météo Alerte request : {}", queryUrl);
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR);
-        }
-    }
-
-    /**
-     * Update the channel from the last Meteo Alerte data retrieved
-     *
-     * @param channelId the id identifying the channel to be updated
-     */
-    private void updateChannels(ApiResponse apiResponse) {
-        Arrays.stream(apiResponse.getRecords()).findFirst().ifPresent(record -> {
-            record.getFields().ifPresent(fields -> {
-                updateAlertString(WIND, fields.getVent());
-                updateAlertString(RAIN, fields.getPluieInondation());
-                updateAlertString(STORM, fields.getOrage());
-                updateAlertString(FLOOD, fields.getInondation());
-                updateAlertString(SNOW, fields.getNeige());
-                updateAlertString(HEAT, fields.getCanicule());
-                updateAlertString(FREEZE, fields.getGrandFroid());
-                updateAlertString(AVALANCHE, fields.getAvalanches());
-
-                fields.getDateInsert().ifPresent(date -> updateDate(OBSERVATION_TIME, date));
-                updateState(COMMENT, new StringType(fields.getVigilanceComment()));
-                updateIcon(WIND, fields.getVent());
-                updateIcon(RAIN, fields.getPluieInondation());
-                updateIcon(STORM, fields.getOrage());
-                updateIcon(FLOOD, fields.getInondation());
-                updateIcon(SNOW, fields.getNeige());
-                updateIcon(HEAT, fields.getCanicule());
-                updateIcon(FREEZE, fields.getGrandFroid());
-                updateIcon(AVALANCHE, fields.getAvalanches());
-            });
-        });
-    }
-
-    public void updateIcon(String channelId, String value) {
-        String iconChannelId = channelId + "-icon";
-        if (isLinked(iconChannelId)) {
-            String pictoName = channelId + (!value.isEmpty() ? "_" + value.toLowerCase() : "");
-            byte[] image = getImage("picto" + File.separator + pictoName + ".gif");
-            if (image != null) {
-                RawType picto = new RawType(image, "image/gif");
-                updateState(iconChannelId, picto);
+    private @Nullable SncfBridgeHandler getBridgeHandler() {
+        Bridge bridge = getBridge();
+        if (bridge != null) {
+            BridgeHandler handler = bridge.getHandler();
+            if (handler != null) {
+                return (SncfBridgeHandler) handler;
             }
         }
-    }
-
-    private byte @Nullable [] getImage(String iconPath) {
-        URL url = FrameworkUtil.getBundle(getClass()).getResource(iconPath);
-        logger.debug("Path to icon image resource is: {}", url);
-        try {
-            InputStream in = url.openStream();
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            int next = in.read();
-            while (next > -1) {
-                bos.write(next);
-                next = in.read();
-            }
-            bos.flush();
-            return bos.toByteArray();
-        } catch (IOException e) {
-            logger.debug("I/O exception occurred getting image data: {}", e.getMessage(), e);
-        }
+        updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.BRIDGE_UNINITIALIZED);
         return null;
-    }
-
-    public void updateAlertString(String channelId, String value) {
-        if (!value.isEmpty() && isLinked(channelId)) {
-            int level = ALERT_LEVELS.indexOf(value);
-            if (level != -1) {
-                updateState(channelId, new StringType(Integer.toString(level)));
-            } else {
-                updateState(channelId, UnDefType.UNDEF);
-                logger.warn("Value {} is not a valid alert level for channel {}", value, channelId);
-            }
-        }
-    }
-
-    public void updateDate(String channelId, ZonedDateTime zonedDateTime) {
-        if (isLinked(channelId)) {
-            ZonedDateTime localDateTime = zonedDateTime.withZoneSameInstant(timeZoneProvider.getTimeZone());
-            updateState(channelId, new DateTimeType(localDateTime));
-        }
     }
 
 }

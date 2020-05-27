@@ -10,17 +10,25 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.sncf.internal.config;
+package org.openhab.binding.sncf.internal.dto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
- * The {@link SncfBridgeConfiguration} is responsible for holding
- * configuration informations needed to access SNCF API
+ * The {@link AccountVehicleRelation} is responsible for storing
+ * informations returned by vehicle position rest
+ * answer
  *
  * @author Gaël L'hopital - Initial contribution
  */
 @NonNullByDefault
-public class SncfBridgeConfiguration {
-    public String username = "";
+public class PlacesNearby extends SncfAnswer {
+    private List<PlaceNearby> placesNearby = new ArrayList<>();
+
+    public List<PlaceNearby> getPlacesNearby() {
+        return placesNearby;
+    }
 }

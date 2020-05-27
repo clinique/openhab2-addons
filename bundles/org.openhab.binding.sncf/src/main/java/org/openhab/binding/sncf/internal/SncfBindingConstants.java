@@ -30,11 +30,25 @@ public class SncfBindingConstants {
 
     public static final String BINDING_ID = "sncf";
 
-    // Vehicle properties
-    public static final String VIN = "vin";
+    // Station properties
+    public static final String STOP_POINT_ID = "stopPointId";
 
     // The URL to use to connect to VocAPI with.
     public static final String SERVICE_URL = "https://api.sncf.com/v1/coverage/sncf/";
+
+    // List of Channel groups
+    public static final String GROUP_ARRIVAL = "arrival";
+    public static final String GROUP_DEPARTURE = "departure";
+
+    // List of Channel id's
+    public static final String DIRECTION = "direction";
+    public static final String CODE = "code";
+    public static final String COMMERCIAL_MODE = "commercialMode";
+    public static final String NAME = "name";
+    public static final String NETWORK = "network";
+    public static final String PHYSICAL_MODE = "physicalMode";
+    public static final String ARRIVAL = "arrival";
+    public static final String DEPARTURE = "departure";
 
     // The JSON content type used when talking to VocAPI.
     public static final String JSON_CONTENT_TYPE = "application/json";
@@ -46,4 +60,7 @@ public class SncfBindingConstants {
     // List of all adressable things in OH = SUPPORTED_DEVICE_THING_TYPES_UIDS + the virtual bridge
     public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Stream
             .of(APIBRIDGE_THING_TYPE, STATION_THING_TYPE).collect(Collectors.toSet());
+
+    // Default value for undefined integers
+    public static final int UNDEFINED = -1;
 }

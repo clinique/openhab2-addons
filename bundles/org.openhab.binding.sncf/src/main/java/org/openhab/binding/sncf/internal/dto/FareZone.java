@@ -10,17 +10,24 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.sncf.internal.config;
+package org.openhab.binding.sncf.internal.dto;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 
-/**
- * The {@link SncfBridgeConfiguration} is responsible for holding
- * configuration informations needed to access SNCF API
- *
- * @author Gaël L'hopital - Initial contribution
- */
+import com.google.gson.annotations.SerializedName;
+
 @NonNullByDefault
-public class SncfBridgeConfiguration {
-    public String username = "";
+public class FareZone {
+    @SerializedName("name")
+    private String name = "";
+
+    /**
+     * Get name
+     * 
+     * @return name
+     **/
+    public String getName() {
+        return name;
+    }
+
 }

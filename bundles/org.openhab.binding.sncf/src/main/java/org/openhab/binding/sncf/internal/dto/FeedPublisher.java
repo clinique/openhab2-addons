@@ -10,17 +10,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.sncf.internal.config;
+package org.openhab.binding.sncf.internal.dto;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
+public class FeedPublisher {
 
-/**
- * The {@link SncfBridgeConfiguration} is responsible for holding
- * configuration informations needed to access SNCF API
- *
- * @author Gaël L'hopital - Initial contribution
- */
-@NonNullByDefault
-public class SncfBridgeConfiguration {
-    public String username = "";
 }
