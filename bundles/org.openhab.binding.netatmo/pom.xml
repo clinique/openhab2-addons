@@ -15,8 +15,9 @@
   <name>openHAB Add-ons :: Bundles :: Netatmo Binding</name>
 
   <properties>
-    <bnd.importpackage>!android.*,!com.android.org.*,!org.apache.harmony.*,!sun.*,!org.apache.oltu.*</bnd.importpackage>
+    <bnd.exportpackage>org.openhab.binding.netatmo.*</bnd.exportpackage>
   </properties>
+<<<<<<< Upstream, based on origin/main
 
   <dependencies>
     <dependency>
@@ -116,4 +117,6 @@
     </plugins>
   </build>
 
+=======
+>>>>>>> 54453ef Rebase and spotless apply
 </project>
