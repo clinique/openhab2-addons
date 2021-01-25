@@ -14,6 +14,7 @@
 
   <name>openHAB Add-ons :: Bundles :: Netatmo Binding</name>
 
+<<<<<<< Upstream, based on origin/main
   <properties>
     <bnd.exportpackage>org.openhab.binding.netatmo.*</bnd.exportpackage>
   </properties>
@@ -119,4 +120,6 @@
 
 =======
 >>>>>>> 54453ef Rebase and spotless apply
+=======
+>>>>>>> 4201a80 Code cleansing
 </project>
