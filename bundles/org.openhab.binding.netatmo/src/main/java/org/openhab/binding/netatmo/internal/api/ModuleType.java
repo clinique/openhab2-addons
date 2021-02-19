@@ -25,6 +25,7 @@ import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
 import org.openhab.binding.netatmo.internal.api.dto.NAThermostat;
 import org.openhab.binding.netatmo.internal.api.dto.NAThing;
 import org.openhab.binding.netatmo.internal.api.dto.NAWelcome;
+import org.openhab.binding.netatmo.internal.api.dto.NRV;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.BatteryHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.CameraChannelHelper;
@@ -124,8 +125,8 @@ public enum ModuleType {
             List.of(GROUP_TH_PROPERTIES, GROUP_TH_SETPOINT, GROUP_TH_TEMPERATURE, GROUP_MODULE, GROUP_SIGNAL,
                     GROUP_BATTERY),
             NAThermostat.class),
-    NRV(NRVHandler.class, RefreshPolicy.PARENT, NAPlug, null, Set.of(BatteryHelper.class, ModuleChannelHelper.class),
-            List.of(GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY), null),
+    NRV(NRVHandler.class, RefreshPolicy.PARENT, NAHomeEnergy, null, Set.of(Therm1PropsChannelHelper.class, Therm1SetpointChannelHelper.class, Therm1TempChannelHelper.class,BatteryHelper.class, ModuleChannelHelper.class),
+            List.of(GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY), NRV.class),
     // Left for future implementation
     // NACamDoorTag : self explaining
     // NSD : smoke detector

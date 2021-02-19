@@ -17,6 +17,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.dto.NADeviceDataBody;
 import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
+import org.openhab.binding.netatmo.internal.api.dto.NRV;
 
 /**
  *
@@ -27,6 +28,8 @@ import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
 @NonNullByDefault
 public class EnergyApi extends RestManager {
     private class NAThermostatDataResponse extends ApiResponse<NADeviceDataBody<NAPlug>> {
+    }
+    private class NAValveDataResponse extends ApiResponse<NADeviceDataBody<NRV>> {
     }
 
     public EnergyApi(ApiBridge apiClient) {
@@ -40,6 +43,13 @@ public class EnergyApi extends RestManager {
         }
         return get(req, NAThermostatDataResponse.class);
     }
+    private NAValveDataResponse getValvesData(@Nullable String equipmentId) throws NetatmoException {
+        String req = "getthermostatsdata";
+        if (equipmentId != null) {
+            req += "?device_id=" + equipmentId;
+        }
+        return get(req, NAValveDataResponse.class);
+    }
 
     public NADeviceDataBody<NAPlug> getThermostatsDataBody(@Nullable String equipmentId) throws NetatmoException {
         return getThermostatsData(equipmentId).getBody();
@@ -50,6 +60,15 @@ public class EnergyApi extends RestManager {
         NAPlug plug = answer.getDevice(equipmentId);
         if (plug != null) {
             return plug;
+        }
+        throw new NetatmoException(String.format("Unexpected answer cherching device '%s' : not found.", equipmentId));
+    }
+
+    public NRV getValveData(String equipmentId) throws NetatmoException {
+        NADeviceDataBody<NRV> answer = getValvesData(equipmentId).getBody();
+        NRV valve = answer.getDevice(equipmentId);
+        if (valve != null) {
+            return valve;
         }
         throw new NetatmoException(String.format("Unexpected answer cherching device '%s' : not found.", equipmentId));
     }
