@@ -28,6 +28,7 @@ import org.openhab.binding.netatmo.internal.api.ModuleType;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NAPerson;
+import org.openhab.binding.netatmo.internal.api.dto.NARoom;
 import org.openhab.binding.netatmo.internal.api.dto.NAThing;
 import org.openhab.core.config.discovery.AbstractDiscoveryService;
 import org.openhab.core.config.discovery.DiscoveryResultBuilder;
@@ -97,6 +98,12 @@ public class NetatmoDiscoveryService extends AbstractDiscoveryService implements
                     // addDiscoveredThing(moduleUID, module.getId(), module.getNonNullName(), homeUID);
                     localBridges.put(module.getId(), moduleUID);
                 });
+                home.getRooms().values().stream().forEach(room -> {
+                    ThingUID moduleUID = createDiscoveredThing(homeUID, room);
+                    // ThingUID moduleUID = findThingUID(module.getType(), module.getId(), homeUID);
+                    // addDiscoveredThing(moduleUID, module.getId(), module.getNonNullName(), homeUID);
+                    localBridges.put(room.getId(), moduleUID);
+                });
                 home.getModules().values().stream().filter(module -> module.getBridge() != null).forEach(module -> {
                     ThingUID bridgeUID = localBridges.get(module.getBridge());
                     if (bridgeUID != null) {
@@ -132,6 +139,17 @@ public class NetatmoDiscoveryService extends AbstractDiscoveryService implements
 
     private ThingUID createDiscoveredThing(@Nullable ThingUID bridgeUID, NAThing module, ModuleType moduleType) {
         ThingUID moduleUID = findThingUID(moduleType, module.getId(), bridgeUID);
+        DiscoveryResultBuilder resultBuilder = DiscoveryResultBuilder.create(moduleUID)
+                .withProperty(EQUIPMENT_ID, module.getId()).withLabel(module.getNonNullName())
+                .withRepresentationProperty(EQUIPMENT_ID);
+        if (bridgeUID != null) {
+            resultBuilder = resultBuilder.withBridge(bridgeUID);
+        }
+        thingDiscovered(resultBuilder.build());
+        return moduleUID;
+    }
+    private ThingUID createDiscoveredThing(@Nullable ThingUID bridgeUID, NARoom module) {
+        ThingUID moduleUID = findThingUID(ModuleType.NARoom, module.getId(), bridgeUID);
         DiscoveryResultBuilder resultBuilder = DiscoveryResultBuilder.create(moduleUID)
                 .withProperty(EQUIPMENT_ID, module.getId()).withLabel(module.getNonNullName())
                 .withRepresentationProperty(EQUIPMENT_ID);

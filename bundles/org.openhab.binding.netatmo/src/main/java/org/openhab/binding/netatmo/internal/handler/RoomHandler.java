@@ -29,7 +29,7 @@ import org.openhab.binding.netatmo.internal.api.EnergyApi;
 
 
 /**
- * {@link NRVHandler} is the class used to handle the valve
+ * {@link RoomHandler} is the class used to handle the valve
  * module of a thermostat set
  *
  * @author Gaël L'hopital - Initial contribution
@@ -37,9 +37,9 @@ import org.openhab.binding.netatmo.internal.api.EnergyApi;
  */
 @SuppressWarnings("unused")
 @NonNullByDefault
-public class NRVHandler extends NetatmoDeviceHandler {
+public class RoomHandler extends NetatmoDeviceHandler {
 
-    public NRVHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
+	public RoomHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
             TimeZoneProvider timeZoneProvider, NetatmoDescriptionProvider descriptionProvider) {
         super(bridge, channelHelpers, apiBridge, timeZoneProvider, descriptionProvider);
     }
@@ -51,13 +51,6 @@ public class NRVHandler extends NetatmoDeviceHandler {
         }
         return null;
     }
- 	@Override
-    protected NRV updateReadings() throws NetatmoException {
-        EnergyApi api = apiBridge.getRestManager(EnergyApi.class);
-        if (api != null) {
-            return api.getValveData(config.id, getBridge().getBridgeUID());
-        }
-        throw new NetatmoException("No restmanager available for Energy access");
-    } 
+
 
 }

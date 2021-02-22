@@ -159,7 +159,7 @@ public class NetatmoDeviceHandler extends BaseBridgeHandler implements Connectio
         }
     }
 
-    protected NADevice updateReadings() throws NetatmoException {
+    protected NAThing updateReadings() throws NetatmoException {
         throw new NetatmoException("Should not be called");
     }
 
@@ -172,7 +172,7 @@ public class NetatmoDeviceHandler extends BaseBridgeHandler implements Connectio
             if (dataOutdated) {
                 logger.debug("Trying to update channels on device {}", config.id);
                 try {
-                    NADevice newDeviceReading = updateReadings();
+                    NAThing newDeviceReading = updateReadings();
                     logger.debug("Successfully updated device {} readings! Now updating channels", config.id);
                     setNAThing(newDeviceReading);
                     updateStatus(newDeviceReading.isReachable() ? ThingStatus.ONLINE : ThingStatus.OFFLINE);

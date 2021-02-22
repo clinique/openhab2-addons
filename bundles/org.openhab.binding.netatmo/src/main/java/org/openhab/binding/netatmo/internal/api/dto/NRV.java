@@ -26,46 +26,5 @@ import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 
 @NonNullByDefault
 public class NRV extends NAModule {
-    private @Nullable NAThermMeasure measured;
-    private @Nullable NASetpoint setpoint;
-
-    private int thermRelayCmd;
-    private boolean anticipating;
-
-    private List<NAThermProgram> thermProgramList = List.of();
-
-    public @Nullable NAThermMeasure getMeasured() {
-        return measured;
-    }
-
-    public List<NAThermProgram> getThermProgramList() {
-        return thermProgramList;
-    }
-
-    public @Nullable NAThermProgram getActiveProgram() {
-        return thermProgramList.stream().filter(NAThermProgram::isSelected).findFirst().orElse(null);
-    }
-
-    public boolean getThermRelayCmd() {
-        return thermRelayCmd != 0;
-    }
-
-    public double getSetpointTemp() {
-        NASetpoint localSetpoint = setpoint;
-        return localSetpoint != null ? localSetpoint.getSetpointTemp() : Double.NaN;
-    }
-
-    public long getSetpointEndtime() {
-        NASetpoint localSetpoint = setpoint;
-        return localSetpoint != null ? localSetpoint.getSetpointEndtime() : 0;
-    }
-
-    public SetpointMode getSetpointMode() {
-        NASetpoint localSetpoint = setpoint;
-        return localSetpoint != null ? localSetpoint.getMode() : SetpointMode.UNKNOWN;
-    }
-
-    public boolean isAnticipating() {
-        return anticipating;
-    }
+   
 }

@@ -18,6 +18,7 @@ import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.dto.NADeviceDataBody;
 import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
 import org.openhab.binding.netatmo.internal.api.dto.NRV;
+import org.openhab.core.thing.ThingUID;
 
 /**
  *
@@ -43,11 +44,9 @@ public class EnergyApi extends RestManager {
         }
         return get(req, NAThermostatDataResponse.class);
     }
-    private NAValveDataResponse getValvesData(@Nullable String equipmentId) throws NetatmoException {
-        String req = "getthermostatsdata";
-        if (equipmentId != null) {
-            req += "?device_id=" + equipmentId;
-        }
+    private NAValveDataResponse getValvesData(@Nullable String equipmentId, @Nullable ThingUID thingUID)
+			throws NetatmoException {
+		String req = "homestatus?home_id" + thingUID + "&device_types=NRV";
         return get(req, NAValveDataResponse.class);
     }
 
@@ -64,8 +63,8 @@ public class EnergyApi extends RestManager {
         throw new NetatmoException(String.format("Unexpected answer cherching device '%s' : not found.", equipmentId));
     }
 
-    public NRV getValveData(String equipmentId) throws NetatmoException {
-        NADeviceDataBody<NRV> answer = getValvesData(equipmentId).getBody();
+    public NRV getValveData(String equipmentId, @Nullable ThingUID thingUID) throws NetatmoException {
+        NADeviceDataBody<NRV> answer = getValvesData(equipmentId, thingUID).getBody();
         NRV valve = answer.getDevice(equipmentId);
         if (valve != null) {
             return valve;
