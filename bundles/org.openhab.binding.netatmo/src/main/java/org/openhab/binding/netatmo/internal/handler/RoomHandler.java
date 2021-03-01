@@ -17,16 +17,10 @@ import java.util.List;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
-import org.openhab.binding.netatmo.internal.api.dto.NRV;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
-import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
-import org.openhab.binding.netatmo.internal.api.NetatmoException;
-import org.openhab.binding.netatmo.internal.api.EnergyApi;
-
-
 
 /**
  * {@link RoomHandler} is the class used to handle the valve
@@ -39,18 +33,16 @@ import org.openhab.binding.netatmo.internal.api.EnergyApi;
 @NonNullByDefault
 public class RoomHandler extends NetatmoDeviceHandler {
 
-	public RoomHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
+    public RoomHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
             TimeZoneProvider timeZoneProvider, NetatmoDescriptionProvider descriptionProvider) {
         super(bridge, channelHelpers, apiBridge, timeZoneProvider, descriptionProvider);
     }
 
-	private @NonNullByDefault({}) HomeEnergyHandler getHomeHandler() {
+    private @NonNullByDefault({}) HomeEnergyHandler getHomeHandler() {
         Bridge bridge = getBridge();
         if (bridge != null && bridge.getStatus() == ThingStatus.ONLINE) {
             return (HomeEnergyHandler) bridge.getHandler();
         }
         return null;
     }
-
-
 }

@@ -17,16 +17,14 @@ import java.util.List;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
+import org.openhab.binding.netatmo.internal.api.NetatmoException;
+import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NRV;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
-import org.openhab.core.thing.Thing;
-import org.openhab.core.thing.ThingStatus;
-import org.openhab.binding.netatmo.internal.api.NetatmoException;
-import org.openhab.binding.netatmo.internal.api.EnergyApi;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link NRVHandler} is the class used to handle the valve
@@ -39,25 +37,22 @@ import org.openhab.binding.netatmo.internal.api.EnergyApi;
 @NonNullByDefault
 public class NRVHandler extends NetatmoDeviceHandler {
 
+    private final Logger logger = LoggerFactory.getLogger(NRVHandler.class);
+
+
     public NRVHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
             TimeZoneProvider timeZoneProvider, NetatmoDescriptionProvider descriptionProvider) {
         super(bridge, channelHelpers, apiBridge, timeZoneProvider, descriptionProvider);
     }
 
-	private @NonNullByDefault({}) HomeEnergyHandler getHomeHandler() {
-        Bridge bridge = getBridge();
-        if (bridge != null && bridge.getStatus() == ThingStatus.ONLINE) {
-            return (HomeEnergyHandler) bridge.getHandler();
-        }
-        return null;
-    }
- 	@Override
+    @Override
     protected NRV updateReadings() throws NetatmoException {
-        EnergyApi api = apiBridge.getRestManager(EnergyApi.class);
-        if (api != null) {
-            return api.getValveData(config.id, getBridge().getBridgeUID());
-        }
-        throw new NetatmoException("No restmanager available for Energy access");
-    } 
-
+        logger.debug("updateReadings");
+        NAHome home = apiBridge.getHomeApi().getHomeData().get(0);
+        NRV nrv = (NRV) home.getModule(config.id);
+        if (nrv == null)
+            return new NRV();
+        else
+            return nrv;
+    }
 }

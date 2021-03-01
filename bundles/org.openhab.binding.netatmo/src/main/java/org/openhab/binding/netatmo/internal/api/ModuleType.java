@@ -22,11 +22,11 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.dto.NAModule;
 import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
+import org.openhab.binding.netatmo.internal.api.dto.NARoom;
 import org.openhab.binding.netatmo.internal.api.dto.NAThermostat;
 import org.openhab.binding.netatmo.internal.api.dto.NAThing;
 import org.openhab.binding.netatmo.internal.api.dto.NAWelcome;
 import org.openhab.binding.netatmo.internal.api.dto.NRV;
-import org.openhab.binding.netatmo.internal.api.dto.NARoom;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.BatteryHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.CameraChannelHelper;
@@ -59,8 +59,8 @@ import org.openhab.binding.netatmo.internal.handler.NetatmoDeviceHandler;
 import org.openhab.binding.netatmo.internal.handler.PersonHandler;
 import org.openhab.binding.netatmo.internal.handler.PlugHandler;
 import org.openhab.binding.netatmo.internal.handler.PresenceHandler;
-import org.openhab.binding.netatmo.internal.handler.Therm1Handler;
 import org.openhab.binding.netatmo.internal.handler.RoomHandler;
+import org.openhab.binding.netatmo.internal.handler.Therm1Handler;
 import org.openhab.core.thing.ThingTypeUID;
 
 /**
@@ -127,17 +127,16 @@ public enum ModuleType {
             List.of(GROUP_TH_PROPERTIES, GROUP_TH_SETPOINT, GROUP_TH_TEMPERATURE, GROUP_MODULE, GROUP_SIGNAL,
                     GROUP_BATTERY),
             NAThermostat.class),
-    NARoom(RoomHandler.class, RefreshPolicy.PARENT, NAHomeEnergy, null,
-            Set.of(),
-            List.of(GROUP_TH_SETPOINT, GROUP_TH_TEMPERATURE),
-            NARoom.class),
-    NRV(NRVHandler.class, RefreshPolicy.PARENT, NAPlug, null, Set.of(BatteryHelper.class, ModuleChannelHelper.class),
-            List.of(GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY), NRV.class),
+    NARoom(RoomHandler.class, RefreshPolicy.PARENT, NAHomeEnergy, null, Set.of(),
+            List.of(GROUP_TH_SETPOINT, GROUP_TH_TEMPERATURE), NARoom.class),
+    NRV(NRVHandler.class, RefreshPolicy.AUTO, NAHomeEnergy, null,
+            Set.of(BatteryHelper.class, ModuleChannelHelper.class), List.of(GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY),
+            NRV.class),
     // Left for future implementation
     // NACamDoorTag : self explaining
     // NSD : smoke detector
     // NIS : indoor siren
-    // NDB : doobell
+    // NDB : doorbell
     ;
 
     public enum RefreshPolicy {

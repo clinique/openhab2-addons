@@ -148,6 +148,7 @@ public class NetatmoDiscoveryService extends AbstractDiscoveryService implements
         thingDiscovered(resultBuilder.build());
         return moduleUID;
     }
+
     private ThingUID createDiscoveredThing(@Nullable ThingUID bridgeUID, NARoom module) {
         ThingUID moduleUID = findThingUID(ModuleType.NARoom, module.getId(), bridgeUID);
         DiscoveryResultBuilder resultBuilder = DiscoveryResultBuilder.create(moduleUID)

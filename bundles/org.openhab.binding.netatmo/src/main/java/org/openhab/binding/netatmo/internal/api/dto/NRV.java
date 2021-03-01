@@ -12,11 +12,7 @@
  */
 package org.openhab.binding.netatmo.internal.api.dto;
 
-import java.util.List;
-
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 
 /**
  *
@@ -26,5 +22,5 @@ import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 
 @NonNullByDefault
 public class NRV extends NAModule {
-   
+
 }

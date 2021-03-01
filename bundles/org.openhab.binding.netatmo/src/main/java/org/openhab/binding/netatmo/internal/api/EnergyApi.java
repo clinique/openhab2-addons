@@ -18,6 +18,7 @@ import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.dto.NADeviceDataBody;
 import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
 import org.openhab.binding.netatmo.internal.api.dto.NRV;
+import org.openhab.binding.netatmo.internal.api.dto.energy.Homestatus;
 import org.openhab.core.thing.ThingUID;
 
 /**
@@ -28,26 +29,34 @@ import org.openhab.core.thing.ThingUID;
 
 @NonNullByDefault
 public class EnergyApi extends RestManager {
+    public static final String URL_HOMESTATUS = "homestatus";
+    public static final String URL_THERMOSTAT = "getthermostatsdata";
+
     private class NAThermostatDataResponse extends ApiResponse<NADeviceDataBody<NAPlug>> {
     }
+
     private class NAValveDataResponse extends ApiResponse<NADeviceDataBody<NRV>> {
     }
 
     public EnergyApi(ApiBridge apiClient) {
-        super(apiClient, NetatmoConstants.ENERGY_SCOPES);
+        super(apiClient, NetatmoConstants.ALL_SCOPES);
     }
 
     private NAThermostatDataResponse getThermostatsData(@Nullable String equipmentId) throws NetatmoException {
-        String req = "getthermostatsdata";
+        String req = URL_THERMOSTAT;
         if (equipmentId != null) {
             req += "?device_id=" + equipmentId;
         }
         return get(req, NAThermostatDataResponse.class);
     }
+
     private NAValveDataResponse getValvesData(@Nullable String equipmentId, @Nullable ThingUID thingUID)
-			throws NetatmoException {
-		String req = "homestatus?home_id" + thingUID + "&device_types=NRV";
-        return get(req, NAValveDataResponse.class);
+            throws NetatmoException {
+
+        String req = URL_HOMESTATUS + "?home_id=" + thingUID.getId() + "&device_types=NRV";
+
+        Homestatus homestatus = get(req, Homestatus.class);
+        return new NAValveDataResponse();
     }
 
     public NADeviceDataBody<NAPlug> getThermostatsDataBody(@Nullable String equipmentId) throws NetatmoException {
@@ -60,7 +69,7 @@ public class EnergyApi extends RestManager {
         if (plug != null) {
             return plug;
         }
-        throw new NetatmoException(String.format("Unexpected answer cherching device '%s' : not found.", equipmentId));
+        throw new NetatmoException(String.format("Unexpected answer searching device '%s' : not found.", equipmentId));
     }
 
     public NRV getValveData(String equipmentId, @Nullable ThingUID thingUID) throws NetatmoException {

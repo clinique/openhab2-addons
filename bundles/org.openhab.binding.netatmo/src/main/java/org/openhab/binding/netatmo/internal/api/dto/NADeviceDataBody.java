@@ -30,6 +30,8 @@ public class NADeviceDataBody<T extends NAThing> {
     }
 
     public @Nullable T getDevice(String id) {
+        if (devices == null)
+            return null;
         return devices.get(id);
     }
 

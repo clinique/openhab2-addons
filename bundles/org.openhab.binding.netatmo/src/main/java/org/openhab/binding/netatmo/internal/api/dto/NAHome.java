@@ -34,18 +34,16 @@ public class NAHome extends NADevice {
     private @Nullable NAObjectMap<NAPerson> persons;
     private List<NAHomeEvent> events = List.of();
     private List<NAThermProgram> thermSchedules = List.of();
-	private List<NAWelcome> cameras = List.of();
-	private @Nullable NAObjectMap<NARoom> rooms;
+    private List<NAWelcome> cameras = List.of();
+    private @Nullable NAObjectMap<NARoom> rooms;
     private int thermSetpointDefaultDuration;
     @SerializedName("coordinates")
     private double[] location = {};
-	private double altitude;
+    private double altitude;
 
     public List<NAThermProgram> getThermSchedules() {
         return thermSchedules;
     }
-
-
 
     public int getThermSetpointDefaultDuration() {
         return thermSetpointDefaultDuration;
@@ -78,9 +76,10 @@ public class NAHome extends NADevice {
         return cameras;
     }
 
-	public  @Nullable NAObjectMap<NARoom> getRooms() {
-		return rooms;
-	}
+    public @Nullable NAObjectMap<NARoom> getRooms() {
+        return rooms;
+    }
+
     public Optional<NAPerson> getPerson(String id) {
         NAObjectMap<NAPerson> personList = persons;
         return personList == null ? Optional.empty() : Optional.ofNullable(personList.get(id));

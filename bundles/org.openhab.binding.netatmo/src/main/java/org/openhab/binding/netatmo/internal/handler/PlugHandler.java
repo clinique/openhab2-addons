@@ -53,7 +53,7 @@ public class PlugHandler extends NetatmoDeviceHandler {
 
     @Override
     protected NAPlug updateReadings() throws NetatmoException {
-        EnergyApi api = apiBridge.getRestManager(EnergyApi.class); 
+        EnergyApi api = apiBridge.getRestManager(EnergyApi.class);
         if (api != null) {
             return api.getThermostatData(config.id);
         }
