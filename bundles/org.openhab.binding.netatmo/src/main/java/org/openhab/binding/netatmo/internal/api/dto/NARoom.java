@@ -13,6 +13,7 @@
 package org.openhab.binding.netatmo.internal.api.dto;
 
 import com.google.gson.annotations.SerializedName;
+import org.openhab.binding.netatmo.internal.api.ModuleType;
 
 /**
  *
@@ -20,23 +21,16 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 
-public class NARoom extends NAObject {
+public class NARoom extends NAModule {
     private boolean anticipating;
     private int heating_power_request;
     private boolean open_window;
-    private boolean reachable;
-    private int therm_measured_temperature;
+    private Double therm_measured_temperature;
     private String therm_setpoint_mode;
-    private int therm_setpoint_temperature;
+    private Double therm_setpoint_temperature;
 
-    private String type;
 
-    @SerializedName(value = "last_message", alternate = { "last_activity" })
-    private long lastMessage;
 
-    public long getLastMessage() {
-        return lastMessage;
-    }
 
     /**
      * @return the anticipating
@@ -80,31 +74,18 @@ public class NARoom extends NAObject {
         this.open_window = open_window;
     }
 
-    /**
-     * @return the reachable
-     */
-    public boolean isReachable() {
-        return reachable;
-    }
-
-    /**
-     * @param reachable the reachable to set
-     */
-    public void setReachable(boolean reachable) {
-        this.reachable = reachable;
-    }
 
     /**
      * @return the therm_measured_temperature
      */
-    public int getTherm_measured_temperature() {
+    public Double getTherm_measured_temperature() {
         return therm_measured_temperature;
     }
 
     /**
      * @param therm_measured_temperature the therm_measured_temperature to set
      */
-    public void setTherm_measured_temperature(int therm_measured_temperature) {
+    public void setTherm_measured_temperature(Double therm_measured_temperature) {
         this.therm_measured_temperature = therm_measured_temperature;
     }
 
@@ -125,28 +106,16 @@ public class NARoom extends NAObject {
     /**
      * @return the therm_setpoint_temperature
      */
-    public int getTherm_setpoint_temperature() {
+    public double getTherm_setpoint_temperature() {
         return therm_setpoint_temperature;
     }
 
     /**
      * @param therm_setpoint_temperature the therm_setpoint_temperature to set
      */
-    public void setTherm_setpoint_temperature(int therm_setpoint_temperature) {
+    public void setTherm_setpoint_temperature(Double therm_setpoint_temperature) {
         this.therm_setpoint_temperature = therm_setpoint_temperature;
     }
 
-    /**
-     * @return the type
-     */
-    public String getType() {
-        return type;
-    }
 
-    /**
-     * @param type the type to set
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
 }

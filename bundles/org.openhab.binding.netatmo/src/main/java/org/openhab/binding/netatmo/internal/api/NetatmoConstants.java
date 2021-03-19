@@ -216,7 +216,9 @@ public class NetatmoConstants {
         OFF("off"),
         @SerializedName("max")
         MAX("max"),
-        UNKNOWN("");
+        UNKNOWN(""),
+        @SerializedName("schedule")
+        SCHEDULE("schedule");
 
         String apiDescriptor;
 

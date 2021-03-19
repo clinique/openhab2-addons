@@ -48,11 +48,13 @@ public class NRVHandler extends NetatmoDeviceHandler {
     @Override
     protected NRV updateReadings() throws NetatmoException {
         logger.debug("updateReadings");
-        NAHome home = apiBridge.getHomeApi().getHomeData().get(0);
-        NRV nrv = (NRV) home.getModule(config.id);
-        if (nrv == null)
-            return new NRV();
-        else
-            return nrv;
+        List<NAHome> homes = apiBridge.getHomeApi().getHomeList(null);
+        for (NAHome home:homes
+             ) {
+            NRV nrv = (NRV) home.getModule(config.id);
+            if (nrv != null) return nrv;
+        }
+        return new NRV();
+
     }
 }

@@ -13,11 +13,13 @@
 package org.openhab.binding.netatmo.internal.channelhelper;
 
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
-import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.*;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toDateTimeType;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toQuantityType;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureClass;
+import org.openhab.binding.netatmo.internal.api.dto.NARoom;
 import org.openhab.binding.netatmo.internal.api.dto.NAThermMeasure;
 import org.openhab.binding.netatmo.internal.api.dto.NAThermostat;
 import org.openhab.binding.netatmo.internal.api.dto.NAThing;
@@ -26,28 +28,24 @@ import org.openhab.core.thing.Thing;
 import org.openhab.core.types.State;
 
 /**
- * The {@link Therm1TempChannelHelper} handle specific behavior
+ * The {@link RoomTempChannelHelper} handle specific behavior
  * of the thermostat module
  *
  * @author Gaël L'hopital - Initial contribution
  *
  */
 @NonNullByDefault
-public class Therm1TempChannelHelper extends AbstractChannelHelper {
+public class RoomTempChannelHelper extends AbstractChannelHelper {
 
-    public Therm1TempChannelHelper(Thing thing, TimeZoneProvider timeZoneProvider) {
+    public RoomTempChannelHelper(Thing thing, TimeZoneProvider timeZoneProvider) {
         super(thing, timeZoneProvider, GROUP_TH_TEMPERATURE);
     }
 
     @Override
     protected @Nullable State internalGetProperty(NAThing naThing, String channelId) {
-        NAThermostat thermostat = (NAThermostat) naThing;
-        NAThermMeasure measured = thermostat.getMeasured();
-        if (measured != null && CHANNEL_VALUE.equals(channelId)) {
-            return toQuantityType(measured.getTemperature(), MeasureClass.EXTERIOR_TEMPERATURE);
-        } else if (measured != null && CHANNEL_TIMEUTC.equals(channelId)) {
-            return toDateTimeType(measured.getTime(), zoneId);
-        }
-        return null;
+        NARoom room = (NARoom) naThing;
+        return toQuantityType(room.getTherm_measured_temperature(), MeasureClass.INTERIOR_TEMPERATURE);
+
+
     }
 }

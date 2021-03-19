@@ -27,28 +27,7 @@ import org.openhab.binding.netatmo.internal.api.dto.NAThermostat;
 import org.openhab.binding.netatmo.internal.api.dto.NAThing;
 import org.openhab.binding.netatmo.internal.api.dto.NAWelcome;
 import org.openhab.binding.netatmo.internal.api.dto.NRV;
-import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.BatteryHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.CameraChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.Co2ChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.DeviceChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.HomeCoachChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.HomeEnergyChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.HomeSecurityChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.HumidityChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.MeasuresChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.ModuleChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.NoiseChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.PersonChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.PlugChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.PresenceChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.PressureChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.RainChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.TemperatureChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.Therm1PropsChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.Therm1SetpointChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.Therm1TempChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.WindChannelHelper;
+import org.openhab.binding.netatmo.internal.channelhelper.*;
 import org.openhab.binding.netatmo.internal.handler.CameraHandler;
 import org.openhab.binding.netatmo.internal.handler.HomeCoachHandler;
 import org.openhab.binding.netatmo.internal.handler.HomeEnergyHandler;
@@ -116,7 +95,7 @@ public enum ModuleType {
             NAThing.class),
 
     // Energy group
-    NAHomeEnergy(HomeEnergyHandler.class, RefreshPolicy.CONFIG, null, null, Set.of(HomeEnergyChannelHelper.class),
+    NAHomeEnergy(HomeEnergyHandler.class, RefreshPolicy.AUTO, null, null, Set.of(HomeEnergyChannelHelper.class),
             List.of(GROUP_HOME_ENERGY), null),
     NAPlug(PlugHandler.class, RefreshPolicy.CONFIG, NAHomeEnergy, null,
             Set.of(PlugChannelHelper.class, DeviceChannelHelper.class), List.of(GROUP_PLUG, GROUP_DEVICE, GROUP_SIGNAL),
@@ -127,7 +106,7 @@ public enum ModuleType {
             List.of(GROUP_TH_PROPERTIES, GROUP_TH_SETPOINT, GROUP_TH_TEMPERATURE, GROUP_MODULE, GROUP_SIGNAL,
                     GROUP_BATTERY),
             NAThermostat.class),
-    NARoom(RoomHandler.class, RefreshPolicy.PARENT, NAHomeEnergy, null, Set.of(),
+    NARoom(RoomHandler.class, RefreshPolicy.AUTO, NAHomeEnergy, null, Set.of(RoomTempChannelHelper.class, RoomSetpointChannelHelper.class),
             List.of(GROUP_TH_SETPOINT, GROUP_TH_TEMPERATURE), NARoom.class),
     NRV(NRVHandler.class, RefreshPolicy.AUTO, NAHomeEnergy, null,
             Set.of(BatteryHelper.class, ModuleChannelHelper.class), List.of(GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY),

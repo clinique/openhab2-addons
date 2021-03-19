@@ -23,7 +23,7 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
  */
 
 @NonNullByDefault
-public class NAHomeData {
+public class NAHomeStatus {
     private List<NAHome> homes = List.of();
 
     public List<NAHome> getHomes() {

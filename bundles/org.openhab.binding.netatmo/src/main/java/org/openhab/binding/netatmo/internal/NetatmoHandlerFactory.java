@@ -26,7 +26,9 @@ import org.openhab.binding.netatmo.internal.api.ModuleType;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.SignalHelper;
+import org.openhab.binding.netatmo.internal.handler.HomeEnergyHandler;
 import org.openhab.binding.netatmo.internal.handler.HomeSecurityHandler;
+import org.openhab.binding.netatmo.internal.handler.RoomHandler;
 import org.openhab.binding.netatmo.internal.webhook.NetatmoServlet;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
@@ -87,6 +89,8 @@ public class NetatmoHandlerFactory extends BaseThingHandlerFactory {
                 handler = build(bridge, mt);
                 if (handler instanceof HomeSecurityHandler) {
                     ((HomeSecurityHandler) handler).setWebHookServlet(webhookServlet);
+                } else if (handler instanceof RoomHandler) {
+              //      ((RoomHandler) handler)
                 }
                 return handler;
             }

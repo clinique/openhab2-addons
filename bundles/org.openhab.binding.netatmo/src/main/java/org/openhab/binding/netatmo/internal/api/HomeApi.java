@@ -21,6 +21,7 @@ import org.openhab.binding.netatmo.internal.api.NetatmoConstants.PresenceLightMo
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NAHomeData;
 import org.openhab.binding.netatmo.internal.api.dto.NAPing;
+import org.openhab.binding.netatmo.internal.api.dto.energy.Homestatus;
 
 /**
  *
@@ -59,12 +60,18 @@ public class HomeApi extends RestManager {
         return response.getBody().getHomes().get(0);
     }
 
+    public Homestatus getHomeStatus(String homeId) throws NetatmoException {
+        String req = "homestatus?home_id=" + homeId;
+        Homestatus response = get(req, Homestatus.class);
+        return response;
+    }
+
     public boolean setpersonsaway(String homeId, String personId) throws NetatmoException {
         String req = "setpersonsaway";
         String payload = String.format("{\"home_id\":\"%s\",\"person_id\":\"%s\"}", homeId, personId);
         ApiOkResponse response = post(req, payload, ApiOkResponse.class, false);
         if (!response.isSuccess()) {
-            throw new NetatmoException(String.format("Unsuccessfull person away command : %s", response.getStatus()));
+            throw new NetatmoException(String.format("Unsuccessful person away command : %s", response.getStatus()));
         }
         return true;
     }

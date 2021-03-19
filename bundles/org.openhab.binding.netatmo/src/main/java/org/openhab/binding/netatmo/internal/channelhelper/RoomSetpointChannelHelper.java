@@ -13,8 +13,10 @@
 package org.openhab.binding.netatmo.internal.channelhelper;
 
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
-import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.*;
-import static org.openhab.binding.netatmo.internal.utils.NetatmoCalendarUtils.*;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toDateTimeType;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toQuantityType;
+import static org.openhab.binding.netatmo.internal.utils.NetatmoCalendarUtils.getProgramBaseTime;
+import static org.openhab.binding.netatmo.internal.utils.NetatmoCalendarUtils.getTimeDiff;
 
 import java.util.List;
 
@@ -23,10 +25,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureClass;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.ThermostatZoneType;
-import org.openhab.binding.netatmo.internal.api.dto.NAThermProgram;
-import org.openhab.binding.netatmo.internal.api.dto.NAThermostat;
-import org.openhab.binding.netatmo.internal.api.dto.NAThing;
-import org.openhab.binding.netatmo.internal.api.dto.NATimeTableItem;
+import org.openhab.binding.netatmo.internal.api.dto.*;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.library.types.StringType;
 import org.openhab.core.thing.Thing;
@@ -34,52 +33,38 @@ import org.openhab.core.types.State;
 import org.openhab.core.types.UnDefType;
 
 /**
- * The {@link Therm1SetpointChannelHelper} handle specific behavior
+ * The {@link RoomSetpointChannelHelper} handle specific behavior
  * of the thermostat module
  *
  * @author Gaël L'hopital - Initial contribution
  *
  */
 @NonNullByDefault
-public class Therm1SetpointChannelHelper extends AbstractChannelHelper {
+public class RoomSetpointChannelHelper extends AbstractChannelHelper {
 
-    public Therm1SetpointChannelHelper(Thing thing, TimeZoneProvider timeZoneProvider) {
+    public RoomSetpointChannelHelper(Thing thing, TimeZoneProvider timeZoneProvider) {
         super(thing, timeZoneProvider, GROUP_TH_SETPOINT);
     }
 
     @Override
     protected @Nullable State internalGetProperty(NAThing naThing, String channelId) {
-        NAThermostat thermostat = (NAThermostat) naThing;
+        NARoom room = (NARoom) naThing;
         switch (channelId) {
             case CHANNEL_VALUE:
-                return getCurrentSetpoint(thermostat);
-            case CHANNEL_SETPOINT_END_TIME:
-                long endTime = thermostat.getSetpointEndtime();
-                return toDateTimeType(endTime != 0 ? endTime : getNextProgramTime(thermostat.getActiveProgram()),
-                        zoneId);
+                return getCurrentSetpoint(room);
             case CHANNEL_SETPOINT_MODE:
-                return new StringType(thermostat.getSetpointMode().name());
+                return new StringType(room.getTherm_setpoint_mode());
         }
         return null;
     }
 
-    private State getCurrentSetpoint(NAThermostat thermostat) {
-        SetpointMode currentMode = thermostat.getSetpointMode();
-        NAThermProgram currentProgram = thermostat.getActiveProgram();
+    private State getCurrentSetpoint(NARoom room) {
+        SetpointMode currentMode = SetpointMode.valueOf(room.getTherm_setpoint_mode().toUpperCase());
+        //NAThermProgram currentProgram = room.getActiveProgram();
         switch (currentMode) {
-            case PROGRAM:
-                NATimeTableItem currentProgramMode = getCurrentProgramMode(thermostat.getActiveProgram());
-                if (currentProgram != null && currentProgramMode != null) {
-                    ThermostatZoneType zoneType = currentProgramMode.getZoneType();
-                    return toQuantityType(currentProgram.getZoneTemperature(zoneType),
-                            MeasureClass.INTERIOR_TEMPERATURE);
-                }
             case AWAY:
-            case FROST_GUARD:
-                return toQuantityType(currentProgram != null ? currentProgram.getZoneTemperature(currentMode) : null,
-                        MeasureClass.INTERIOR_TEMPERATURE);
             case MANUAL:
-                return toQuantityType(thermostat.getSetpointTemp(), MeasureClass.INTERIOR_TEMPERATURE);
+                return toQuantityType(room.getTherm_setpoint_temperature(), MeasureClass.INTERIOR_TEMPERATURE);
             case OFF:
             case MAX:
             case UNKNOWN:
@@ -97,21 +82,5 @@ public class Therm1SetpointChannelHelper extends AbstractChannelHelper {
         return null;
     }
 
-    private long getNextProgramTime(@Nullable NAThermProgram activeProgram) {
-        long diff = getTimeDiff();
-        if (activeProgram != null) {
-            // By default we'll use the first slot of next week - this case will be true if
-            // we are in the last schedule of the week so below loop will not exit by break
-            List<NATimeTableItem> timetable = activeProgram.getTimetable();
-            int next = timetable.get(0).getMOffset() + (7 * 24 * 60);
-            for (NATimeTableItem timeTable : timetable) {
-                if (timeTable.getMOffset() > diff) {
-                    next = timeTable.getMOffset();
-                    break;
-                }
-            }
-            return next * 60 + getProgramBaseTime();
-        }
-        return -1;
-    }
+
 }
