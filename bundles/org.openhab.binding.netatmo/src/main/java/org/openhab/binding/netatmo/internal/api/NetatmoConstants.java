@@ -12,7 +12,8 @@
  */
 package org.openhab.binding.netatmo.internal.api;
 
-import static org.openhab.core.library.unit.MetricPrefix.*;
+import static org.openhab.core.library.unit.MetricPrefix.HECTO;
+import static org.openhab.core.library.unit.MetricPrefix.MILLI;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -23,12 +24,12 @@ import java.util.stream.Stream;
 
 import javax.measure.Unit;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.core.library.unit.SIUnits;
 import org.openhab.core.library.unit.Units;
-
-import com.google.gson.annotations.SerializedName;
 
 /**
  * This class holds various definitions and settings provided by the Netatmo

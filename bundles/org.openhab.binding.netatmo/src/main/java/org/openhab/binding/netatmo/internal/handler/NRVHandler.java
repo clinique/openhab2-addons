@@ -39,7 +39,6 @@ public class NRVHandler extends NetatmoDeviceHandler {
 
     private final Logger logger = LoggerFactory.getLogger(NRVHandler.class);
 
-
     public NRVHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
             TimeZoneProvider timeZoneProvider, NetatmoDescriptionProvider descriptionProvider) {
         super(bridge, channelHelpers, apiBridge, timeZoneProvider, descriptionProvider);
@@ -49,12 +48,11 @@ public class NRVHandler extends NetatmoDeviceHandler {
     protected NRV updateReadings() throws NetatmoException {
         logger.debug("updateReadings");
         List<NAHome> homes = apiBridge.getHomeApi().getHomeList(null);
-        for (NAHome home:homes
-             ) {
+        for (NAHome home : homes) {
             NRV nrv = (NRV) home.getModule(config.id);
-            if (nrv != null) return nrv;
+            if (nrv != null)
+                return nrv;
         }
         return new NRV();
-
     }
 }

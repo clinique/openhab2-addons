@@ -22,15 +22,15 @@ import java.util.Map;
 public class Body implements Serializable {
 
     private Home home;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = 4318969274668449496L;
 
     /**
      * No args constructor for use in serialization
      * 
      */
-    public Body() {
-    }
+    // public Body() {
+    // }
 
     /**
      * 

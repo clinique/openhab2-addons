@@ -15,15 +15,16 @@ package org.openhab.binding.netatmo.internal.api.dto.energy;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * @author Bernhard Kreuz - Initial contribution
  */
 public class Homestatus implements Serializable {
 
     private String status;
-    private Integer timeServer;
+    private long timeServer;
     private Body body;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = -8532076777888120923L;
 
     /**
@@ -39,7 +40,7 @@ public class Homestatus implements Serializable {
      * @param body
      * @param status
      */
-    public Homestatus(String status, Integer timeServer, Body body) {
+    public Homestatus(String status, long timeServer, Body body) {
         super();
         this.status = status;
         this.timeServer = timeServer;
@@ -59,15 +60,15 @@ public class Homestatus implements Serializable {
         return this;
     }
 
-    public Integer getTimeServer() {
+    public long getTimeServer() {
         return timeServer;
     }
 
-    public void setTimeServer(Integer timeServer) {
+    public void setTimeServer(long timeServer) {
         this.timeServer = timeServer;
     }
 
-    public Homestatus withTimeServer(Integer timeServer) {
+    public Homestatus withTimeServer(long timeServer) {
         this.timeServer = timeServer;
         return this;
     }

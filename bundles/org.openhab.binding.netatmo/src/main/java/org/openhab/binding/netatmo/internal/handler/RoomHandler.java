@@ -19,14 +19,11 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
-import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NARoom;
-import org.openhab.binding.netatmo.internal.api.dto.NRV;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ThingStatus;
-import org.openhab.core.thing.ThingUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +40,6 @@ public class RoomHandler extends NetatmoDeviceHandler {
 
     private final Logger logger = LoggerFactory.getLogger(RoomHandler.class);
 
-
     public RoomHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
             TimeZoneProvider timeZoneProvider, NetatmoDescriptionProvider descriptionProvider) {
         super(bridge, channelHelpers, apiBridge, timeZoneProvider, descriptionProvider);
@@ -59,8 +55,6 @@ public class RoomHandler extends NetatmoDeviceHandler {
 
     @Override
     protected NARoom updateReadings() throws NetatmoException {
-        return (NARoom) Objects.requireNonNullElse(getHomeHandler().getHome().getRoom(config.id),new NARoom());
-
-
+        return (NARoom) Objects.requireNonNullElse(getHomeHandler().getHome().getRoom(config.id), new NARoom());
     }
 }

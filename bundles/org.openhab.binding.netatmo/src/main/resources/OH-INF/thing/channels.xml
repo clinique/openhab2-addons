@@ -128,6 +128,14 @@
 		</state>
 	</channel-type>
 
+	<channel-type id="valve-heating">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Heating Power</label>
+		<description>Percentage of heating power.</description>
+		<category>Energy</category>
+		<state readOnly="true" pattern="%.0f %%"/>
+	</channel-type>
+
 	<channel-type id="orientation" advanced="true">
 		<item-type>Number:Angle</item-type>
 		<label>Orientation</label>

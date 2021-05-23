@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.PointType;
-
-import com.google.gson.annotations.SerializedName;
 
 /**
  *
@@ -36,7 +36,8 @@ public class NAHome extends NADevice {
     private List<NAThermProgram> thermSchedules = List.of();
     private List<NAWelcome> cameras = List.of();
 
-    private @Nullable NAObjectMap<NARoom> rooms;
+    private List<NARoom> rooms = List.of();
+    //    private @Nullable NAObjectMap<NARoom> rooms;
     private int thermSetpointDefaultDuration;
     @SerializedName("coordinates")
     private double[] location = {};
@@ -46,9 +47,9 @@ public class NAHome extends NADevice {
         return thermSchedules;
     }
 
-    public void setRooms(NAObjectMap<NARoom> rooms) {
-        this.rooms = rooms;
-    }
+    // public void setRooms(NAObjectMap<NARoom> rooms) {
+    //     this.rooms = rooms;
+    // }
 
     public int getThermSetpointDefaultDuration() {
         return thermSetpointDefaultDuration;
@@ -81,12 +82,18 @@ public class NAHome extends NADevice {
         return cameras;
     }
 
-    public @Nullable NAObjectMap<NARoom> getRooms() {
+    public List<NARoom> getRooms() {
         return rooms;
     }
-    public @Nullable NARoom getRoom(String key) {
-        return rooms.get(key);
+
+    // public @Nullable NARoom getRoom(String key) {
+    //     return rooms.get(key);
+    // }
+
+    public @Nullable NARoom getRoom(String id) {
+        return rooms.stream().filter(r -> r.getId().equals(id)).findFirst().orElse(null);
     }
+    
     public Optional<NAPerson> getPerson(String id) {
         NAObjectMap<NAPerson> personList = persons;
         return personList == null ? Optional.empty() : Optional.ofNullable(personList.get(id));

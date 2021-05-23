@@ -15,6 +15,7 @@ package org.openhab.binding.netatmo.internal.api.dto.energy;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * @author Bernhard Kreuz - Initial contribution
  */
@@ -34,7 +35,7 @@ public class Module implements Serializable {
     private Boolean reachable;
     private String bridge;
     private String batteryState;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = 1685165670279602787L;
 
     /**

@@ -18,7 +18,7 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
  *
- * @author Gaël L'hopital - Initial contribution
+ * @author Bernhard Kreuz - Initial contribution
  *
  */
 

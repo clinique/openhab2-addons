@@ -12,9 +12,14 @@
  */
 package org.openhab.binding.netatmo.internal.channelhelper;
 
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
-import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.*;
-import static org.openhab.binding.netatmo.internal.utils.NetatmoCalendarUtils.*;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_SETPOINT_END_TIME;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_SETPOINT_MODE;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_VALUE;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_TH_SETPOINT;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toDateTimeType;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toQuantityType;
+import static org.openhab.binding.netatmo.internal.utils.NetatmoCalendarUtils.getProgramBaseTime;
+import static org.openhab.binding.netatmo.internal.utils.NetatmoCalendarUtils.getTimeDiff;
 
 import java.util.List;
 
@@ -78,6 +83,7 @@ public class Therm1SetpointChannelHelper extends AbstractChannelHelper {
             case FROST_GUARD:
                 return toQuantityType(currentProgram != null ? currentProgram.getZoneTemperature(currentMode) : null,
                         MeasureClass.INTERIOR_TEMPERATURE);
+            case SCHEDULE:
             case MANUAL:
                 return toQuantityType(thermostat.getSetpointTemp(), MeasureClass.INTERIOR_TEMPERATURE);
             case OFF:

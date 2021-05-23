@@ -98,7 +98,7 @@ public class NetatmoDiscoveryService extends AbstractDiscoveryService implements
                     // addDiscoveredThing(moduleUID, module.getId(), module.getNonNullName(), homeUID);
                     localBridges.put(module.getId(), moduleUID);
                 });
-                home.getRooms().values().stream().forEach(room -> {
+                home.getRooms().forEach(room -> {
                     ThingUID moduleUID = createDiscoveredThing(homeUID, room);
                     // ThingUID moduleUID = findThingUID(module.getType(), module.getId(), homeUID);
                     // addDiscoveredThing(moduleUID, module.getId(), module.getNonNullName(), homeUID);

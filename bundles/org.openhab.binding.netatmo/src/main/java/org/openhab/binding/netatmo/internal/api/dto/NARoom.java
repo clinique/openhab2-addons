@@ -12,25 +12,21 @@
  */
 package org.openhab.binding.netatmo.internal.api.dto;
 
-import com.google.gson.annotations.SerializedName;
-import org.openhab.binding.netatmo.internal.api.ModuleType;
-
 /**
  *
- * @author Gaël L'hopital - Initial contribution
+ * @author Bernhard Kreuz - Initial contribution
  *
  */
 
 public class NARoom extends NAModule {
     private boolean anticipating;
-    private int heating_power_request;
-    private boolean open_window;
-    private Double therm_measured_temperature;
-    private String therm_setpoint_mode;
-    private Double therm_setpoint_temperature;
-
-
-
+    private int heatingPowerRequest;
+    private boolean openWindow;
+    private double thermMeasuredTemperature;
+    private String thermSetpointMode;
+    private double thermSetpointTemperature;
+    private long thermSetpointStartTime;
+    private long thermSetpointEndTime = -1;
 
     /**
      * @return the anticipating
@@ -47,75 +43,89 @@ public class NARoom extends NAModule {
     }
 
     /**
-     * @return the heating_power_request
+     * @return the heatingPowerRequest
      */
-    public int getHeating_power_request() {
-        return heating_power_request;
+    public int getHeatingPowerRequest() {
+        return heatingPowerRequest;
     }
 
     /**
-     * @param heating_power_request the heating_power_request to set
+     * @param heatingPowerRequest the heatingPowerRequest to set
      */
-    public void setHeating_power_request(int heating_power_request) {
-        this.heating_power_request = heating_power_request;
+    public void setHeatingPowerRequest(int heatingPowerRequest) {
+        this.heatingPowerRequest = heatingPowerRequest;
     }
 
     /**
-     * @return the open_window
+     * @return the openWindow
      */
-    public boolean isOpen_window() {
-        return open_window;
+    public boolean isOpenWindow() {
+        return openWindow;
     }
 
     /**
-     * @param open_window the open_window to set
+     * @param openWindow the openWindow to set
      */
-    public void setOpen_window(boolean open_window) {
-        this.open_window = open_window;
-    }
-
-
-    /**
-     * @return the therm_measured_temperature
-     */
-    public Double getTherm_measured_temperature() {
-        return therm_measured_temperature;
+    public void setOpenWindow(boolean openWindow) {
+        this.openWindow = openWindow;
     }
 
     /**
-     * @param therm_measured_temperature the therm_measured_temperature to set
+     * @return the thermMeasuredTemperature
      */
-    public void setTherm_measured_temperature(Double therm_measured_temperature) {
-        this.therm_measured_temperature = therm_measured_temperature;
+    public Double getThermMeasuredTemperature() {
+        return thermMeasuredTemperature;
     }
 
     /**
-     * @return the therm_setpoint_mode
+     * @param thermMeasuredTemperature the thermMeasuredTemperature to set
      */
-    public String getTherm_setpoint_mode() {
-        return therm_setpoint_mode;
+    public void setThermMeasuredTemperature(Double thermMeasuredTemperature) {
+        this.thermMeasuredTemperature = thermMeasuredTemperature;
     }
 
     /**
-     * @param therm_setpoint_mode the therm_setpoint_mode to set
+     * @return the thermSetpointMode
      */
-    public void setTherm_setpoint_mode(String therm_setpoint_mode) {
-        this.therm_setpoint_mode = therm_setpoint_mode;
+    public String getThermSetpointMode() {
+        return thermSetpointMode;
     }
 
     /**
-     * @return the therm_setpoint_temperature
+     * @param thermSetpointMode the thermSetpointMode to set
      */
-    public double getTherm_setpoint_temperature() {
-        return therm_setpoint_temperature;
+    public void setThermSetpointMode(String thermSetpointMode) {
+        this.thermSetpointMode = thermSetpointMode;
     }
 
     /**
-     * @param therm_setpoint_temperature the therm_setpoint_temperature to set
+     * @return the thermSetpointTemperature
      */
-    public void setTherm_setpoint_temperature(Double therm_setpoint_temperature) {
-        this.therm_setpoint_temperature = therm_setpoint_temperature;
+    public double getThermSetpointTemperature() {
+        return thermSetpointTemperature;
     }
 
+    /**
+     * @param thermSetpointTemperature the thermSetpointTemperature to set
+     */
+    public void setThermSetpointTemperature(Double thermSetpointTemperature) {
+        this.thermSetpointTemperature = thermSetpointTemperature;
+    }
+
+    public long getThermSetpointStartTime() {
+        return thermSetpointStartTime;
+    }
+
+    public void setThermSetpointStartTime(long thermSetpointStartTime) {
+        this.thermSetpointStartTime = thermSetpointStartTime;
+    }
+
+    public long getThermSetpointEndTime() {
+        return thermSetpointEndTime;
+    }
+    
+    public void setThermSetpointEndTime(long thermSetpointEndTime) {
+        this.thermSetpointEndTime = thermSetpointEndTime;
+    }
 
 }

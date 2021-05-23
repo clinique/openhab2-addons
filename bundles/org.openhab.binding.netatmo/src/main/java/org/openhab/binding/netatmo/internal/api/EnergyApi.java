@@ -17,9 +17,6 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.dto.NADeviceDataBody;
 import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
-import org.openhab.binding.netatmo.internal.api.dto.NRV;
-import org.openhab.binding.netatmo.internal.api.dto.energy.Homestatus;
-import org.openhab.core.thing.ThingUID;
 
 /**
  *
@@ -35,8 +32,8 @@ public class EnergyApi extends RestManager {
     private class NAThermostatDataResponse extends ApiResponse<NADeviceDataBody<NAPlug>> {
     }
 
-    private class NAValveDataResponse extends ApiResponse<NADeviceDataBody<NRV>> {
-    }
+    // private class NAValveDataResponse extends ApiResponse<NADeviceDataBody<NRV>> {
+    // }
 
     public EnergyApi(ApiBridge apiClient) {
         super(apiClient, NetatmoConstants.ALL_SCOPES);
@@ -50,14 +47,14 @@ public class EnergyApi extends RestManager {
         return get(req, NAThermostatDataResponse.class);
     }
 
-    private NAValveDataResponse getValvesData(@Nullable String equipmentId, @Nullable ThingUID thingUID)
-            throws NetatmoException {
+    // private NAValveDataResponse getValvesData(@Nullable String equipmentId, @Nullable ThingUID thingUID)
+    //         throws NetatmoException {
 
-        String req = URL_HOMESTATUS + "?home_id=" + thingUID.getId() + "&device_types=NRV";
+    //     String req = URL_HOMESTATUS + "?home_id=" + thingUID.getId() + "&device_types=NRV";
 
-        Homestatus homestatus = get(req, Homestatus.class);
-        return new NAValveDataResponse();
-    }
+    //     Homestatus homestatus = get(req, Homestatus.class);
+    //     return new NAValveDataResponse();
+    // }
 
     public NADeviceDataBody<NAPlug> getThermostatsDataBody(@Nullable String equipmentId) throws NetatmoException {
         return getThermostatsData(equipmentId).getBody();
@@ -72,14 +69,14 @@ public class EnergyApi extends RestManager {
         throw new NetatmoException(String.format("Unexpected answer searching device '%s' : not found.", equipmentId));
     }
 
-    public NRV getValveData(String equipmentId, @Nullable ThingUID thingUID) throws NetatmoException {
-        NADeviceDataBody<NRV> answer = getValvesData(equipmentId, thingUID).getBody();
-        NRV valve = answer.getDevice(equipmentId);
-        if (valve != null) {
-            return valve;
-        }
-        throw new NetatmoException(String.format("Unexpected answer cherching device '%s' : not found.", equipmentId));
-    }
+    // public NRV getValveData(String equipmentId, @Nullable ThingUID thingUID) throws NetatmoException {
+    //     NADeviceDataBody<NRV> answer = getValvesData(equipmentId, thingUID).getBody();
+    //     NRV valve = answer.getDevice(equipmentId);
+    //     if (valve != null) {
+    //         return valve;
+    //     }
+    //     throw new NetatmoException(String.format("Unexpected answer cherching device '%s' : not found.", equipmentId));
+    // }
 
     /**
      *

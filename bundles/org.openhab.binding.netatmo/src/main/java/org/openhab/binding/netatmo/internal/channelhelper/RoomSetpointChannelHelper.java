@@ -12,20 +12,23 @@
  */
 package org.openhab.binding.netatmo.internal.channelhelper;
 
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_SETPOINT_END_TIME;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_SETPOINT_MODE;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_SETPOINT_START_TIME;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_VALUE;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_TH_SETPOINT;
 import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toDateTimeType;
 import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toQuantityType;
-import static org.openhab.binding.netatmo.internal.utils.NetatmoCalendarUtils.getProgramBaseTime;
 import static org.openhab.binding.netatmo.internal.utils.NetatmoCalendarUtils.getTimeDiff;
-
-import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureClass;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
-import org.openhab.binding.netatmo.internal.api.NetatmoConstants.ThermostatZoneType;
-import org.openhab.binding.netatmo.internal.api.dto.*;
+import org.openhab.binding.netatmo.internal.api.dto.NARoom;
+import org.openhab.binding.netatmo.internal.api.dto.NAThermProgram;
+import org.openhab.binding.netatmo.internal.api.dto.NAThing;
+import org.openhab.binding.netatmo.internal.api.dto.NATimeTableItem;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.library.types.StringType;
 import org.openhab.core.thing.Thing;
@@ -53,18 +56,25 @@ public class RoomSetpointChannelHelper extends AbstractChannelHelper {
             case CHANNEL_VALUE:
                 return getCurrentSetpoint(room);
             case CHANNEL_SETPOINT_MODE:
-                return new StringType(room.getTherm_setpoint_mode());
+                return new StringType(room.getThermSetpointMode());
+            case CHANNEL_SETPOINT_START_TIME:
+                return toDateTimeType(room.getThermSetpointStartTime(), zoneId);    
+            case CHANNEL_SETPOINT_END_TIME:
+                return (room.getThermSetpointEndTime() > 0 ? toDateTimeType(room.getThermSetpointEndTime(), zoneId) : null);    
         }
         return null;
     }
 
     private State getCurrentSetpoint(NARoom room) {
-        SetpointMode currentMode = SetpointMode.valueOf(room.getTherm_setpoint_mode().toUpperCase());
-        //NAThermProgram currentProgram = room.getActiveProgram();
+        SetpointMode currentMode = SetpointMode.valueOf(room.getThermSetpointMode().toUpperCase());
+        // NAThermProgram currentProgram = room.getActiveProgram();
         switch (currentMode) {
             case AWAY:
             case MANUAL:
-                return toQuantityType(room.getTherm_setpoint_temperature(), MeasureClass.INTERIOR_TEMPERATURE);
+            case SCHEDULE:
+            case FROST_GUARD:
+            case PROGRAM:
+                return toQuantityType(room.getThermSetpointTemperature(), MeasureClass.INTERIOR_TEMPERATURE);
             case OFF:
             case MAX:
             case UNKNOWN:
@@ -81,6 +91,4 @@ public class RoomSetpointChannelHelper extends AbstractChannelHelper {
         }
         return null;
     }
-
-
 }

@@ -17,23 +17,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 /**
  * @author Bernhard Kreuz - Initial contribution
  */
 public class Home implements Serializable {
 
     private String id;
-    private List<Module> modules = new ArrayList<Module>();
-    private List<Room> rooms = new ArrayList<Room>();
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private List<Module> modules = new ArrayList<>();
+    private List<Room> rooms = new ArrayList<>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = -330826367376419729L;
 
     /**
      * No args constructor for use in serialization
      * 
      */
-    public Home() {
-    }
+    // public Home() {
+    // }
 
     /**
      * 

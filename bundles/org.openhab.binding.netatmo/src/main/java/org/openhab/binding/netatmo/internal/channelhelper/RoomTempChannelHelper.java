@@ -12,16 +12,13 @@
  */
 package org.openhab.binding.netatmo.internal.channelhelper;
 
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
-import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toDateTimeType;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_ROOM_TEMPERATURE;
 import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toQuantityType;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureClass;
 import org.openhab.binding.netatmo.internal.api.dto.NARoom;
-import org.openhab.binding.netatmo.internal.api.dto.NAThermMeasure;
-import org.openhab.binding.netatmo.internal.api.dto.NAThermostat;
 import org.openhab.binding.netatmo.internal.api.dto.NAThing;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Thing;
@@ -38,14 +35,12 @@ import org.openhab.core.types.State;
 public class RoomTempChannelHelper extends AbstractChannelHelper {
 
     public RoomTempChannelHelper(Thing thing, TimeZoneProvider timeZoneProvider) {
-        super(thing, timeZoneProvider, GROUP_TH_TEMPERATURE);
+        super(thing, timeZoneProvider, GROUP_ROOM_TEMPERATURE);
     }
 
     @Override
     protected @Nullable State internalGetProperty(NAThing naThing, String channelId) {
         NARoom room = (NARoom) naThing;
-        return toQuantityType(room.getTherm_measured_temperature(), MeasureClass.INTERIOR_TEMPERATURE);
-
-
+        return toQuantityType(room.getThermMeasuredTemperature(), MeasureClass.INTERIOR_TEMPERATURE);
     }
 }

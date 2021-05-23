@@ -12,6 +12,11 @@
  */
 package org.openhab.binding.netatmo.internal;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.api.NADynamicObjectMapDeserializer;
 import org.openhab.binding.netatmo.internal.api.NAObjectMapDeserializer;
@@ -21,11 +26,6 @@ import org.openhab.binding.netatmo.internal.webhook.NAPushType;
 import org.openhab.binding.netatmo.internal.webhook.NAPushTypeDeserializer;
 import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.library.types.OpenClosedType;
-
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
 
 /**
  * The {@link NetatmoBinding} class defines common constants, which are used
@@ -83,6 +83,8 @@ public class NetatmoBindingConstants {
     public static final String GROUP_WELCOME_EVENT = "welcome-event";
     public static final String GROUP_PERSON = "person";
     public static final String GROUP_PERSON_EVENT = "person-event";
+    public static final String GROUP_ROOM_TEMPERATURE = "room-temperature";
+    public static final String GROUP_ROOM_PROPERTIES = "room-properties";
     public static final String GROUP_TH_PROPERTIES = "th-properties";
     public static final String GROUP_TH_SETPOINT = "setpoint";
     public static final String GROUP_TH_TEMPERATURE = "th-temperature";
@@ -115,10 +117,14 @@ public class NetatmoBindingConstants {
     public static final String CHANNEL_CONNECTED_BOILER = "connected";
     public static final String CHANNEL_LAST_BILAN = "last-bilan";
     public static final String CHANNEL_SETPOINT_MODE = "mode";
+    public static final String CHANNEL_SETPOINT_START_TIME = "start";
     public static final String CHANNEL_SETPOINT_END_TIME = "end";
     public static final String CHANNEL_THERM_RELAY = "relay-status";
     public static final String CHANNEL_THERM_ORIENTATION = "orientation";
     public static final String CHANNEL_THERM_ANTICIPATING = "anticipating";
+    public static final String CHANNEL_ROOM_ANTICIPATING = "anticipating";
+    public static final String CHANNEL_ROOM_WINDOW_OPEN = "window-open";
+    public static final String CHANNEL_ROOM_HEATING_POWER = "heating-power-request";
     public static final String CHANNEL_PLANNING = "planning";
     public static final String CHANNEL_HOME_CITY = "city";
     public static final String CHANNEL_HOME_COUNTRY = "country";

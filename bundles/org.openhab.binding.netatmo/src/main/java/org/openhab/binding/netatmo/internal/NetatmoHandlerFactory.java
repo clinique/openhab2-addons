@@ -26,7 +26,6 @@ import org.openhab.binding.netatmo.internal.api.ModuleType;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.SignalHelper;
-import org.openhab.binding.netatmo.internal.handler.HomeEnergyHandler;
 import org.openhab.binding.netatmo.internal.handler.HomeSecurityHandler;
 import org.openhab.binding.netatmo.internal.handler.RoomHandler;
 import org.openhab.binding.netatmo.internal.webhook.NetatmoServlet;
@@ -90,7 +89,7 @@ public class NetatmoHandlerFactory extends BaseThingHandlerFactory {
                 if (handler instanceof HomeSecurityHandler) {
                     ((HomeSecurityHandler) handler).setWebHookServlet(webhookServlet);
                 } else if (handler instanceof RoomHandler) {
-              //      ((RoomHandler) handler)
+                    // ((RoomHandler) handler)
                 }
                 return handler;
             }

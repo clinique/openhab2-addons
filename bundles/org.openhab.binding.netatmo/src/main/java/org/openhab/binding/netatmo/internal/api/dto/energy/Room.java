@@ -15,20 +15,23 @@ package org.openhab.binding.netatmo.internal.api.dto.energy;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * @author Bernhard Kreuz - Initial contribution
  */
 public class Room implements Serializable {
 
-    private Boolean anticipating;
-    private Integer heatingPowerRequest;
+    private boolean anticipating;
+    private int heatingPowerRequest;
     private String id;
-    private Boolean openWindow;
-    private Boolean reachable;
-    private Double thermMeasuredTemperature;
+    private boolean openWindow;
+    private boolean reachable;
+    private double thermMeasuredTemperature;
     private String thermSetpointMode;
-    private Integer thermSetpointTemperature;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private double thermSetpointTemperature;
+    private long thermSetpointStartTime;
+    private long thermSetpointEndTime = -1;
+    private Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = -4756273979865765465L;
 
     /**
@@ -48,9 +51,12 @@ public class Room implements Serializable {
      * @param reachable
      * @param thermMeasuredTemperature
      * @param thermSetpointTemperature
+     * @param thermSetpointStartTime
+     * @param thermSetpointEndTime
      */
     public Room(Boolean anticipating, Integer heatingPowerRequest, String id, Boolean openWindow, Boolean reachable,
-            Double thermMeasuredTemperature, String thermSetpointMode, Integer thermSetpointTemperature) {
+            Double thermMeasuredTemperature, String thermSetpointMode, Integer thermSetpointTemperature,
+            long thermSetpointStartTime, long thermSetpointEndTime) {
         super();
         this.anticipating = anticipating;
         this.heatingPowerRequest = heatingPowerRequest;
@@ -60,6 +66,8 @@ public class Room implements Serializable {
         this.thermMeasuredTemperature = thermMeasuredTemperature;
         this.thermSetpointMode = thermSetpointMode;
         this.thermSetpointTemperature = thermSetpointTemperature;
+        this.thermSetpointStartTime = thermSetpointStartTime;
+        this.thermSetpointEndTime = thermSetpointEndTime;
     }
 
     public Boolean getAnticipating() {
@@ -153,17 +161,25 @@ public class Room implements Serializable {
         return this;
     }
 
-    public Integer getThermSetpointTemperature() {
+    public Double getThermSetpointTemperature() {
         return thermSetpointTemperature;
     }
 
-    public void setThermSetpointTemperature(Integer thermSetpointTemperature) {
+    public void setThermSetpointTemperature(Double thermSetpointTemperature) {
         this.thermSetpointTemperature = thermSetpointTemperature;
     }
 
     public Room withThermSetpointTemperature(Integer thermSetpointTemperature) {
         this.thermSetpointTemperature = thermSetpointTemperature;
         return this;
+    }
+
+    public long getThermSetpointStartTime() {
+        return thermSetpointStartTime;
+    }
+
+    public long getThermSetpointEndTime() {
+        return thermSetpointEndTime;
     }
 
     public Map<String, Object> getAdditionalProperties() {

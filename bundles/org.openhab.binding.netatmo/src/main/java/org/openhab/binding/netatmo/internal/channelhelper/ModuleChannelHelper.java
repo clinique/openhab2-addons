@@ -12,6 +12,9 @@
  */
 package org.openhab.binding.netatmo.internal.channelhelper;
 
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_LAST_SEEN;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_MODULE;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.dto.NAModule;
@@ -22,9 +25,6 @@ import org.openhab.core.thing.Thing;
 import org.openhab.core.types.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_LAST_SEEN;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_MODULE;
 
 /**
  * The {@link ModuleChannelHelper} handle specific behavior
@@ -44,7 +44,7 @@ public class ModuleChannelHelper extends AbstractChannelHelper {
     @Override
     protected @Nullable State internalGetProperty(NAThing naThing, String channelId) {
         NAModule module = (NAModule) naThing;
-        logger.debug("internalGetProperty: {}",module.getName());
+        logger.debug("internalGetProperty: {}", module.getName());
         return CHANNEL_LAST_SEEN.equals(channelId)
                 ? ChannelTypeUtils.toDateTimeType(Math.max(module.getLastSeen(), module.getLastMessage()), zoneId)
                 : null;
