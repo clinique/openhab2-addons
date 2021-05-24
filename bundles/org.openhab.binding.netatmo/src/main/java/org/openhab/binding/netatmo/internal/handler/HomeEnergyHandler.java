@@ -58,8 +58,8 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
 
     @Override
     protected NAHome updateReadings() throws NetatmoException {
-        home = apiBridge.getHomeApi().getHomesData(config.id);
-        Homestatus status = apiBridge.getHomeApi().getHomeStatus(home.getId());
+        home = apiBridge.getEnergyApi().getHomesData(config.id);
+        Homestatus status = apiBridge.getEnergyApi().getHomeStatus(home.getId());
         for (Room room : status.getBody().getHome().getRooms()) {
             NARoom naRoom = home.getRoom(room.getId());
             naRoom.setAnticipating(room.getAnticipating());

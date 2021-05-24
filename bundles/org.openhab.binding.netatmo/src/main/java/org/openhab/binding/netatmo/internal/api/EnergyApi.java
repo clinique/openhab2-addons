@@ -12,11 +12,16 @@
  */
 package org.openhab.binding.netatmo.internal.api;
 
+import java.util.List;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.dto.NADeviceDataBody;
 import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
+import org.openhab.binding.netatmo.internal.api.dto.NAHome;
+import org.openhab.binding.netatmo.internal.api.dto.NAHomeData;
+import org.openhab.binding.netatmo.internal.api.dto.energy.Homestatus;
 
 /**
  *
@@ -27,18 +32,42 @@ import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
 @NonNullByDefault
 public class EnergyApi extends RestManager {
     public static final String URL_HOMESTATUS = "homestatus";
+    public static final String URL_HOMESDATA = "homesdata";
+
     public static final String URL_THERMOSTAT = "getthermostatsdata";
 
     private class NAThermostatDataResponse extends ApiResponse<NADeviceDataBody<NAPlug>> {
     }
 
-    // private class NAValveDataResponse extends ApiResponse<NADeviceDataBody<NRV>> {
-    // }
-
     public EnergyApi(ApiBridge apiClient) {
         super(apiClient, NetatmoConstants.ALL_SCOPES);
     }
 
+    public class NAHomesDataResponse extends ApiResponse<NAHomeData> {
+    }
+
+    public List<NAHome> getHomeList(@Nullable ModuleType type) throws NetatmoException {
+        String req = URL_HOMESDATA;
+        if (type != null) {
+            req += "?gateway_types=" + type.name();
+        }
+        NAHomesDataResponse response = get(req, NAHomesDataResponse.class);
+        return response.getBody().getHomes();
+    }
+
+    public NAHome getHomesData(String homeId) throws NetatmoException {
+        String req = URL_HOMESDATA + "?home_id=" + homeId + "&gateway_types=NAPlug";
+        NAHomesDataResponse response = get(req, NAHomesDataResponse.class);
+        return response.getBody().getHomes().get(0);
+    }
+
+    public Homestatus getHomeStatus(String homeId) throws NetatmoException {
+        String req = URL_HOMESTATUS + "?home_id=" + homeId + "&device_types=NAPlug&device_types=NATherm&device_types=NRV";
+        Homestatus response = get(req, Homestatus.class);
+        return response;
+    }
+
+    // -- deprecated 
     private NAThermostatDataResponse getThermostatsData(@Nullable String equipmentId) throws NetatmoException {
         String req = URL_THERMOSTAT;
         if (equipmentId != null) {
@@ -46,15 +75,6 @@ public class EnergyApi extends RestManager {
         }
         return get(req, NAThermostatDataResponse.class);
     }
-
-    // private NAValveDataResponse getValvesData(@Nullable String equipmentId, @Nullable ThingUID thingUID)
-    //         throws NetatmoException {
-
-    //     String req = URL_HOMESTATUS + "?home_id=" + thingUID.getId() + "&device_types=NRV";
-
-    //     Homestatus homestatus = get(req, Homestatus.class);
-    //     return new NAValveDataResponse();
-    // }
 
     public NADeviceDataBody<NAPlug> getThermostatsDataBody(@Nullable String equipmentId) throws NetatmoException {
         return getThermostatsData(equipmentId).getBody();

@@ -66,19 +66,22 @@ public class RoomSetpointChannelHelper extends AbstractChannelHelper {
     }
 
     private State getCurrentSetpoint(NARoom room) {
-        SetpointMode currentMode = SetpointMode.valueOf(room.getThermSetpointMode().toUpperCase());
-        // NAThermProgram currentProgram = room.getActiveProgram();
-        switch (currentMode) {
-            case AWAY:
-            case MANUAL:
-            case SCHEDULE:
-            case FROST_GUARD:
-            case PROGRAM:
-                return toQuantityType(room.getThermSetpointTemperature(), MeasureClass.INTERIOR_TEMPERATURE);
-            case OFF:
-            case MAX:
-            case UNKNOWN:
-                return UnDefType.UNDEF;
+        String thermSetPoint = room.getThermSetpointMode();
+        if (thermSetPoint != null) {
+            SetpointMode currentMode = SetpointMode.valueOf(thermSetPoint.toUpperCase());
+            // NAThermProgram currentProgram = room.getActiveProgram();
+            switch (currentMode) {
+                case AWAY:
+                case MANUAL:
+                case SCHEDULE:
+                case FROST_GUARD:
+                case PROGRAM:
+                    return toQuantityType(room.getThermSetpointTemperature(), MeasureClass.INTERIOR_TEMPERATURE);
+                case OFF:
+                case MAX:
+                case UNKNOWN:
+                    return UnDefType.UNDEF;
+            }
         }
         return UnDefType.NULL;
     }

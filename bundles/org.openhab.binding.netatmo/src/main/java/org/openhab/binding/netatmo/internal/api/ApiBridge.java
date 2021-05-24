@@ -145,8 +145,16 @@ public class ApiBridge {
         return Optional.ofNullable(getRestManager(WeatherApi.class));
     }
 
-    public Optional<EnergyApi> getEnergyApi() {
-        return Optional.ofNullable(getRestManager(EnergyApi.class));
+    // public Optional<EnergyApi> getEnergyApi() {
+    //     return Optional.ofNullable(getRestManager(EnergyApi.class));
+    // }
+    public EnergyApi getEnergyApi() {
+        EnergyApi energyApi = (EnergyApi) managers.get(EnergyApi.class);
+        if (energyApi == null) {
+            energyApi = new EnergyApi(this);
+            managers.put(EnergyApi.class, energyApi);
+        }
+        return energyApi;
     }
 
     public Optional<AircareApi> getAirCareApi() {

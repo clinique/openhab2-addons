@@ -108,7 +108,7 @@ public enum ModuleType {
             List.of(GROUP_TH_PROPERTIES, GROUP_TH_SETPOINT, GROUP_TH_TEMPERATURE, GROUP_MODULE, GROUP_SIGNAL,
                     GROUP_BATTERY),
             NAThermostat.class),
-    NARoom(RoomHandler.class, RefreshPolicy.PARENT, NAHomeEnergy, null,
+    NARoom(RoomHandler.class, RefreshPolicy.CONFIG, NAHomeEnergy, null,
             Set.of(RoomPropsChannelHelper.class, RoomTempChannelHelper.class, RoomSetpointChannelHelper.class),
             List.of(GROUP_ROOM_PROPERTIES, GROUP_TH_SETPOINT, GROUP_ROOM_TEMPERATURE), NARoom.class),
     NRV(NRVHandler.class, RefreshPolicy.AUTO, NAHomeEnergy, null,
@@ -144,7 +144,6 @@ public enum ModuleType {
         this.groups = groups;
         this.refreshPeriod = refreshPeriod;
         this.extensions = extensions;
-        this.refreshPeriod = refreshPeriod;
         this.channelHelpers = setOfHelpers;
         this.bridgeThingType = bridge != null ? bridge.thingTypeUID : null;
         this.dto = dto;
