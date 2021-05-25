@@ -83,16 +83,6 @@ public class NetatmoConstants {
     public static final String NETATMO_BASE_URL = "https://api.netatmo.com/";
     public static final String NETATMO_APP_URL = "https://app.netatmo.net/";
 
-    // Units of measurement of the data delivered by the API
-    // public static final Unit<Temperature> TEMPERATURE_UNIT = SIUnits.CELSIUS;
-    // public static final Unit<Dimensionless> HUMIDITY_UNIT = Units.PERCENT;
-    // public static final Unit<Pressure> PRESSURE_UNIT = HECTO(SIUnits.PASCAL);
-    // public static final Unit<Speed> WIND_SPEED_UNIT = SIUnits.KILOMETRE_PER_HOUR;
-    // public static final Unit<Angle> WIND_DIRECTION_UNIT = Units.DEGREE_ANGLE;
-    // public static final Unit<Length> RAIN_UNIT = MILLI(SIUnits.METRE);
-    // public static final Unit<Dimensionless> CO2_UNIT = Units.PARTS_PER_MILLION;
-    // public static final Unit<Dimensionless> NOISE_UNIT = Units.DECIBEL;
-
     public enum MeasureType {
         SUM_RAIN,
         @SerializedName("Temperature")
@@ -144,9 +134,6 @@ public class NetatmoConstants {
     }
 
     // Default unit associated with each kind of measurement
-    // public static final Map<MeasureType, Unit<?>> MEASUREUNITS = Map.of(MeasureType.SUM_RAIN, RAIN_UNIT,
-    // MeasureType.TEMP, TEMPERATURE_UNIT, MeasureType.HUM, HUMIDITY_UNIT, MeasureType.CO2, CO2_UNIT,
-    // MeasureType.NOISE, NOISE_UNIT, MeasureType.PRESSURE, PRESSURE_UNIT, MeasureType.WIND, WIND_SPEED_UNIT);
     public static final Map<MeasureType, MeasureClass> MEASUREUNITS = Map.of(MeasureType.SUM_RAIN,
             MeasureClass.RAIN_QTTY, MeasureType.TEMP, MeasureClass.EXTERIOR_TEMPERATURE, MeasureType.HUM,
             MeasureClass.HUMIDITY, MeasureType.CO2, MeasureClass.CO2, MeasureType.NOISE, MeasureClass.NOISE,
@@ -199,7 +186,7 @@ public class NetatmoConstants {
 
     // Radio signal quality thresholds
     private static final int[] EMPTY_INT_ARRAY = new int[0];
-    public static final int[] WIFI_SIGNAL_LEVELS = new int[] { 86, 71, 56 }; // Resp : bad, average, good
+    public static final int[] WIFI_SIGNAL_LEVELS = new int[] { 99, 84, 69, 54 }; // Resp : bad, average, good, full
     public static final int[] RADIO_SIGNAL_LEVELS = new int[] { 90, 80, 70, 60 }; // Resp : low, medium, high, full
     public static final int[] NO_RADIO = EMPTY_INT_ARRAY;
 

@@ -68,7 +68,7 @@ public class PersonHandler extends NetatmoDeviceHandler {
         HomeSecurityHandler homeHandler = getHomeHandler();
         if (homeHandler != null) {
             List<NAHomeEvent> lastEvents = homeHandler.getLastEventOf(config.id);
-            if (lastEvents.size() > 0) {
+            if (!lastEvents.isEmpty()) {
                 setEvent(lastEvents.get(0));
             }
         }
