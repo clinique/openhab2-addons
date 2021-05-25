@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.netatmo.internal;
 
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.SERVICE_PID;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -74,7 +74,12 @@ public class NetatmoHandlerFactory extends BaseThingHandlerFactory {
 
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
-        return (thingTypeUID.getBindingId().equals(BINDING_ID));
+        for (ModuleType moduleType : ModuleType.values()) {
+            if (moduleType.matches(thingTypeUID)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

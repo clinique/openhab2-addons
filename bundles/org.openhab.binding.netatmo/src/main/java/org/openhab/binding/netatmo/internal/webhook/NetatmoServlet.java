@@ -87,7 +87,7 @@ public class NetatmoServlet extends HttpServlet {
     }
 
     @Modified
-    protected void modified(Map<String, Object> config) {
+    protected void modified(Map<@Nullable String, @Nullable Object> config) {
         NetatmoBindingConfiguration configuration = new Configuration(config).as(NetatmoBindingConfiguration.class);
         SecurityApi localApi = api;
         String url = configuration.webHookUrl;

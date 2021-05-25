@@ -190,8 +190,9 @@ public class NetatmoConstants {
     public static final Set<Scope> PRESENCE_SCOPES = Set.of(Scope.READ_PRESENCE, Scope.ACCESS_PRESENCE);
     public static final Set<Scope> SMOKE_SCOPES = Set.of(Scope.READ_SMOKEDETECTOR);
     public static final Set<Scope> AIR_QUALITY_SCOPES = Set.of(Scope.READ_HOMECOACH);
-    public static final Set<Scope> SECURITY_SCOPES = Stream.of(WELCOME_SCOPES, PRESENCE_SCOPES, SMOKE_SCOPES)
-            .flatMap(Set::stream).collect(Collectors.toSet());
+    public static final Set<Scope> SECURITY_SCOPES = Stream
+            .of(WELCOME_SCOPES, PRESENCE_SCOPES, SMOKE_SCOPES, DOORBELL_SCOPES).flatMap(Set::stream)
+            .collect(Collectors.toSet());
     public static final Set<Scope> ALL_SCOPES = Stream
             .of(WEATHER_SCOPES, ENERGY_SCOPES, SECURITY_SCOPES, AIR_QUALITY_SCOPES).flatMap(Set::stream)
             .collect(Collectors.toSet());

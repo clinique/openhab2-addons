@@ -79,14 +79,14 @@ public enum ModuleType {
             List.of(GROUP_WELCOME, GROUP_WELCOME_EVENT, GROUP_PRESENCE), NAWelcome.class),
 
     // Weather group
-    NAMain(MainHandler.class, RefreshPolicy.AUTO, null, List.of("measure", "measure-timestamp"),
+    NAMain(MainHandler.class, RefreshPolicy.AUTO, null, MEASURE_EXTENSIONS,
             Set.of(PressureChannelHelper.class, NoiseChannelHelper.class, HumidityChannelHelper.class,
                     TemperatureChannelHelper.class, Co2ChannelHelper.class, DeviceChannelHelper.class,
                     MeasuresChannelHelper.class),
             List.of(GROUP_TEMPERATURE, GROUP_HUMIDITY, GROUP_CO2, GROUP_NOISE, GROUP_PRESSURE, GROUP_DEVICE,
                     GROUP_SIGNAL),
             NAThing.class),
-    NAModule1(NetatmoDeviceHandler.class, RefreshPolicy.PARENT, NAMain, List.of("measure", "measure-timestamp"),
+    NAModule1(NetatmoDeviceHandler.class, RefreshPolicy.PARENT, NAMain, MEASURE_EXTENSIONS,
             Set.of(HumidityChannelHelper.class, TemperatureChannelHelper.class, BatteryHelper.class,
                     ModuleChannelHelper.class, MeasuresChannelHelper.class),
             List.of(GROUP_TEMPERATURE, GROUP_HUMIDITY, GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY), NAModule.class),
@@ -97,14 +97,14 @@ public enum ModuleType {
             Set.of(RainChannelHelper.class, BatteryHelper.class, ModuleChannelHelper.class,
                     MeasuresChannelHelper.class),
             List.of(GROUP_RAIN, GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY), NAModule.class),
-    NAModule4(NetatmoDeviceHandler.class, RefreshPolicy.PARENT, NAMain, List.of("measure", "measure-timestamp"),
+    NAModule4(NetatmoDeviceHandler.class, RefreshPolicy.PARENT, NAMain, MEASURE_EXTENSIONS,
             Set.of(HumidityChannelHelper.class, TemperatureChannelHelper.class, Co2ChannelHelper.class,
                     BatteryHelper.class, ModuleChannelHelper.class, MeasuresChannelHelper.class),
             List.of(GROUP_TEMPERATURE, GROUP_HUMIDITY, GROUP_CO2, GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY),
             NAModule.class),
 
     // Aircare group
-    NHC(HomeCoachHandler.class, RefreshPolicy.AUTO, null, List.of("measure", "measure-timestamp"),
+    NHC(HomeCoachHandler.class, RefreshPolicy.AUTO, null, MEASURE_EXTENSIONS,
             Set.of(NoiseChannelHelper.class, HumidityChannelHelper.class, PressureChannelHelper.class,
                     TemperatureChannelHelper.class, Co2ChannelHelper.class, HomeCoachChannelHelper.class,
                     DeviceChannelHelper.class, MeasuresChannelHelper.class),
@@ -130,7 +130,7 @@ public enum ModuleType {
     // NACamDoorTag : self explaining
     // NSD : smoke detector
     // NIS : indoor siren
-    // NDB : doobell
+    // NDB : doorbell
     ;
 
     public enum RefreshPolicy {

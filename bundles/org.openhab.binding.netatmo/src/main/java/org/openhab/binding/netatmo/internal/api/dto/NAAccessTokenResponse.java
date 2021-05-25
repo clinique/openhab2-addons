@@ -74,10 +74,6 @@ public final class NAAccessTokenResponse implements Serializable, Cloneable {
         return expiresIn;
     }
 
-    public void setExpiresIn(long expiresIn) {
-        this.expiresIn = expiresIn;
-    }
-
     public String getRefreshToken() {
         return refreshToken;
     }

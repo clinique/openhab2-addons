@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.JsonSyntaxException;
 
 /**
- * The {@link ApiBridge} allows the communication to the various Husqvarna rest apis like the
+ * The {@link ApiBridge} allows the communication to the various Netatmo rest APIs like the
  * AutomowerConnectApi or the AuthenticationApi
  *
  * @author Gaël L'hopital - Initial contribution
@@ -90,7 +90,7 @@ public class ApiBridge {
     }
 
     @Modified
-    protected void modified(Map<String, Object> config) {
+    protected void modified(Map<@Nullable String, @Nullable Object> config) {
         configuration.update(new Configuration(config).as(NetatmoBindingConfiguration.class));
         logger.debug("Updated binding configuration to {}", configuration);
         testConnection();
