@@ -90,6 +90,7 @@ public class NetatmoBindingConstants {
     public static final String GROUP_TH_PROPERTIES = "th-properties";
     public static final String GROUP_TH_SETPOINT = "setpoint";
     public static final String GROUP_TH_TEMPERATURE = "th-temperature";
+
     // Channel ids
     public static final String CHANNEL_VALUE = "value";
     public static final String CHANNEL_TREND = "trend";
@@ -153,6 +154,7 @@ public class NetatmoBindingConstants {
     public static final String CHANNEL_HOME_EVENT = "home-event";
     public static final String CHANNEL_CAMERA_EVENT = "camera-event";
     public static final String CHANNEL_SETPOINT_DURATION = "setpoint-duration";
+
     // Presence outdoor camera specific channels
     public static final String CHANNEL_CAMERA_FLOODLIGHT_AUTO_MODE = "auto-mode";
     public static final String CHANNEL_CAMERA_FLOODLIGHT = "floodlight";

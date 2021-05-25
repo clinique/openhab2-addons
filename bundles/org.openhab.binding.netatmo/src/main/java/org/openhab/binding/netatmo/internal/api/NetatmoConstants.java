@@ -15,6 +15,7 @@ package org.openhab.binding.netatmo.internal.api;
 import static org.openhab.core.library.unit.MetricPrefix.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -169,14 +170,14 @@ public class NetatmoConstants {
         ACCESS_DOORBELL;
     }
 
-    public static final Set<Scope> WEATHER_SCOPES = Set.of(Scope.READ_STATION);
+    public static final Set<Scope> WEATHER_SCOPES = Collections.singleton(Scope.READ_STATION);
+    public static final Set<Scope> SMOKE_SCOPES = Collections.singleton(Scope.READ_SMOKEDETECTOR);
+    public static final Set<Scope> AIR_QUALITY_SCOPES = Collections.singleton(Scope.READ_HOMECOACH);
     public static final Set<Scope> ENERGY_SCOPES = Set.of(Scope.READ_THERMOSTAT, Scope.WRITE_THERMOSTAT);
     public static final Set<Scope> WELCOME_SCOPES = Set.of(Scope.READ_CAMERA, Scope.WRITE_CAMERA, Scope.ACCESS_CAMERA);
     public static final Set<Scope> DOORBELL_SCOPES = Set.of(Scope.READ_DOORBELL, Scope.WRITE_DOORBELL,
             Scope.ACCESS_DOORBELL);
     public static final Set<Scope> PRESENCE_SCOPES = Set.of(Scope.READ_PRESENCE, Scope.ACCESS_PRESENCE);
-    public static final Set<Scope> SMOKE_SCOPES = Set.of(Scope.READ_SMOKEDETECTOR);
-    public static final Set<Scope> AIR_QUALITY_SCOPES = Set.of(Scope.READ_HOMECOACH);
     public static final Set<Scope> SECURITY_SCOPES = Stream
             .of(WELCOME_SCOPES, PRESENCE_SCOPES, SMOKE_SCOPES, DOORBELL_SCOPES).flatMap(Set::stream)
             .collect(Collectors.toSet());
@@ -185,10 +186,9 @@ public class NetatmoConstants {
             .collect(Collectors.toSet());
 
     // Radio signal quality thresholds
-    private static final int[] EMPTY_INT_ARRAY = new int[0];
     public static final int[] WIFI_SIGNAL_LEVELS = new int[] { 99, 84, 69, 54 }; // Resp : bad, average, good, full
     public static final int[] RADIO_SIGNAL_LEVELS = new int[] { 90, 80, 70, 60 }; // Resp : low, medium, high, full
-    public static final int[] NO_RADIO = EMPTY_INT_ARRAY;
+    public static final int[] NO_RADIO = new int[0]; // No radio => no levels
 
     // Thermostat definitions
     public static enum SetpointMode {
