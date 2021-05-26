@@ -44,7 +44,7 @@ import org.openhab.core.types.StateOption;
 @NonNullByDefault
 public class HomeEnergyHandler extends NetatmoDeviceHandler {
 
-    private int setpointDefaultDuration;
+//    private int setpointDefaultDuration;
     private NAHome home = new NAHome();
 
     public HomeEnergyHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
@@ -74,13 +74,13 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
         ChannelUID channelUID = new ChannelUID(getThing().getUID(), GROUP_HOME_ENERGY, CHANNEL_PLANNING);
         descriptionProvider.setStateOptions(channelUID, home.getThermSchedules().stream()
                 .map(p -> new StateOption(p.getId(), p.getName())).collect(Collectors.toList()));
-        setpointDefaultDuration = home.getThermSetpointDefaultDuration();
+//        setpointDefaultDuration = home.getThermSetpointDefaultDuration();
         return home;
     }
 
-    public int getSetpointDefaultDuration() {
-        return setpointDefaultDuration;
-    }
+    // public int getSetpointDefaultDuration() {
+    //     return setpointDefaultDuration;
+    // }
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {

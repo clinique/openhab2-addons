@@ -91,6 +91,14 @@
 				<label>Planning</label>
 				<description>Heat planning currently used</description>
 			</channel>
+			<channel id="mode" typeId="string-ro">
+				<label>Mode</label>
+				<description>Current mode (eg. frost-guard or away)</description>
+			</channel>
+			<channel id="end" typeId="timestamp">
+				<label>Mode End</label>
+				<description>Timestamp until current mode is active</description>
+			</channel>
 		</channels>
 	</channel-group-type>
 

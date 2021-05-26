@@ -33,18 +33,23 @@ import org.openhab.core.library.types.PointType;
 public class NAHome extends NADevice {
     private @Nullable NAObjectMap<NAPerson> persons;
     private List<NAHomeEvent> events = List.of();
-    private List<NAThermProgram> thermSchedules = List.of();
+    private List<NAThermProgram> schedules = List.of();
     private List<NAWelcome> cameras = List.of();
 
     private List<NARoom> rooms = List.of();
     //    private @Nullable NAObjectMap<NARoom> rooms;
+    private String thermMode = "";
     private int thermSetpointDefaultDuration;
     @SerializedName("coordinates")
     private double[] location = {};
     private double altitude;
 
     public List<NAThermProgram> getThermSchedules() {
-        return thermSchedules;
+        return schedules;
+    }
+
+    public @Nullable NAThermProgram getActiveProgram() {
+        return schedules.stream().filter(NAThermProgram::isSelected).findFirst().orElse(null);
     }
 
     // public void setRooms(NAObjectMap<NARoom> rooms) {
@@ -60,6 +65,10 @@ public class NAHome extends NADevice {
             return new PointType(new DecimalType(location[1]), new DecimalType(location[0]), new DecimalType(altitude));
         }
         return null;
+    }
+
+    public @Nullable String getThermMode() {
+        return thermMode;
     }
 
     public @Nullable NAObjectMap<NAPerson> getPersons() {

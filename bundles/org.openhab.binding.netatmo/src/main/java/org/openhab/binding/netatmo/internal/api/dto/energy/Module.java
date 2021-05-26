@@ -21,20 +21,14 @@ import java.util.Map;
  */
 public class Module implements Serializable {
 
-    private Boolean boilerCable;
     private Integer firmwareRevision;
-    private Integer hardwareVersion;
     private String id;
     private Integer rfStrength;
     private String type;
     private Integer wifiStrength;
-    private Boolean anticipating;
-    private Integer batteryLevel;
-    private Boolean boilerStatus;
-    private Boolean boilerValveComfortBoost;
-    private Boolean reachable;
-    private String bridge;
     private String batteryState;
+    private String bridge;
+    private Boolean reachable;
     private Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = 1685165670279602787L;
 
@@ -48,52 +42,28 @@ public class Module implements Serializable {
     /**
      * 
      * @param wifiStrength
-     * @param boilerValveComfortBoost
      * @param type
      * @param rfStrength
      * @param reachable
-     * @param boilerCable
      * @param batteryState
-     * @param boilerStatus
-     * @param hardwareVersion
      * @param id
      * @param bridge
-     * @param anticipating
      * @param firmwareRevision
-     * @param batteryLevel
      */
-    public Module(Boolean boilerCable, Integer firmwareRevision, Integer hardwareVersion, String id, Integer rfStrength,
-            String type, Integer wifiStrength, Boolean anticipating, Integer batteryLevel, Boolean boilerStatus,
-            Boolean boilerValveComfortBoost, Boolean reachable, String bridge, String batteryState) {
+    public Module(Integer firmwareRevision, String id, Integer rfStrength,
+            String type, Integer wifiStrength, 
+            Boolean reachable, String bridge, String batteryState) {
         super();
-        this.boilerCable = boilerCable;
         this.firmwareRevision = firmwareRevision;
-        this.hardwareVersion = hardwareVersion;
         this.id = id;
         this.rfStrength = rfStrength;
         this.type = type;
         this.wifiStrength = wifiStrength;
-        this.anticipating = anticipating;
-        this.batteryLevel = batteryLevel;
-        this.boilerStatus = boilerStatus;
-        this.boilerValveComfortBoost = boilerValveComfortBoost;
         this.reachable = reachable;
         this.bridge = bridge;
         this.batteryState = batteryState;
     }
 
-    public Boolean getBoilerCable() {
-        return boilerCable;
-    }
-
-    public void setBoilerCable(Boolean boilerCable) {
-        this.boilerCable = boilerCable;
-    }
-
-    public Module withBoilerCable(Boolean boilerCable) {
-        this.boilerCable = boilerCable;
-        return this;
-    }
 
     public Integer getFirmwareRevision() {
         return firmwareRevision;
@@ -105,19 +75,6 @@ public class Module implements Serializable {
 
     public Module withFirmwareRevision(Integer firmwareRevision) {
         this.firmwareRevision = firmwareRevision;
-        return this;
-    }
-
-    public Integer getHardwareVersion() {
-        return hardwareVersion;
-    }
-
-    public void setHardwareVersion(Integer hardwareVersion) {
-        this.hardwareVersion = hardwareVersion;
-    }
-
-    public Module withHardwareVersion(Integer hardwareVersion) {
-        this.hardwareVersion = hardwareVersion;
         return this;
     }
 
@@ -170,58 +127,6 @@ public class Module implements Serializable {
 
     public Module withWifiStrength(Integer wifiStrength) {
         this.wifiStrength = wifiStrength;
-        return this;
-    }
-
-    public Boolean getAnticipating() {
-        return anticipating;
-    }
-
-    public void setAnticipating(Boolean anticipating) {
-        this.anticipating = anticipating;
-    }
-
-    public Module withAnticipating(Boolean anticipating) {
-        this.anticipating = anticipating;
-        return this;
-    }
-
-    public Integer getBatteryLevel() {
-        return batteryLevel;
-    }
-
-    public void setBatteryLevel(Integer batteryLevel) {
-        this.batteryLevel = batteryLevel;
-    }
-
-    public Module withBatteryLevel(Integer batteryLevel) {
-        this.batteryLevel = batteryLevel;
-        return this;
-    }
-
-    public Boolean getBoilerStatus() {
-        return boilerStatus;
-    }
-
-    public void setBoilerStatus(Boolean boilerStatus) {
-        this.boilerStatus = boilerStatus;
-    }
-
-    public Module withBoilerStatus(Boolean boilerStatus) {
-        this.boilerStatus = boilerStatus;
-        return this;
-    }
-
-    public Boolean getBoilerValveComfortBoost() {
-        return boilerValveComfortBoost;
-    }
-
-    public void setBoilerValveComfortBoost(Boolean boilerValveComfortBoost) {
-        this.boilerValveComfortBoost = boilerValveComfortBoost;
-    }
-
-    public Module withBoilerValveComfortBoost(Boolean boilerValveComfortBoost) {
-        this.boilerValveComfortBoost = boilerValveComfortBoost;
         return this;
     }
 

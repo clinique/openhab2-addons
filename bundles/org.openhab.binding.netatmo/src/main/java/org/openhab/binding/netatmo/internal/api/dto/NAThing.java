@@ -14,12 +14,12 @@ package org.openhab.binding.netatmo.internal.api.dto;
 
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.ModuleType;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureType;
-
-import com.google.gson.annotations.SerializedName;
 
 /**
  *
@@ -33,6 +33,7 @@ public class NAThing extends NAObject {
     private int radioStatus;
     @SerializedName(value = "last_seen", alternate = { "last_therm_seen", "last_status_store", "last_plug_seen" })
     private long lastSeen;
+    private long setupDate;
     private int firmware = -1;
     private List<MeasureType> dataType = List.of();
     private @NonNullByDefault({}) ModuleType type;
@@ -73,6 +74,10 @@ public class NAThing extends NAObject {
 
     public long getLastSeen() {
         return lastSeen;
+    }
+
+    public long getSetupDate() {
+        return setupDate;
     }
 
     public @Nullable String getBridge() {

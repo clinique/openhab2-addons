@@ -15,6 +15,7 @@ package org.openhab.binding.netatmo.internal.handler;
 import static org.openhab.binding.netatmo.internal.utils.NetatmoCalendarUtils.getSetpointEndTimeFromNow;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
@@ -53,14 +54,11 @@ public class PlugHandler extends NetatmoDeviceHandler {
 
     @Override
     protected NAPlug updateReadings() throws NetatmoException {
-        EnergyApi api = apiBridge.getRestManager(EnergyApi.class);
-        if (api != null) {
-            return api.getThermostatData(config.id);
-        }
-        throw new NetatmoException("No restmanager available for Energy access");
+        return (NAPlug) Objects.requireNonNullElse(getHomeHandler().getHome().getRoom(config.id), new NAPlug());
     }
 
-    public int getSetpointDefaultDuration() {
+    // Plug can't do anything in the new API
+/*     public int getSetpointDefaultDuration() {
         HomeEnergyHandler bridgeHandler = getHomeHandler();
         return bridgeHandler != null ? bridgeHandler.getSetpointDefaultDuration() : 120;
     }
@@ -83,4 +81,4 @@ public class PlugHandler extends NetatmoDeviceHandler {
         EnergyApi api = apiBridge.getRestManager(EnergyApi.class);
         tryApiCall(() -> api != null ? api.switchschedule(config.id, moduleId, schedule) : false);
     }
-}
+ */}

@@ -56,7 +56,7 @@ public class Therm1Handler extends NetatmoDeviceHandler {
         return handler != null ? (PlugHandler) handler : null;
     }
 
-    @Override
+/*     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
         if (command instanceof RefreshType) {
             super.handleCommand(channelUID, command);
@@ -84,5 +84,5 @@ public class Therm1Handler extends NetatmoDeviceHandler {
                 }
             }
         }
-    }
+    } */
 }

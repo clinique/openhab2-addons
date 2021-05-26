@@ -21,6 +21,6 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
  */
 
 @NonNullByDefault
-public class NRV extends NAModule {
+public class NRV extends NAEnergyModule {
 
 }
