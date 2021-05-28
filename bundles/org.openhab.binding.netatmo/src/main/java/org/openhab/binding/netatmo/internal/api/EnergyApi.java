@@ -18,9 +18,9 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.dto.NADeviceDataBody;
-import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NAHomeData;
+import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
 import org.openhab.binding.netatmo.internal.api.dto.energy.Homestatus;
 
 /**
@@ -100,26 +100,47 @@ public class EnergyApi extends RestManager {
 
     /**
      *
-     * The method switchschedule switches the Thermostat&#x27;s schedule to another existing schedule.
+     * The method switchschedule switches the home&#x27;s schedule to another existing schedule.
      *
-     * @param deviceId The relay id (required)
-     * @param moduleId The thermostat id (required)
+     * @param homeId The id of home (required)
      * @param scheduleId The schedule id. It can be found in the getthermstate response, under the keys
      *            therm_program_backup and therm_program. (required)
      * @return boolean success
      * @throws NetatmoException If fail to call the API, e.g. server error or cannot deserialize the
      *             response body
      */
-    public boolean switchschedule(String deviceId, String moduleId, String scheduleId) throws NetatmoException {
-        String req = "switchschedule?device_id=%s&module_id=%s&schedule_id=%s";
-        req = String.format(req, deviceId, moduleId, scheduleId);
-        ApiOkResponse response = post(req, null, ApiOkResponse.class, true);
+    public boolean switchSchedule(String homeId, String scheduleId) throws NetatmoException {
+        String req = "switchschedule";
+        String payload = String.format("{\"home_id\":\"%s\",\"schedule_id\":\"%s\"}", homeId, scheduleId);
+        ApiOkResponse response = post(req, payload, ApiOkResponse.class, false);
         if (!response.isSuccess()) {
             throw new NetatmoException(String.format("Unsuccessfull schedule change : %s", response.getStatus()));
         }
         return true;
     }
 
+    /**
+     *
+     * This endpoint permits to control the heating of a specific home. A home can be set in 3 differents modes:
+     *  "schedule" mode in which the home will follow the user schedule
+     *  "away" mode which will put the whole house to away (default is 12° but can be changed by the user in its settings)
+     *   "hg" corresponds to frostguard mode (7° by default)
+     *
+     * @param homeId The id of home (required)
+     * @param mode The mode. (required)
+     * @return boolean success
+     * @throws NetatmoException If fail to call the API, e.g. server error or cannot deserialize the
+     *             response body
+     */
+    public boolean setthermmode(String homeId, String mode) throws NetatmoException {
+        String req = "setthermmode";
+        String payload = String.format("{\"home_id\":\"%s\",\"mode\":\"%s\"}", homeId, mode);
+        ApiOkResponse response = post(req, payload, ApiOkResponse.class, false);
+        if (!response.isSuccess()) {
+            throw new NetatmoException(String.format("Unsuccessfull schedule change : %s", response.getStatus()));
+        }
+        return true;
+    }
     /**
      *
      * The method setthermpoint changes the Thermostat manual temperature setpoint.

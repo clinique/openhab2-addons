@@ -46,7 +46,7 @@
 			<channel id="anticipating" typeId="switch-ro">
 				<label>Anticipated heating</label>
 			</channel>
-			<channel id="heating-power-request" typeId="valve-heating">
+			<channel id="heating-power-request" typeId="room-heating-percent">
 				<label>Current heating power</label>
 			</channel>
 		</channels>
@@ -91,7 +91,7 @@
 				<label>Planning</label>
 				<description>Heat planning currently used</description>
 			</channel>
-			<channel id="mode" typeId="string-ro">
+			<channel id="mode" typeId="energy-mode">
 				<label>Mode</label>
 				<description>Current mode (eg. frost-guard or away)</description>
 			</channel>

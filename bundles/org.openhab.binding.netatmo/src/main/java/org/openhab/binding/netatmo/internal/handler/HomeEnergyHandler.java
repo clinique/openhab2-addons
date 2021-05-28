@@ -13,6 +13,7 @@
 package org.openhab.binding.netatmo.internal.handler;
 
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_PLANNING;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_SETPOINT_MODE;
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_HOME_ENERGY;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
+import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NARoom;
@@ -33,6 +35,8 @@ import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.types.Command;
 import org.openhab.core.types.RefreshType;
 import org.openhab.core.types.StateOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link HomeEnergyHandler} is the class used to handle the plug
@@ -44,7 +48,8 @@ import org.openhab.core.types.StateOption;
 @NonNullByDefault
 public class HomeEnergyHandler extends NetatmoDeviceHandler {
 
-//    private int setpointDefaultDuration;
+    private final Logger logger = LoggerFactory.getLogger(HomeEnergyHandler.class);
+
     private NAHome home = new NAHome();
 
     public HomeEnergyHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
@@ -74,13 +79,8 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
         ChannelUID channelUID = new ChannelUID(getThing().getUID(), GROUP_HOME_ENERGY, CHANNEL_PLANNING);
         descriptionProvider.setStateOptions(channelUID, home.getThermSchedules().stream()
                 .map(p -> new StateOption(p.getId(), p.getName())).collect(Collectors.toList()));
-//        setpointDefaultDuration = home.getThermSetpointDefaultDuration();
         return home;
     }
-
-    // public int getSetpointDefaultDuration() {
-    //     return setpointDefaultDuration;
-    // }
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
@@ -89,17 +89,22 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
         } else {
             String channelName = channelUID.getIdWithoutGroup();
             if (CHANNEL_PLANNING.equals(channelName)) {
-                tryApiCall(() -> apiBridge.getHomeApi().switchSchedule(config.id, command.toString()));
+                tryApiCall(() -> apiBridge.getEnergyApi().switchSchedule(config.id, command.toString()));
+            } else if (channelName.equals(CHANNEL_SETPOINT_MODE)) {
+                SetpointMode targetMode = SetpointMode.valueOf(command.toString());
+                if (targetMode == SetpointMode.MANUAL) {
+//                    updateState(channelUID, toStringType(currentData.getSetpointMode()));
+                    logger.info("Switch to 'Manual' is done by setting a setpoint temp, command ignored");
+                } else {
+                    callSetThermMode(config.id, targetMode);
+                }
             }
-            // TODO : did not find how to make this work
-            // else if (CHANNEL_SETPOINT_DURATION.equals(channelName)) {
-            // QuantityType<?> quantity = commandToQuantity(command, Units.MINUTE);
-            // if (quantity != null) {
-            // tryApiCall(() -> homeApi.changeSetpointDefaultDuration(config.id, quantity.intValue()));
-            // } else {
-            // logger.warn("Incorrect value '{}' on channel '{}'", command, channelName);
-            // }
-            // }
+
         }
     }
+
+    public void callSetThermMode(String moduleId, SetpointMode targetMode) {
+        tryApiCall(() -> apiBridge.getEnergyApi().setthermmode(config.id, targetMode.getDescriptor()));
+    }
+
 }

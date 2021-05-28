@@ -128,7 +128,21 @@
 		</state>
 	</channel-type>
 
-	<channel-type id="valve-heating">
+	<channel-type id="energy-mode">
+		<item-type>String</item-type>
+		<label>Mode house</label>
+		<description>Chosen mode for the house (schedule, away, frost guard, manual)</description>
+		<state readOnly="false">
+			<options>
+				<option value="SCHEDULE">Following a weekly schedule</option>
+				<option value="AWAY">Applying the -away- temperature as defined by the user</option>
+				<option value="FROST_GUARD">Frost-guard</option>
+				<option value="MANUAL">Applying a manually set temperature setpoint</option>
+			</options>
+		</state>
+	</channel-type>
+
+	<channel-type id="room-heating-percent">
 		<item-type>Number:Dimensionless</item-type>
 		<label>Heating Power</label>
 		<description>Percentage of heating power.</description>

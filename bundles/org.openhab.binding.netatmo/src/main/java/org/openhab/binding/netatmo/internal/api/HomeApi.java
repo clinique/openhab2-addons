@@ -86,16 +86,6 @@ public class HomeApi extends RestManager {
         return true;
     }
 
-    public boolean switchSchedule(String homeId, String scheduleId) throws NetatmoException {
-        String req = "switchschedule";
-        String payload = String.format("{\"home_id\":\"%s\",\"schedule_id\":\"%s\"}", homeId, scheduleId);
-        ApiOkResponse response = post(req, payload, ApiOkResponse.class, false);
-        if (!response.isSuccess()) {
-            throw new NetatmoException(String.format("Unsuccessfull schedule change : %s", response.getStatus()));
-        }
-        return true;
-    }
-
     public String ping(String vpnUrl) throws NetatmoException {
         String url = vpnUrl + "/command/ping";
         NAPing response = get(url, NAPing.class);

@@ -20,6 +20,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.PointType;
 
@@ -38,7 +39,8 @@ public class NAHome extends NADevice {
 
     private List<NARoom> rooms = List.of();
     //    private @Nullable NAObjectMap<NARoom> rooms;
-    private String thermMode = "";
+    private @Nullable SetpointMode thermMode;
+    private long thermModeEndtime = 0;
     private int thermSetpointDefaultDuration;
     @SerializedName("coordinates")
     private double[] location = {};
@@ -52,9 +54,9 @@ public class NAHome extends NADevice {
         return schedules.stream().filter(NAThermProgram::isSelected).findFirst().orElse(null);
     }
 
-    // public void setRooms(NAObjectMap<NARoom> rooms) {
-    //     this.rooms = rooms;
-    // }
+    public long getThermModeEndTime() {
+        return thermModeEndtime;
+    }
 
     public int getThermSetpointDefaultDuration() {
         return thermSetpointDefaultDuration;
@@ -67,7 +69,7 @@ public class NAHome extends NADevice {
         return null;
     }
 
-    public @Nullable String getThermMode() {
+    public @Nullable SetpointMode getThermMode() {
         return thermMode;
     }
 

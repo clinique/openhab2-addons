@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NAThermProgram;
 import org.openhab.binding.netatmo.internal.api.dto.NAThing;
@@ -36,6 +37,8 @@ import org.openhab.core.library.types.StringType;
 import org.openhab.core.library.unit.Units;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.types.State;
+import org.openhab.core.types.UnDefType;
+
 
 /**
  * The {@link HomeEnergyChannelHelper} handle specific behavior
@@ -55,18 +58,51 @@ public class HomeEnergyChannelHelper extends AbstractChannelHelper {
     protected @Nullable State internalGetProperty(NAThing naThing, String channelId) {
         NAHome localThing = (NAHome) naThing;
         NAThermProgram currentProgram = localThing.getActiveProgram();
+        SetpointMode thermMode = localThing.getThermMode();
+ 
         switch (channelId) {
             case CHANNEL_SETPOINT_DURATION:
                 return toQuantityType(localThing.getThermSetpointDefaultDuration(), Units.MINUTE);
             case CHANNEL_PLANNING:
                 return (currentProgram != null ? toStringType(currentProgram.getName()) : null);
             case CHANNEL_SETPOINT_MODE:
-                NATimeTableItem currentProgramMode = getCurrentProgramMode(localThing.getActiveProgram());
-                if (currentProgram != null && currentProgramMode != null) {
-                    return new StringType(currentProgram.getZone(String.valueOf(currentProgramMode.getZoneId())).getName());
+                if (thermMode != null) {
+                    switch (thermMode) {
+                        case PROGRAM:
+                        case SCHEDULE:
+                            NATimeTableItem currentProgramMode = getCurrentProgramMode(localThing.getActiveProgram());
+                            if (currentProgram != null && currentProgramMode != null) {
+                                return new StringType(currentProgram
+                                        .getZone(String.valueOf(currentProgramMode.getZoneId())).getName());
+                            }
+                        case AWAY:
+                        case MANUAL:
+                        case FROST_GUARD:
+                            return new StringType(thermMode.name());
+                        case OFF:
+                        case MAX:
+                        case UNKNOWN:
+                            return UnDefType.UNDEF;
+                    }
                 }
+                return null;
             case CHANNEL_SETPOINT_END_TIME:
-                return toDateTimeType(getNextProgramTime(localThing.getActiveProgram()),zoneId);
+                if (thermMode != null) {
+                    switch (thermMode) {
+                        case PROGRAM:
+                        case SCHEDULE:
+                            return toDateTimeType(getNextProgramTime(localThing.getActiveProgram()),zoneId);
+                        case AWAY:
+                        case MANUAL:
+                        case FROST_GUARD:
+                            return (localThing.getThermModeEndTime() > 0 ? toDateTimeType(localThing.getThermModeEndTime(),zoneId) : UnDefType.UNDEF);
+                        case OFF:
+                        case MAX:
+                        case UNKNOWN:
+                            return UnDefType.UNDEF;
+                    }
+                }
+                return null;
           }
         return null;
     }
