@@ -230,6 +230,11 @@ public class NetatmoConstants {
         public String getDescriptor() {
             return apiDescriptor;
         }
+
+        public static SetpointMode fromName(String name) {
+            return Arrays.stream(values()).filter(value -> value.apiDescriptor.equals(name)).findFirst().orElse(UNKNOWN);
+        }
+
     }
 
     public static enum ThermostatZoneType {

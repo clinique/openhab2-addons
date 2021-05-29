@@ -12,6 +12,8 @@
  */
 package org.openhab.binding.netatmo.internal.api.dto;
 
+import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
+
 /**
  *
  * @author Bernhard Kreuz - Initial contribution
@@ -23,7 +25,7 @@ public class NARoom extends NAModule {
     private int heatingPowerRequest;
     private boolean openWindow;
     private double thermMeasuredTemperature;
-    private String thermSetpointMode;
+    private SetpointMode thermSetpointMode;
     private double thermSetpointTemperature;
     private long thermSetpointStartTime;
     private long thermSetpointEndTime = -1;
@@ -87,14 +89,14 @@ public class NARoom extends NAModule {
     /**
      * @return the thermSetpointMode
      */
-    public String getThermSetpointMode() {
+    public SetpointMode getThermSetpointMode() {
         return thermSetpointMode;
     }
 
     /**
      * @param thermSetpointMode the thermSetpointMode to set
      */
-    public void setThermSetpointMode(String thermSetpointMode) {
+    public void setThermSetpointMode(SetpointMode thermSetpointMode) {
         this.thermSetpointMode = thermSetpointMode;
     }
 

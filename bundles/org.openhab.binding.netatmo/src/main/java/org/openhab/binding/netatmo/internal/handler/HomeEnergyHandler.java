@@ -71,7 +71,8 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
             naRoom.setHeatingPowerRequest(room.getHeatingPowerRequest());
             naRoom.setThermMeasuredTemperature(room.getThermMeasuredTemperature());
             naRoom.setOpenWindow(room.getOpenWindow());
-            naRoom.setThermSetpointMode(room.getThermSetpointMode());
+            SetpointMode localmode = SetpointMode.fromName(room.getThermSetpointMode());
+            naRoom.setThermSetpointMode(localmode);
             naRoom.setThermSetpointStartTime(room.getThermSetpointStartTime());
             naRoom.setThermSetpointEndTime(room.getThermSetpointEndTime());
             naRoom.setThermSetpointTemperature(Double.valueOf(room.getThermSetpointTemperature()));

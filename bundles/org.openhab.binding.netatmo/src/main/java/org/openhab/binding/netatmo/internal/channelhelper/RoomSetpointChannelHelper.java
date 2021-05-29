@@ -56,7 +56,7 @@ public class RoomSetpointChannelHelper extends AbstractChannelHelper {
             case CHANNEL_VALUE:
                 return getCurrentSetpoint(room);
             case CHANNEL_SETPOINT_MODE:
-                return new StringType(room.getThermSetpointMode());
+                return new StringType(room.getThermSetpointMode().name());
             case CHANNEL_SETPOINT_START_TIME:
                 return toDateTimeType(room.getThermSetpointStartTime(), zoneId);    
             case CHANNEL_SETPOINT_END_TIME:
@@ -66,11 +66,11 @@ public class RoomSetpointChannelHelper extends AbstractChannelHelper {
     }
 
     private State getCurrentSetpoint(NARoom room) {
-        String thermSetPoint = room.getThermSetpointMode();
-        if (thermSetPoint != null) {
-            SetpointMode currentMode = SetpointMode.valueOf(thermSetPoint.toUpperCase());
+        SetpointMode thermSetPointMode = room.getThermSetpointMode();
+        if (thermSetPointMode != null) {
+//            SetpointMode currentMode = SetpointMode.valueOf(thermSetPoint.toUpperCase());
             // NAThermProgram currentProgram = room.getActiveProgram();
-            switch (currentMode) {
+            switch (thermSetPointMode) {
                 case AWAY:
                 case MANUAL:
                 case SCHEDULE:
