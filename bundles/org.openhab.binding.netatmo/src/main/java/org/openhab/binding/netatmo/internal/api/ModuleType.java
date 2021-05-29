@@ -162,7 +162,7 @@ public enum ModuleType {
     NARoom(RoomHandler.class, RefreshPolicy.CONFIG, NAHomeEnergy, null,
             Set.of(RoomPropsChannelHelper.class, RoomTempChannelHelper.class, RoomSetpointChannelHelper.class),
             List.of(GROUP_ROOM_PROPERTIES, GROUP_TH_SETPOINT, GROUP_ROOM_TEMPERATURE), NARoom.class),
-    NRV(NRVHandler.class, RefreshPolicy.AUTO, NAHomeEnergy, null,
+    NRV(NRVHandler.class, RefreshPolicy.CONFIG, NAHomeEnergy, null,
             Set.of(BatteryHelper.class, ModuleChannelHelper.class),
             List.of(GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY),
             NRV.class),

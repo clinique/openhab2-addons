@@ -38,7 +38,6 @@ public class NAHome extends NADevice {
     private List<NAWelcome> cameras = List.of();
 
     private List<NARoom> rooms = List.of();
-    //    private @Nullable NAObjectMap<NARoom> rooms;
     private @Nullable SetpointMode thermMode;
     private long thermModeEndtime = 0;
     private int thermSetpointDefaultDuration;
