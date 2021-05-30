@@ -53,8 +53,7 @@ public class RoomSetpointChannelHelper extends AbstractChannelHelper {
             case CHANNEL_VALUE:
                 return getCurrentSetpoint(room);
             case CHANNEL_SETPOINT_MODE:
-                return room.getThermSetpointMode() != null ? new StringType(room.getThermSetpointMode().name())
-                        : null;
+                return room.getThermSetpointMode() != null ? new StringType(room.getThermSetpointMode().name()) : null;
             case CHANNEL_SETPOINT_START_TIME:
                 return toDateTimeType(room.getThermSetpointStartTime(), zoneId);
             case CHANNEL_SETPOINT_END_TIME:

@@ -58,7 +58,7 @@ public class NRVHandler extends NetatmoDeviceHandler {
         return null;
     }
 
-    @Override    
+    @Override
     protected NRV updateReadings() throws NetatmoException {
         logger.debug("updateReadings on valve");
         return (NRV) Objects.requireNonNullElse(getHomeHandler().getHome().getModule(config.id), new NRV());

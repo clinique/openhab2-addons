@@ -81,7 +81,7 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
             nrvmodule.setRfStrength(module.getRfStrength());
             nrvmodule.setBatteryState(module.getBatteryState());
         }
-        
+
         for (Room room : status.getBody().getHome().getRooms()) {
             NARoom naRoom = home.getRoom(room.getId());
             naRoom.setAnticipating(room.getAnticipating());
@@ -111,7 +111,7 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
             } else if (channelName.equals(CHANNEL_SETPOINT_MODE)) {
                 SetpointMode targetMode = SetpointMode.valueOf(command.toString());
                 if (targetMode == SetpointMode.MANUAL) {
-//                    updateState(channelUID, toStringType(currentData.getSetpointMode()));
+                    // updateState(channelUID, toStringType(currentData.getSetpointMode()));
                     logger.info("Switch to 'Manual' is done by setting a setpoint temp, command ignored");
                 } else {
                     callSetThermMode(config.id, targetMode);

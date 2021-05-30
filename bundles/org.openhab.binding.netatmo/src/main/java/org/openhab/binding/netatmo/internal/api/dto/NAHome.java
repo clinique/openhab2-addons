@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.google.gson.annotations.SerializedName;
-
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.PointType;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
@@ -97,13 +97,13 @@ public class NAHome extends NADevice {
     }
 
     // public @Nullable NARoom getRoom(String key) {
-    //     return rooms.get(key);
+    // return rooms.get(key);
     // }
 
     public @Nullable NARoom getRoom(String id) {
         return rooms.stream().filter(r -> r.getId().equals(id)).findFirst().orElse(null);
     }
-    
+
     public Optional<NAPerson> getPerson(String id) {
         NAObjectMap<NAPerson> personList = persons;
         return personList == null ? Optional.empty() : Optional.ofNullable(personList.get(id));

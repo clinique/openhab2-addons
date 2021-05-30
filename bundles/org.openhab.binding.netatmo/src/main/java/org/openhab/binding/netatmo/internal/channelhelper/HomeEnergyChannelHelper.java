@@ -39,7 +39,6 @@ import org.openhab.core.thing.Thing;
 import org.openhab.core.types.State;
 import org.openhab.core.types.UnDefType;
 
-
 /**
  * The {@link HomeEnergyChannelHelper} handle specific behavior
  * of modules using batteries
@@ -59,7 +58,7 @@ public class HomeEnergyChannelHelper extends AbstractChannelHelper {
         NAHome localThing = (NAHome) naThing;
         NAThermProgram currentProgram = localThing.getActiveProgram();
         SetpointMode thermMode = localThing.getThermMode();
- 
+
         switch (channelId) {
             case CHANNEL_SETPOINT_DURATION:
                 return toQuantityType(localThing.getThermSetpointDefaultDuration(), Units.MINUTE);
@@ -93,11 +92,13 @@ public class HomeEnergyChannelHelper extends AbstractChannelHelper {
                         case PROGRAM:
                         case HOME:
                         case SCHEDULE:
-                            return toDateTimeType(getNextProgramTime(localThing.getActiveProgram()),zoneId);
+                            return toDateTimeType(getNextProgramTime(localThing.getActiveProgram()), zoneId);
                         case AWAY:
                         case MANUAL:
                         case FROST_GUARD:
-                            return (localThing.getThermModeEndTime() > 0 ? toDateTimeType(localThing.getThermModeEndTime(),zoneId) : UnDefType.UNDEF);
+                            return (localThing.getThermModeEndTime() > 0
+                                    ? toDateTimeType(localThing.getThermModeEndTime(), zoneId)
+                                    : UnDefType.UNDEF);
                         case OFF:
                         case MAX:
                         case UNKNOWN:
@@ -105,7 +106,7 @@ public class HomeEnergyChannelHelper extends AbstractChannelHelper {
                     }
                 }
                 return null;
-          }
+        }
         return null;
     }
 

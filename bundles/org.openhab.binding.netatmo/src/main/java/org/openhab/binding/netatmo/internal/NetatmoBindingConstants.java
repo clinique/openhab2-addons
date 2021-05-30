@@ -12,11 +12,6 @@
  */
 package org.openhab.binding.netatmo.internal;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.api.NADynamicObjectMapDeserializer;
 import org.openhab.binding.netatmo.internal.api.NAObjectMapDeserializer;
@@ -26,6 +21,11 @@ import org.openhab.binding.netatmo.internal.webhook.NAPushType;
 import org.openhab.binding.netatmo.internal.webhook.NAPushTypeDeserializer;
 import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.library.types.OpenClosedType;
+
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 
 /**
  * The {@link NetatmoBinding} class defines common constants, which are used

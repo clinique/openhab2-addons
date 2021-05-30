@@ -14,12 +14,12 @@ package org.openhab.binding.netatmo.internal.api.dto;
 
 import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
-
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.ModuleType;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureType;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  *

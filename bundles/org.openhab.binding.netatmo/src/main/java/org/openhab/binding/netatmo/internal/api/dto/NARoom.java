@@ -125,9 +125,8 @@ public class NARoom extends NAModule {
     public long getThermSetpointEndTime() {
         return thermSetpointEndTime;
     }
-    
+
     public void setThermSetpointEndTime(long thermSetpointEndTime) {
         this.thermSetpointEndTime = thermSetpointEndTime;
     }
-
 }

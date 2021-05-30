@@ -42,7 +42,7 @@ public class NAThermProgram extends NAObject {
     public @Nullable NAZone getZone(String id) {
         return zones.stream().filter(r -> r.getId().equals(id)).findFirst().orElse(null);
     }
-  
+
     public double getZoneTemperature(SetpointMode currentMode) {
         try {
             ThermostatZoneType equivalentZone = ThermostatZoneType.valueOf(currentMode.toString());

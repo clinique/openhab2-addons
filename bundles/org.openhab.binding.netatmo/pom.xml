@@ -14,7 +14,7 @@
 
   <name>openHAB Add-ons :: Bundles :: Netatmo Binding</name>
   <properties>
-    <spotless.check.skip>true</spotless.check.skip>
+    <spotless.check.skip>false</spotless.check.skip>
   </properties>
 
 </project>

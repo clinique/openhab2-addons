@@ -24,12 +24,12 @@ import java.util.stream.Stream;
 
 import javax.measure.Unit;
 
-import com.google.gson.annotations.SerializedName;
-
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.core.library.unit.SIUnits;
 import org.openhab.core.library.unit.Units;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * This class holds various definitions and settings provided by the Netatmo
@@ -233,9 +233,9 @@ public class NetatmoConstants {
         }
 
         public static SetpointMode fromName(String name) {
-            return Arrays.stream(values()).filter(value -> value.apiDescriptor.equals(name)).findFirst().orElse(UNKNOWN);
+            return Arrays.stream(values()).filter(value -> value.apiDescriptor.equals(name)).findFirst()
+                    .orElse(UNKNOWN);
         }
-
     }
 
     public static enum ThermostatZoneType {

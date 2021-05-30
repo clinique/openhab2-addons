@@ -18,7 +18,7 @@ package org.openhab.binding.netatmo.internal.api.dto;
  *
  */
 
-public class NAEnergyModule extends NADevice{
+public class NAEnergyModule extends NADevice {
     private int firmware_revision = -1;
     private int rf_strength;
     private String battery_state = "";

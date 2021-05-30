@@ -50,8 +50,7 @@ public class Module implements Serializable {
      * @param bridge
      * @param firmwareRevision
      */
-    public Module(Integer firmwareRevision, String id, Integer rfStrength,
-            String type, Integer wifiStrength, 
+    public Module(Integer firmwareRevision, String id, Integer rfStrength, String type, Integer wifiStrength,
             Boolean reachable, String bridge, String batteryState) {
         super();
         this.firmwareRevision = firmwareRevision;
@@ -63,7 +62,6 @@ public class Module implements Serializable {
         this.bridge = bridge;
         this.batteryState = batteryState;
     }
-
 
     public Integer getFirmwareRevision() {
         return firmwareRevision;

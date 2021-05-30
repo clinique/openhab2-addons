@@ -62,12 +62,13 @@ public class EnergyApi extends RestManager {
     }
 
     public Homestatus getHomeStatus(String homeId) throws NetatmoException {
-        String req = URL_HOMESTATUS + "?home_id=" + homeId + "&device_types=NAPlug&device_types=NATherm&device_types=NRV";
+        String req = URL_HOMESTATUS + "?home_id=" + homeId
+                + "&device_types=NAPlug&device_types=NATherm&device_types=NRV";
         Homestatus response = get(req, Homestatus.class);
         return response;
     }
 
-    // -- deprecated 
+    // -- deprecated
     private NAThermostatDataResponse getThermostatsData(@Nullable String equipmentId) throws NetatmoException {
         String req = URL_THERMOSTAT;
         if (equipmentId != null) {
@@ -113,9 +114,10 @@ public class EnergyApi extends RestManager {
     /**
      *
      * This endpoint permits to control the heating of a specific home. A home can be set in 3 differents modes:
-     *  "schedule" mode in which the home will follow the user schedule
-     *  "away" mode which will put the whole house to away (default is 12° but can be changed by the user in its settings)
-     *   "hg" corresponds to frostguard mode (7° by default)
+     * "schedule" mode in which the home will follow the user schedule
+     * "away" mode which will put the whole house to away (default is 12° but can be changed by the user in its
+     * settings)
+     * "hg" corresponds to frostguard mode (7° by default)
      *
      * @param homeId The id of home (required)
      * @param mode The mode. (required)
@@ -132,6 +134,7 @@ public class EnergyApi extends RestManager {
         }
         return true;
     }
+
     /**
      *
      * The method setroomthermpoint changes the Thermostat manual temperature setpoint.
@@ -147,8 +150,8 @@ public class EnergyApi extends RestManager {
      * @throws NetatmoCommunicationException If fail to call the API, e.g. server error or cannot deserialize the
      *             response body
      */
-    public boolean setroomthermpoint(String homeId, String roomId, SetpointMode mode, long endtime,
-            double temp) throws NetatmoException {
+    public boolean setroomthermpoint(String homeId, String roomId, SetpointMode mode, long endtime, double temp)
+            throws NetatmoException {
         String req = "setroomthermpoint?home_id=%s&room_id=%s&mode=%s";
         req = String.format(req, homeId, roomId, mode.getDescriptor());
         if (mode == SetpointMode.MANUAL || mode == SetpointMode.MAX) {

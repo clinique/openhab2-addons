@@ -21,16 +21,9 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
-import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureClass;
-import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
-import org.openhab.binding.netatmo.internal.api.dto.NAThermostat;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
-import org.openhab.core.library.types.QuantityType;
 import org.openhab.core.thing.Bridge;
-import org.openhab.core.thing.ChannelUID;
-import org.openhab.core.types.Command;
-import org.openhab.core.types.RefreshType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,33 +49,35 @@ public class Therm1Handler extends NetatmoDeviceHandler {
         return handler != null ? (PlugHandler) handler : null;
     }
 
-/*     @Override
-    public void handleCommand(ChannelUID channelUID, Command command) {
-        if (command instanceof RefreshType) {
-            super.handleCommand(channelUID, command);
-        } else {
-            NAThermostat currentData = (NAThermostat) naThing;
-            PlugHandler handler = getPlugHandler();
-            if (currentData != null && handler != null) {
-                String channelName = channelUID.getIdWithoutGroup();
-                String groupName = channelUID.getGroupId();
-                if (channelName.equals(CHANNEL_SETPOINT_MODE)) {
-                    SetpointMode targetMode = SetpointMode.valueOf(command.toString());
-                    if (targetMode == SetpointMode.MANUAL) {
-                        updateState(channelUID, toStringType(currentData.getSetpointMode()));
-                        logger.info("Switch to 'Manual' is done by setting a setpoint temp, command ignored");
-                    } else {
-                        handler.callSetThermMode(config.id, targetMode);
-                    }
-                } else if (GROUP_TH_SETPOINT.equals(groupName) && channelName.equals(CHANNEL_VALUE)) {
-                    QuantityType<?> quantity = commandToQuantity(command, MeasureClass.INTERIOR_TEMPERATURE);
-                    if (quantity != null) {
-                        handler.callSetThermTemp(config.id, quantity.doubleValue());
-                    } else {
-                        logger.warn("Incorrect command '{}' on channel '{}'", command, channelName);
-                    }
-                }
-            }
-        }
-    } */
+    /*
+     * @Override
+     * public void handleCommand(ChannelUID channelUID, Command command) {
+     * if (command instanceof RefreshType) {
+     * super.handleCommand(channelUID, command);
+     * } else {
+     * NAThermostat currentData = (NAThermostat) naThing;
+     * PlugHandler handler = getPlugHandler();
+     * if (currentData != null && handler != null) {
+     * String channelName = channelUID.getIdWithoutGroup();
+     * String groupName = channelUID.getGroupId();
+     * if (channelName.equals(CHANNEL_SETPOINT_MODE)) {
+     * SetpointMode targetMode = SetpointMode.valueOf(command.toString());
+     * if (targetMode == SetpointMode.MANUAL) {
+     * updateState(channelUID, toStringType(currentData.getSetpointMode()));
+     * logger.info("Switch to 'Manual' is done by setting a setpoint temp, command ignored");
+     * } else {
+     * handler.callSetThermMode(config.id, targetMode);
+     * }
+     * } else if (GROUP_TH_SETPOINT.equals(groupName) && channelName.equals(CHANNEL_VALUE)) {
+     * QuantityType<?> quantity = commandToQuantity(command, MeasureClass.INTERIOR_TEMPERATURE);
+     * if (quantity != null) {
+     * handler.callSetThermTemp(config.id, quantity.doubleValue());
+     * } else {
+     * logger.warn("Incorrect command '{}' on channel '{}'", command, channelName);
+     * }
+     * }
+     * }
+     * }
+     * }
+     */
 }

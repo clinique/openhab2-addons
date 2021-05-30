@@ -50,9 +50,8 @@ public class RoomPropsChannelHelper extends AbstractChannelHelper {
             case CHANNEL_ROOM_ANTICIPATING:
                 return OnOffType.from(room.isAnticipating());
             case CHANNEL_ROOM_HEATING_POWER:
-                return new DecimalType(room.getHeatingPowerRequest());    
+                return new DecimalType(room.getHeatingPowerRequest());
         }
         return null;
     }
-
 }

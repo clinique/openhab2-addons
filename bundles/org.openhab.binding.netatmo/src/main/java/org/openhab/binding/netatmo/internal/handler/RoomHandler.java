@@ -86,7 +86,7 @@ public class RoomHandler extends NetatmoDeviceHandler {
                 if (channelName.equals(CHANNEL_SETPOINT_MODE)) {
                     SetpointMode targetMode = SetpointMode.valueOf(command.toString());
                     if (targetMode == SetpointMode.MANUAL) {
-//                        updateState(channelUID, toStringType(currentData.getSetpointMode()));
+                        // updateState(channelUID, toStringType(currentData.getSetpointMode()));
                         logger.info("Switch to 'Manual' is done by setting a setpoint temp, command ignored");
                     } else {
                         callSetRoomThermMode(home.getId(), config.id, targetMode);
@@ -102,7 +102,7 @@ public class RoomHandler extends NetatmoDeviceHandler {
             }
         }
     }
-    
+
     public int getSetpointDefaultDuration() {
         HomeEnergyHandler bridgeHandler = getHomeHandler();
         return bridgeHandler != null ? bridgeHandler.getSetpointDefaultDuration() : 120;
@@ -121,5 +121,4 @@ public class RoomHandler extends NetatmoDeviceHandler {
         tryApiCall(() -> api != null ? api.setroomthermpoint(homeId, roomId, SetpointMode.MANUAL,
                 getSetpointEndTimeFromNow(getSetpointDefaultDuration()), temperature) : false);
     }
-
 }
