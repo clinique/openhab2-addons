@@ -12,36 +12,8 @@
  */
 package org.openhab.binding.netatmo.internal.api;
 
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.BINDING_ID;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_BATTERY;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_CO2;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_DEVICE;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_ENERGY_BATTERY;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_HEALTH;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_HOME_ENERGY;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_HOME_SECURITY;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_HUMIDITY;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_MODULE;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_NOISE;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_PERSON;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_PERSON_EVENT;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_PLUG;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_PRESENCE;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_PRESSURE;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_RAIN;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_ROOM_PROPERTIES;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_ROOM_TEMPERATURE;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_SIGNAL;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_TEMPERATURE;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_TH_PROPERTIES;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_TH_SETPOINT;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_TH_TEMPERATURE;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_WELCOME;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_WELCOME_EVENT;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_WIND;
-import static org.openhab.binding.netatmo.internal.api.NetatmoConstants.NO_RADIO;
-import static org.openhab.binding.netatmo.internal.api.NetatmoConstants.RADIO_SIGNAL_LEVELS;
-import static org.openhab.binding.netatmo.internal.api.NetatmoConstants.WIFI_SIGNAL_LEVELS;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
+import static org.openhab.binding.netatmo.internal.api.NetatmoConstants.*;
 
 import java.util.List;
 import java.util.Set;
@@ -114,14 +86,14 @@ public enum ModuleType {
             List.of(GROUP_WELCOME, GROUP_WELCOME_EVENT, GROUP_PRESENCE), NAWelcome.class),
 
     // Weather group
-    NAMain(MainHandler.class, RefreshPolicy.AUTO, null, List.of("measure", "measure-timestamp"),
+    NAMain(MainHandler.class, RefreshPolicy.AUTO, null, MEASURE_EXTENSIONS,
             Set.of(PressureChannelHelper.class, NoiseChannelHelper.class, HumidityChannelHelper.class,
                     TemperatureChannelHelper.class, Co2ChannelHelper.class, DeviceChannelHelper.class,
                     MeasuresChannelHelper.class),
             List.of(GROUP_TEMPERATURE, GROUP_HUMIDITY, GROUP_CO2, GROUP_NOISE, GROUP_PRESSURE, GROUP_DEVICE,
                     GROUP_SIGNAL),
             NAThing.class),
-    NAModule1(NetatmoDeviceHandler.class, RefreshPolicy.PARENT, NAMain, List.of("measure", "measure-timestamp"),
+    NAModule1(NetatmoDeviceHandler.class, RefreshPolicy.PARENT, NAMain, MEASURE_EXTENSIONS,
             Set.of(HumidityChannelHelper.class, TemperatureChannelHelper.class, BatteryHelper.class,
                     ModuleChannelHelper.class, MeasuresChannelHelper.class),
             List.of(GROUP_TEMPERATURE, GROUP_HUMIDITY, GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY), NAModule.class),
@@ -132,14 +104,14 @@ public enum ModuleType {
             Set.of(RainChannelHelper.class, BatteryHelper.class, ModuleChannelHelper.class,
                     MeasuresChannelHelper.class),
             List.of(GROUP_RAIN, GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY), NAModule.class),
-    NAModule4(NetatmoDeviceHandler.class, RefreshPolicy.PARENT, NAMain, List.of("measure", "measure-timestamp"),
+    NAModule4(NetatmoDeviceHandler.class, RefreshPolicy.PARENT, NAMain, MEASURE_EXTENSIONS,
             Set.of(HumidityChannelHelper.class, TemperatureChannelHelper.class, Co2ChannelHelper.class,
                     BatteryHelper.class, ModuleChannelHelper.class, MeasuresChannelHelper.class),
             List.of(GROUP_TEMPERATURE, GROUP_HUMIDITY, GROUP_CO2, GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY),
             NAModule.class),
 
     // Aircare group
-    NHC(HomeCoachHandler.class, RefreshPolicy.AUTO, null, List.of("measure", "measure-timestamp"),
+    NHC(HomeCoachHandler.class, RefreshPolicy.AUTO, null, MEASURE_EXTENSIONS,
             Set.of(NoiseChannelHelper.class, HumidityChannelHelper.class, PressureChannelHelper.class,
                     TemperatureChannelHelper.class, Co2ChannelHelper.class, HomeCoachChannelHelper.class,
                     DeviceChannelHelper.class, MeasuresChannelHelper.class),
@@ -192,6 +164,7 @@ public enum ModuleType {
         this.groups = groups;
         this.refreshPeriod = refreshPeriod;
         this.extensions = extensions;
+        this.refreshPeriod = refreshPeriod;
         this.channelHelpers = setOfHelpers;
         this.bridgeThingType = bridge != null ? bridge.thingTypeUID : null;
         this.dto = dto;

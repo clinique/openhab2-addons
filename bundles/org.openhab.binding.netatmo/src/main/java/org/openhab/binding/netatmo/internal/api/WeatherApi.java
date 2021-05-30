@@ -81,14 +81,14 @@ public class WeatherApi extends RestManager {
             MeasureLimit limit) throws NetatmoException {
         List<NAMeasureBodyElem> result = getmeasure(deviceId, moduleId, scale,
                 new String[] { (limit.toString() + "_" + type.toString()).toLowerCase() }, 0, 0, 0, false, false);
-        return result.size() > 0 ? result.get(0).getSingleValue() : Double.NaN;
+        return !result.isEmpty() ? result.get(0).getSingleValue() : Double.NaN;
     }
 
     public double getMeasurements(String deviceId, @Nullable String moduleId, MeasureScale scale, MeasureType type)
             throws NetatmoException {
         List<NAMeasureBodyElem> result = getmeasure(deviceId, moduleId, scale,
                 new String[] { type.toString().toLowerCase() }, 0, 0, 0, false, false);
-        return result.size() > 0 ? result.get(0).getSingleValue() : Double.NaN;
+        return !result.isEmpty() ? result.get(0).getSingleValue() : Double.NaN;
     }
 
     public List<NAMeasureBodyElem> getmeasure(String deviceId, @Nullable String moduleId, MeasureScale scale,

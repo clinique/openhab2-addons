@@ -12,9 +12,6 @@
  */
 package org.openhab.binding.netatmo.internal.handler;
 
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
-import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.*;
-
 import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;

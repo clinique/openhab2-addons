@@ -12,8 +12,20 @@
  */
 package org.openhab.binding.netatmo.internal.handler;
 
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
-import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.*;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_EVENT_CAMERA_ID;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_EVENT_SNAPSHOT;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_EVENT_SNAPSHOT_URL;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_EVENT_SUBTYPE;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_EVENT_TIME;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_HOME_EVENT;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_PERSON_AT_HOME;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_PERSON;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_PERSON_EVENT;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_WELCOME_EVENT;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.PROPERTY_MAX_EVENT_TIME;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toDateTimeType;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toRawType;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toStringType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,7 +80,7 @@ public class PersonHandler extends NetatmoDeviceHandler {
         HomeSecurityHandler homeHandler = getHomeHandler();
         if (homeHandler != null) {
             List<NAHomeEvent> lastEvents = homeHandler.getLastEventOf(config.id);
-            if (lastEvents.size() > 0) {
+            if (!lastEvents.isEmpty()) {
                 setEvent(lastEvents.get(0));
             }
         }

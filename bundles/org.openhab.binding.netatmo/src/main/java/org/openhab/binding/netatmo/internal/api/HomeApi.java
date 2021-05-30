@@ -71,7 +71,7 @@ public class HomeApi extends RestManager {
         String payload = String.format("{\"home_id\":\"%s\",\"person_id\":\"%s\"}", homeId, personId);
         ApiOkResponse response = post(req, payload, ApiOkResponse.class, false);
         if (!response.isSuccess()) {
-            throw new NetatmoException(String.format("Unsuccessful person away command : %s", response.getStatus()));
+            throw new NetatmoException(String.format("Unsuccessfull person away command : %s", response.getStatus()));
         }
         return true;
     }

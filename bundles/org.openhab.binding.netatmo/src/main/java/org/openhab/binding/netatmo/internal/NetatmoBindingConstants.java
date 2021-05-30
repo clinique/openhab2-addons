@@ -12,6 +12,8 @@
  */
 package org.openhab.binding.netatmo.internal;
 
+import java.util.List;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.api.NADynamicObjectMapDeserializer;
 import org.openhab.binding.netatmo.internal.api.NAObjectMapDeserializer;
@@ -51,6 +53,8 @@ public class NetatmoBindingConstants {
                         return "TRUE".equals(value) || "1".equals(value) ? OpenClosedType.CLOSED : OpenClosedType.OPEN;
                     })
             .create();
+
+    public static final List<String> MEASURE_EXTENSIONS = List.of("measure", "measure-timestamp");
 
     public static final String BINDING_ID = "netatmo";
     public static final String SERVICE_PID = "org.openhab.binding." + BINDING_ID;

@@ -63,7 +63,7 @@ public class AuthenticationApi extends RestManager {
         NAAccessTokenResponse authorization = post(req, NAAccessTokenResponse.class);
         apiHandler.onAccessTokenResponse(authorization.getAccessToken(), authorization.getScope());
 
-        scheduleTokenRefresh(authorization.getRefreshToken(), 5 /* authorization.getExpiresIn() */);
+        scheduleTokenRefresh(authorization.getRefreshToken(), 5);
     }
 
     private void scheduleTokenRefresh(String refreshToken, long delay) {
@@ -73,9 +73,15 @@ public class AuthenticationApi extends RestManager {
             try {
                 NAAccessTokenResponse answer = post(req, NAAccessTokenResponse.class);
                 apiHandler.onAccessTokenResponse(answer.getAccessToken(), answer.getScope());
-                scheduleTokenRefresh(answer.getRefreshToken(), Math.round(answer.getExpiresIn() * 0.9));
+                scheduleTokenRefresh(answer.getRefreshToken(), Math.round(answer.getExpiresIn() * 0.8));
             } catch (NetatmoException e) {
                 logger.warn("Unable to refresh access token : {}", e.getMessage());
+                try {
+                    logger.debug("Trying to authenticate again.");
+                    authenticate();
+                } catch (NetatmoException e1) {
+                    logger.warn("Unable to reauthenticate after unsuccessfull token refresh : {}", e1.getMessage());
+                }
             }
         }, delay, TimeUnit.SECONDS);
     }

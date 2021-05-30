@@ -87,7 +87,7 @@ public class EnergyApi extends RestManager {
         if (plug != null) {
             return plug;
         }
-        throw new NetatmoException(String.format("Unexpected answer searching device '%s' : not found.", equipmentId));
+        throw new NetatmoException(String.format("Unexpected answer cherching device '%s' : not found.", equipmentId));
     }
 
     /**

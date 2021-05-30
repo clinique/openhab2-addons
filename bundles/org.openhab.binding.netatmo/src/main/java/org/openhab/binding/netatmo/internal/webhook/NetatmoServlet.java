@@ -12,7 +12,8 @@
  */
 package org.openhab.binding.netatmo.internal.webhook;
 
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.NETATMO_CALLBACK_URI;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.NETATMO_GSON;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,7 +88,7 @@ public class NetatmoServlet extends HttpServlet {
     }
 
     @Modified
-    protected void modified(Map<String, Object> config) {
+    protected void modified(Map<@Nullable String, @Nullable Object> config) {
         NetatmoBindingConfiguration configuration = new Configuration(config).as(NetatmoBindingConfiguration.class);
         SecurityApi localApi = api;
         String url = configuration.webHookUrl;

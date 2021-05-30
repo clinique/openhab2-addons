@@ -490,11 +490,13 @@ All these channels except welcomePersonAtHome are read only.
 
 ```
 // Bridge configuration:
-Bridge netatmo:netatmoapi:home "Netatmo API" [ clientId="*********", clientSecret="**********", username = "mail@example.com", password = "******", readStation=true, readThermostat=false] {
-    // Thing configuration:
-    Thing NAMain inside "Netatmo Inside"       [ id="aa:aa:aa:aa:aa:aa" ]
-    Thing NAModule1 outside "Netatmo Outside"  [ id="bb:bb:bb:bb:bb:bb", parentId="aa:aa:aa:aa:aa:aa" ]
-    Thing NAModule3 rain "Netatmo Rain"        [ id="cc:cc:cc:cc:cc:cc", parentId="aa:aa:aa:aa:aa:aa" ]
+Bridge netatmo:NAMain:indoorModule  "Netatmo Indoor Module"  [id="aa:bb:cc:dd:ee:ff"] {
+  Thing NAModule1 outdoorModule     "Netatmo Outdoor Module" [id="aa:bb:cc:dd:ee:ff"]
+  Thing NAModule3 rainModule        "Netatmo Rain Module"    [id="aa:bb:cc:dd:ee:ff"] {
+    Channels:
+      Type sum-rain : rainThisWeek  "Rain This Week"         [type="SUM_RAIN", period="ONE_WEEK"]
+      Type sum-rain : rainThisMonth "Rain This Month"        [type="SUM_RAIN", period="ONE_MONTH"]
+  }
 }
 ```
 

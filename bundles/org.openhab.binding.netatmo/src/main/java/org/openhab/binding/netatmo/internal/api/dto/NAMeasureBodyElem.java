@@ -41,9 +41,9 @@ public class NAMeasureBodyElem {
     }
 
     public Double getSingleValue() {
-        if (value.size() > 0) {
+        if (!value.isEmpty()) {
             List<Double> first = value.get(0);
-            if (first.size() > 0) {
+            if (!first.isEmpty()) {
                 return first.get(0);
             }
         }

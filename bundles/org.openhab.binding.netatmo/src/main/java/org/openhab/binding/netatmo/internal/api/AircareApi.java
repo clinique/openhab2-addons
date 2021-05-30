@@ -60,10 +60,5 @@ public class AircareApi extends RestManager {
 
     public NADeviceDataBody<NAMain> getHomeCoachDataBody(@Nullable String deviceId) throws NetatmoException {
         return getHomeCoachData2(deviceId).getBody();
-        // NAMain result = answer.getDevice(deviceId);
-        // if (result != null) {
-        // return result;
-        // }
-        // throw new NetatmoException(String.format("Unexpected answer searching device '%s' : not found.", deviceId));
     }
 }
