@@ -84,6 +84,7 @@ public class Therm1SetpointChannelHelper extends AbstractChannelHelper {
                 return toQuantityType(currentProgram != null ? currentProgram.getZoneTemperature(currentMode) : null,
                         MeasureClass.INTERIOR_TEMPERATURE);
             case SCHEDULE:
+            case HOME:
             case MANUAL:
                 return toQuantityType(thermostat.getSetpointTemp(), MeasureClass.INTERIOR_TEMPERATURE);
             case OFF:

@@ -115,15 +115,13 @@
 	<channel-type id="th-mode">
 		<item-type>String</item-type>
 		<label>Thermostat Mode</label>
-		<description>Chosen thermostat mode (program, away, frost guard, manual, off, max)</description>
+		<description>Chosen thermostat mode (home, frost guard, manual, max)</description>
 		<state readOnly="false">
 			<options>
-				<option value="PROGRAM">Following a weekly schedule</option>
-				<option value="AWAY">Applying the -away- temperature as defined by the user</option>
+				<option value="HOME">Following a weekly schedule</option>
 				<option value="FROST_GUARD">Frost-guard</option>
 				<option value="MANUAL">Applying a manually set temperature setpoint</option>
-				<option value="OFF">Currently off</option>
-				<option value="MAX">Heating continuously</option>
+				<option value="MAX">Heating continuously - only available for room with Thermostat</option>
 			</options>
 		</state>
 	</channel-type>

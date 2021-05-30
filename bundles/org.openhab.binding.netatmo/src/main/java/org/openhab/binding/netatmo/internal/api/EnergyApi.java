@@ -89,15 +89,6 @@ public class EnergyApi extends RestManager {
         throw new NetatmoException(String.format("Unexpected answer searching device '%s' : not found.", equipmentId));
     }
 
-    // public NRV getValveData(String equipmentId, @Nullable ThingUID thingUID) throws NetatmoException {
-    //     NADeviceDataBody<NRV> answer = getValvesData(equipmentId, thingUID).getBody();
-    //     NRV valve = answer.getDevice(equipmentId);
-    //     if (valve != null) {
-    //         return valve;
-    //     }
-    //     throw new NetatmoException(String.format("Unexpected answer cherching device '%s' : not found.", equipmentId));
-    // }
-
     /**
      *
      * The method switchschedule switches the home&#x27;s schedule to another existing schedule.
@@ -143,27 +134,27 @@ public class EnergyApi extends RestManager {
     }
     /**
      *
-     * The method setthermpoint changes the Thermostat manual temperature setpoint.
+     * The method setroomthermpoint changes the Thermostat manual temperature setpoint.
      *
-     * @param deviceId The relay id (required)
-     * @param moduleId The thermostat id (required)
-     * @param targetMode Chosen setpoint_mode (required)
-     * @param setpointEndtime When using the manual or max setpoint_mode, this parameter defines when the setpoint
+     * @param homeId The id of home (required)
+     * @param roomId The id of the room (required)
+     * @param mode The mode. (required)
+     * @param endtime When using the manual or max setpoint_mode, this parameter defines when the setpoint
      *            expires. (optional)
-     * @param setpointTemp When using the manual setpoint_mode, this parameter defines the temperature setpoint (in
+     * @param temp When using the manual setpoint_mode, this parameter defines the temperature setpoint (in
      *            Celcius) to use. (optional)
      * @return ApiOkResponse
      * @throws NetatmoCommunicationException If fail to call the API, e.g. server error or cannot deserialize the
      *             response body
      */
-    public boolean setthermpoint(String deviceId, String moduleId, SetpointMode targetMode, long setpointEndtime,
-            double setpointTemp) throws NetatmoException {
-        String req = "setthermpoint?device_id=%s&module_id=%s&setpoint_mode=%s";
-        req = String.format(req, deviceId, moduleId, targetMode.getDescriptor());
-        if (targetMode == SetpointMode.MANUAL || targetMode == SetpointMode.MAX) {
-            req += "&setpoint_endtime=" + setpointEndtime;
-            if (targetMode == SetpointMode.MANUAL) {
-                req += "&setpoint_temp=" + setpointTemp;
+    public boolean setroomthermpoint(String homeId, String roomId, SetpointMode mode, long endtime,
+            double temp) throws NetatmoException {
+        String req = "setroomthermpoint?home_id=%s&room_id=%s&mode=%s";
+        req = String.format(req, homeId, roomId, mode.getDescriptor());
+        if (mode == SetpointMode.MANUAL || mode == SetpointMode.MAX) {
+            req += "&endtime=" + endtime;
+            if (mode == SetpointMode.MANUAL) {
+                req += "&temp=" + temp;
             }
         }
 

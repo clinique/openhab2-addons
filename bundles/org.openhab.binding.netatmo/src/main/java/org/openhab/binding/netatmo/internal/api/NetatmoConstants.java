@@ -219,7 +219,8 @@ public class NetatmoConstants {
         MAX("max"),
         UNKNOWN(""),
         @SerializedName("schedule")
-        SCHEDULE("schedule");
+        SCHEDULE("schedule"),
+        HOME("home");
 
         String apiDescriptor;
 

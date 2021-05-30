@@ -77,6 +77,7 @@ public class NetatmoBindingConstants {
     public static final String GROUP_HOME_ENERGY = "energy";
     public static final String GROUP_SIGNAL = "signal";
     public static final String GROUP_BATTERY = "battery";
+    public static final String GROUP_ENERGY_BATTERY = "energy-battery";
     public static final String GROUP_HOME_SECURITY = "home-security";
     public static final String GROUP_WELCOME = "welcome";
     public static final String GROUP_PRESENCE = "presence";
@@ -104,6 +105,7 @@ public class NetatmoBindingConstants {
     public static final String CHANNEL_LOCATION = "location";
     public static final String CHANNEL_LAST_SEEN = "last-seen";
     public static final String CHANNEL_LOW_BATTERY = "low-battery";
+    public static final String CHANNEL_BATTERY_STATUS = "status";
     public static final String CHANNEL_SIGNAL_STRENGTH = "strength";
     public static final String CHANNEL_SUM_RAIN1 = "sum-1";
     public static final String CHANNEL_SUM_RAIN24 = "sum-24";

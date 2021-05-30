@@ -12,18 +12,32 @@
  */
 package org.openhab.binding.netatmo.internal.handler;
 
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_SETPOINT_MODE;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_VALUE;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_TH_SETPOINT;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.commandToQuantity;
+import static org.openhab.binding.netatmo.internal.utils.NetatmoCalendarUtils.getSetpointEndTimeFromNow;
+
 import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
+import org.openhab.binding.netatmo.internal.api.EnergyApi;
+import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureClass;
+import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
+import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NARoom;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
+import org.openhab.core.library.types.QuantityType;
 import org.openhab.core.thing.Bridge;
+import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.ThingStatus;
+import org.openhab.core.types.Command;
+import org.openhab.core.types.RefreshType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * @author Gaël L'hopital - Initial contribution
  *
  */
-@SuppressWarnings("unused")
+
 @NonNullByDefault
 public class RoomHandler extends NetatmoDeviceHandler {
 
@@ -57,4 +71,55 @@ public class RoomHandler extends NetatmoDeviceHandler {
     protected NARoom updateReadings() throws NetatmoException {
         return (NARoom) Objects.requireNonNullElse(getHomeHandler().getHome().getRoom(config.id), new NARoom());
     }
+
+    @Override
+    public void handleCommand(ChannelUID channelUID, Command command) {
+        if (command instanceof RefreshType) {
+            super.handleCommand(channelUID, command);
+        } else {
+            NARoom currentData = (NARoom) naThing;
+            HomeEnergyHandler handler = getHomeHandler();
+            NAHome home = handler.getHome();
+            if (currentData != null && handler != null) {
+                String channelName = channelUID.getIdWithoutGroup();
+                String groupName = channelUID.getGroupId();
+                if (channelName.equals(CHANNEL_SETPOINT_MODE)) {
+                    SetpointMode targetMode = SetpointMode.valueOf(command.toString());
+                    if (targetMode == SetpointMode.MANUAL) {
+//                        updateState(channelUID, toStringType(currentData.getSetpointMode()));
+                        logger.info("Switch to 'Manual' is done by setting a setpoint temp, command ignored");
+                    } else {
+                        callSetRoomThermMode(home.getId(), config.id, targetMode);
+                    }
+                } else if (GROUP_TH_SETPOINT.equals(groupName) && channelName.equals(CHANNEL_VALUE)) {
+                    QuantityType<?> quantity = commandToQuantity(command, MeasureClass.INTERIOR_TEMPERATURE);
+                    if (quantity != null) {
+                        callSetRoomThermTemp(home.getId(), config.id, quantity.doubleValue());
+                    } else {
+                        logger.warn("Incorrect command '{}' on channel '{}'", command, channelName);
+                    }
+                }
+            }
+        }
+    }
+    
+    public int getSetpointDefaultDuration() {
+        HomeEnergyHandler bridgeHandler = getHomeHandler();
+        return bridgeHandler != null ? bridgeHandler.getSetpointDefaultDuration() : 120;
+    }
+
+    public void callSetRoomThermMode(String homeId, String roomId, SetpointMode targetMode) {
+        EnergyApi api = apiBridge.getEnergyApi();
+        tryApiCall(() -> api != null
+                ? api.setroomthermpoint(homeId, roomId, targetMode,
+                        targetMode == SetpointMode.MAX ? getSetpointEndTimeFromNow(getSetpointDefaultDuration()) : 0, 0)
+                : false);
+    }
+
+    public void callSetRoomThermTemp(String homeId, String roomId, double temperature) {
+        EnergyApi api = apiBridge.getEnergyApi();
+        tryApiCall(() -> api != null ? api.setroomthermpoint(homeId, roomId, SetpointMode.MANUAL,
+                getSetpointEndTimeFromNow(getSetpointDefaultDuration()), temperature) : false);
+    }
+
 }

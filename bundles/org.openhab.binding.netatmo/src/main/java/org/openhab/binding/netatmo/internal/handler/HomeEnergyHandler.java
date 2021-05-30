@@ -25,8 +25,11 @@ import org.openhab.binding.netatmo.internal.api.ApiBridge;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
+import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
 import org.openhab.binding.netatmo.internal.api.dto.NARoom;
+import org.openhab.binding.netatmo.internal.api.dto.NRV;
 import org.openhab.binding.netatmo.internal.api.dto.energy.Homestatus;
+import org.openhab.binding.netatmo.internal.api.dto.energy.Module;
 import org.openhab.binding.netatmo.internal.api.dto.energy.Room;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
@@ -65,6 +68,20 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
     protected NAHome updateReadings() throws NetatmoException {
         home = apiBridge.getEnergyApi().getHomesData(config.id);
         Homestatus status = apiBridge.getEnergyApi().getHomeStatus(home.getId());
+
+        Module localplug = status.getBody().getHome().getNAPlug();
+        NAPlug NAlocalplug = (NAPlug) home.getModule(localplug.getId());
+        NAlocalplug.setFirmware_revision(localplug.getFirmwareRevision());
+        NAlocalplug.setRfStrength(localplug.getRfStrength());
+        NAlocalplug.setWifiStrength(localplug.getWifiStrength());
+
+        for (Module module : status.getBody().getHome().getNRVs()) {
+            NRV nrvmodule = (NRV) home.getModule(module.getId());
+            nrvmodule.setFirmware_revision(module.getFirmwareRevision());
+            nrvmodule.setRfStrength(module.getRfStrength());
+            nrvmodule.setBatteryState(module.getBatteryState());
+        }
+        
         for (Room room : status.getBody().getHome().getRooms()) {
             NARoom naRoom = home.getRoom(room.getId());
             naRoom.setAnticipating(room.getAnticipating());
@@ -104,8 +121,11 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
         }
     }
 
-    public void callSetThermMode(String moduleId, SetpointMode targetMode) {
-        tryApiCall(() -> apiBridge.getEnergyApi().setthermmode(config.id, targetMode.getDescriptor()));
+    public void callSetThermMode(String homeId, SetpointMode targetMode) {
+        tryApiCall(() -> apiBridge.getEnergyApi().setthermmode(homeId, targetMode.getDescriptor()));
     }
 
+    public int getSetpointDefaultDuration() {
+        return home.getThermSetpointDefaultDuration();
+    }
 }

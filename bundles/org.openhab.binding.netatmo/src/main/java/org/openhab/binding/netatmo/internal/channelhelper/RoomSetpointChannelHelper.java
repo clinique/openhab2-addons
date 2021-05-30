@@ -52,15 +52,19 @@ public class RoomSetpointChannelHelper extends AbstractChannelHelper {
     @Override
     protected @Nullable State internalGetProperty(NAThing naThing, String channelId) {
         NARoom room = (NARoom) naThing;
-        switch (channelId) {
-            case CHANNEL_VALUE:
-                return getCurrentSetpoint(room);
-            case CHANNEL_SETPOINT_MODE:
-                return new StringType(room.getThermSetpointMode().name());
-            case CHANNEL_SETPOINT_START_TIME:
-                return toDateTimeType(room.getThermSetpointStartTime(), zoneId);    
-            case CHANNEL_SETPOINT_END_TIME:
-                return (room.getThermSetpointEndTime() > 0 ? toDateTimeType(room.getThermSetpointEndTime(), zoneId) : null);    
+        if (room != null) {
+            switch (channelId) {
+                case CHANNEL_VALUE:
+                    return getCurrentSetpoint(room);
+                case CHANNEL_SETPOINT_MODE:
+                    return room.getThermSetpointMode() != null ? new StringType(room.getThermSetpointMode().name())
+                            : null;
+                case CHANNEL_SETPOINT_START_TIME:
+                    return toDateTimeType(room.getThermSetpointStartTime(), zoneId);
+                case CHANNEL_SETPOINT_END_TIME:
+                    return (room.getThermSetpointEndTime() > 0 ? toDateTimeType(room.getThermSetpointEndTime(), zoneId)
+                            : null);
+            }
         }
         return null;
     }
@@ -72,6 +76,7 @@ public class RoomSetpointChannelHelper extends AbstractChannelHelper {
             // NAThermProgram currentProgram = room.getActiveProgram();
             switch (thermSetPointMode) {
                 case AWAY:
+                case HOME:
                 case MANUAL:
                 case SCHEDULE:
                 case FROST_GUARD:

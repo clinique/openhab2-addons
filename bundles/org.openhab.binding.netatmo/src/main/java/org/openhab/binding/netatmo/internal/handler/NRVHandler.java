@@ -13,16 +13,20 @@
 package org.openhab.binding.netatmo.internal.handler;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
-import org.openhab.binding.netatmo.internal.api.dto.NAHome;
+import org.openhab.binding.netatmo.internal.api.dto.NAThing;
 import org.openhab.binding.netatmo.internal.api.dto.NRV;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
+import org.openhab.core.thing.Thing;
+import org.openhab.core.thing.ThingStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +37,6 @@ import org.slf4j.LoggerFactory;
  * @author Gaël L'hopital - Initial contribution
  *
  */
-@SuppressWarnings("unused")
 @NonNullByDefault
 public class NRVHandler extends NetatmoDeviceHandler {
 
@@ -44,15 +47,29 @@ public class NRVHandler extends NetatmoDeviceHandler {
         super(bridge, channelHelpers, apiBridge, timeZoneProvider, descriptionProvider);
     }
 
-    @Override
-    protected NRV updateReadings() throws NetatmoException {
-        logger.debug("updateReadings");
-        List<NAHome> homes = apiBridge.getHomeApi().getHomeList(null);
-        for (NAHome home : homes) {
-            NRV nrv = (NRV) home.getModule(config.id);
-            if (nrv != null)
-                return nrv;
+    private @NonNullByDefault({}) HomeEnergyHandler getHomeHandler() {
+        Bridge bridge = super.getBridge();
+        if (bridge != null && bridge.getStatus() == ThingStatus.ONLINE) {
+            PlugHandler plughandler = (PlugHandler) bridge.getHandler();
+            return (HomeEnergyHandler) plughandler.getHomeHandler();
         }
-        return new NRV();
+        return null;
+    }
+
+    @Override    
+    protected NRV updateReadings() throws NetatmoException {
+        logger.debug("updateReadings on valve");
+        return (NRV) Objects.requireNonNullElse(getHomeHandler().getHome().getModule(config.id), new NRV());
+    }
+
+    @Override
+    protected void updateProperties(NAThing naThing) {
+        NRV nrv = (NRV) naThing;
+        int firmware = nrv.getFirmware_revision();
+        if (firmware != -1) {
+            Map<String, String> properties = editProperties();
+            properties.put(Thing.PROPERTY_FIRMWARE_VERSION, Integer.toString(firmware));
+            updateProperties(properties);
+        }
     }
 }

@@ -69,6 +69,7 @@ public class HomeEnergyChannelHelper extends AbstractChannelHelper {
                 if (thermMode != null) {
                     switch (thermMode) {
                         case PROGRAM:
+                        case HOME:
                         case SCHEDULE:
                             NATimeTableItem currentProgramMode = getCurrentProgramMode(localThing.getActiveProgram());
                             if (currentProgram != null && currentProgramMode != null) {
@@ -90,6 +91,7 @@ public class HomeEnergyChannelHelper extends AbstractChannelHelper {
                 if (thermMode != null) {
                     switch (thermMode) {
                         case PROGRAM:
+                        case HOME:
                         case SCHEDULE:
                             return toDateTimeType(getNextProgramTime(localThing.getActiveProgram()),zoneId);
                         case AWAY:

@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Bernhard Kreuz - Initial contribution
@@ -99,5 +103,13 @@ public class Home implements Serializable {
     public Home withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
+    }
+
+    public @Nullable Module getNAPlug() {
+        return modules.stream().filter(m -> m.getType().equals("NAPlug")).findFirst().orElse(null);
+    }
+
+    public List<Module> getNRVs() {
+        return modules.stream().filter(m -> m.getType().equals("NRV")).collect(Collectors.toList());
     }
 }

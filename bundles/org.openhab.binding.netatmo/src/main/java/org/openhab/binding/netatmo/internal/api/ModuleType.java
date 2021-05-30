@@ -14,6 +14,7 @@ package org.openhab.binding.netatmo.internal.api;
 
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.BINDING_ID;
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_BATTERY;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_ENERGY_BATTERY;
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_CO2;
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_DEVICE;
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_HEALTH;
@@ -56,6 +57,7 @@ import org.openhab.binding.netatmo.internal.api.dto.NAWelcome;
 import org.openhab.binding.netatmo.internal.api.dto.NRV;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.BatteryHelper;
+import org.openhab.binding.netatmo.internal.channelhelper.EnergyBatteryHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.CameraChannelHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.Co2ChannelHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.DeviceChannelHelper;
@@ -150,8 +152,8 @@ public enum ModuleType {
             Set.of(HomeEnergyChannelHelper.class),
             List.of(GROUP_HOME_ENERGY), null),
     NAPlug(PlugHandler.class, RefreshPolicy.CONFIG, NAHomeEnergy, null,
-            Set.of(PlugChannelHelper.class, DeviceChannelHelper.class),
-            List.of(GROUP_PLUG, GROUP_DEVICE, GROUP_SIGNAL),
+            Set.of(PlugChannelHelper.class),
+            List.of(GROUP_PLUG, GROUP_SIGNAL),
             NAPlug.class),
     NATherm1(Therm1Handler.class, RefreshPolicy.PARENT, NAPlug, null,
             Set.of(Therm1PropsChannelHelper.class, Therm1SetpointChannelHelper.class, Therm1TempChannelHelper.class,
@@ -163,8 +165,8 @@ public enum ModuleType {
             Set.of(RoomPropsChannelHelper.class, RoomTempChannelHelper.class, RoomSetpointChannelHelper.class),
             List.of(GROUP_ROOM_PROPERTIES, GROUP_TH_SETPOINT, GROUP_ROOM_TEMPERATURE), NARoom.class),
     NRV(NRVHandler.class, RefreshPolicy.CONFIG, NAHomeEnergy, null,
-            Set.of(BatteryHelper.class, ModuleChannelHelper.class),
-            List.of(GROUP_MODULE, GROUP_SIGNAL, GROUP_BATTERY),
+            Set.of(EnergyBatteryHelper.class),
+            List.of(GROUP_ENERGY_BATTERY, GROUP_SIGNAL),
             NRV.class),
     // Left for future implementation
     // NACamDoorTag : self explaining

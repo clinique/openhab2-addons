@@ -6,15 +6,24 @@ package org.openhab.binding.netatmo.internal.api.dto;
  *
  */
 
-public class NAEnergyModule extends NAThing{
-    private int firmware_revision;
+public class NAEnergyModule extends NADevice{
+    private int firmware_revision = -1;
     private int rf_strength;
+    private String battery_state = "";
 
-    public int getRf_strength() {
+    public String getBatteryState() {
+        return this.battery_state;
+    }
+
+    public void setBatteryState(String battery_state) {
+        this.battery_state = battery_state;
+    }
+
+    public int getRfStrength() {
         return this.rf_strength;
     }
 
-    public void setRf_strength(int rf_strength) {
+    public void setRfStrength(int rf_strength) {
         this.rf_strength = rf_strength;
     }
 
