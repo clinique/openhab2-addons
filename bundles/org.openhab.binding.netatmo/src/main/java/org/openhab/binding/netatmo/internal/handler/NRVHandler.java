@@ -51,7 +51,9 @@ public class NRVHandler extends NetatmoDeviceHandler {
         Bridge bridge = super.getBridge();
         if (bridge != null && bridge.getStatus() == ThingStatus.ONLINE) {
             PlugHandler plughandler = (PlugHandler) bridge.getHandler();
-            return (HomeEnergyHandler) plughandler.getHomeHandler();
+            if (plughandler != null) {
+                return (HomeEnergyHandler) plughandler.getHomeHandler();
+            }
         }
         return null;
     }
