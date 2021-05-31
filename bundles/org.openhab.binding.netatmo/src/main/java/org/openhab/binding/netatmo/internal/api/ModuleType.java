@@ -179,4 +179,16 @@ public enum ModuleType {
                 ? (groups.contains(GROUP_BATTERY) ? RADIO_SIGNAL_LEVELS : WIFI_SIGNAL_LEVELS)
                 : NO_RADIO;
     }
+
+    public static Boolean isModuleTypeImplemented(String name) {
+        if (name.isBlank()) {
+            return false;
+        }
+        for (ModuleType item : ModuleType.values()) {
+            if (name.equals(item.toString())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
