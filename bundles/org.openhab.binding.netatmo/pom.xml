@@ -13,8 +13,5 @@
   <artifactId>org.openhab.binding.netatmo</artifactId>
 
   <name>openHAB Add-ons :: Bundles :: Netatmo Binding</name>
-  <properties>
-    <spotless.check.skip>false</spotless.check.skip>
-  </properties>
 
 </project>

@@ -40,7 +40,7 @@ public class EnergyApi extends RestManager {
     }
 
     public EnergyApi(ApiBridge apiClient) {
-        super(apiClient, NetatmoConstants.ALL_SCOPES);
+        super(apiClient, NetatmoConstants.ENERGY_SCOPES);
     }
 
     public class NAHomesDataResponse extends ApiResponse<NAHomeData> {
@@ -55,8 +55,11 @@ public class EnergyApi extends RestManager {
         return response.getBody().getHomes();
     }
 
-    public NAHome getHomesData(String homeId) throws NetatmoException {
-        String req = URL_HOMESDATA + "?home_id=" + homeId + "&gateway_types=NAPlug";
+    public NAHome getHomesData(String homeId, @Nullable ModuleType type) throws NetatmoException {
+        String req = URL_HOMESDATA + "?home_id=" + homeId;
+        if (type != null) {
+            req += "&gateway_types=" + type.name();
+        }
         NAHomesDataResponse response = get(req, NAHomesDataResponse.class);
         return response.getBody().getHomes().get(0);
     }
@@ -125,7 +128,7 @@ public class EnergyApi extends RestManager {
      * @throws NetatmoException If fail to call the API, e.g. server error or cannot deserialize the
      *             response body
      */
-    public boolean setthermmode(String homeId, String mode) throws NetatmoException {
+    public boolean setThermMode(String homeId, String mode) throws NetatmoException {
         String req = "setthermmode";
         String payload = String.format("{\"home_id\":\"%s\",\"mode\":\"%s\"}", homeId, mode);
         ApiOkResponse response = post(req, payload, ApiOkResponse.class, false);
@@ -150,7 +153,7 @@ public class EnergyApi extends RestManager {
      * @throws NetatmoCommunicationException If fail to call the API, e.g. server error or cannot deserialize the
      *             response body
      */
-    public boolean setroomthermpoint(String homeId, String roomId, SetpointMode mode, long endtime, double temp)
+    public boolean setRoomThermpoint(String homeId, String roomId, SetpointMode mode, long endtime, double temp)
             throws NetatmoException {
         String req = "setroomthermpoint?home_id=%s&room_id=%s&mode=%s";
         req = String.format(req, homeId, roomId, mode.getDescriptor());

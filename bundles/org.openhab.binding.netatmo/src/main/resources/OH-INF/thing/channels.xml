@@ -145,7 +145,7 @@
 		<label>Heating Power</label>
 		<description>Percentage of heating power.</description>
 		<category>Energy</category>
-		<state readOnly="true" pattern="%.0f %%"/>
+		<state readOnly="true" pattern="%.0f %unit%"/>
 	</channel-type>
 
 	<channel-type id="orientation" advanced="true">

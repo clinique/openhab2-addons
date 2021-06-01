@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
+import org.openhab.binding.netatmo.internal.api.ModuleType;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
@@ -66,7 +67,7 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
 
     @Override
     protected NAHome updateReadings() throws NetatmoException {
-        home = apiBridge.getEnergyApi().getHomesData(config.id);
+        home = apiBridge.getEnergyApi().getHomesData(config.id, ModuleType.NAPlug);
         Homestatus status = apiBridge.getEnergyApi().getHomeStatus(home.getId());
 
         Module localplug = status.getBody().getHome().getNAPlug();
@@ -122,7 +123,7 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
     }
 
     public void callSetThermMode(String homeId, SetpointMode targetMode) {
-        tryApiCall(() -> apiBridge.getEnergyApi().setthermmode(homeId, targetMode.getDescriptor()));
+        tryApiCall(() -> apiBridge.getEnergyApi().setThermMode(homeId, targetMode.getDescriptor()));
     }
 
     public int getSetpointDefaultDuration() {

@@ -111,14 +111,14 @@ public class RoomHandler extends NetatmoDeviceHandler {
     public void callSetRoomThermMode(String homeId, String roomId, SetpointMode targetMode) {
         EnergyApi api = apiBridge.getEnergyApi();
         tryApiCall(() -> api != null
-                ? api.setroomthermpoint(homeId, roomId, targetMode,
+                ? api.setRoomThermpoint(homeId, roomId, targetMode,
                         targetMode == SetpointMode.MAX ? getSetpointEndTimeFromNow(getSetpointDefaultDuration()) : 0, 0)
                 : false);
     }
 
     public void callSetRoomThermTemp(String homeId, String roomId, double temperature) {
         EnergyApi api = apiBridge.getEnergyApi();
-        tryApiCall(() -> api != null ? api.setroomthermpoint(homeId, roomId, SetpointMode.MANUAL,
+        tryApiCall(() -> api != null ? api.setRoomThermpoint(homeId, roomId, SetpointMode.MANUAL,
                 getSetpointEndTimeFromNow(getSetpointDefaultDuration()), temperature) : false);
     }
 }
