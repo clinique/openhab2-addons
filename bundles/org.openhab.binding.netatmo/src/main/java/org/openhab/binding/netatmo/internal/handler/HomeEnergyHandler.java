@@ -67,37 +67,42 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
 
     @Override
     protected NAHome updateReadings() throws NetatmoException {
-        home = apiBridge.getEnergyApi().getHomesData(config.id, ModuleType.NAPlug);
-        Homestatus status = apiBridge.getEnergyApi().getHomeStatus(home.getId());
+        apiBridge.getEnergyApi().ifPresent(api -> {
+            try {
+                home = api.getHomesData(config.id, ModuleType.NAPlug);
+                Homestatus status = api.getHomeStatus(home.getId());
 
-        Module localplug = status.getBody().getHome().getNAPlug();
-        NAPlug NAlocalplug = (NAPlug) home.getModule(localplug.getId());
-        NAlocalplug.setFirmware_revision(localplug.getFirmwareRevision());
-        NAlocalplug.setRfStrength(localplug.getRfStrength());
-        NAlocalplug.setWifiStrength(localplug.getWifiStrength());
+                Module localplug = status.getBody().getHome().getNAPlug();
+                NAPlug NAlocalplug = (NAPlug) home.getModule(localplug.getId());
+                NAlocalplug.setFirmware_revision(localplug.getFirmwareRevision());
+                NAlocalplug.setRfStrength(localplug.getRfStrength());
+                NAlocalplug.setWifiStrength(localplug.getWifiStrength());
 
-        for (Module module : status.getBody().getHome().getNRVs()) {
-            NRV nrvmodule = (NRV) home.getModule(module.getId());
-            nrvmodule.setFirmware_revision(module.getFirmwareRevision());
-            nrvmodule.setRfStrength(module.getRfStrength());
-            nrvmodule.setBatteryState(module.getBatteryState());
-        }
+                for (Module module : status.getBody().getHome().getNRVs()) {
+                    NRV nrvmodule = (NRV) home.getModule(module.getId());
+                    nrvmodule.setFirmware_revision(module.getFirmwareRevision());
+                    nrvmodule.setRfStrength(module.getRfStrength());
+                    nrvmodule.setBatteryState(module.getBatteryState());
+                }
 
-        for (Room room : status.getBody().getHome().getRooms()) {
-            NARoom naRoom = home.getRoom(room.getId());
-            naRoom.setAnticipating(room.getAnticipating());
-            naRoom.setHeatingPowerRequest(room.getHeatingPowerRequest());
-            naRoom.setThermMeasuredTemperature(room.getThermMeasuredTemperature());
-            naRoom.setOpenWindow(room.getOpenWindow());
-            SetpointMode localmode = SetpointMode.fromName(room.getThermSetpointMode());
-            naRoom.setThermSetpointMode(localmode);
-            naRoom.setThermSetpointStartTime(room.getThermSetpointStartTime());
-            naRoom.setThermSetpointEndTime(room.getThermSetpointEndTime());
-            naRoom.setThermSetpointTemperature(Double.valueOf(room.getThermSetpointTemperature()));
-        }
-        ChannelUID channelUID = new ChannelUID(getThing().getUID(), GROUP_HOME_ENERGY, CHANNEL_PLANNING);
-        descriptionProvider.setStateOptions(channelUID, home.getThermSchedules().stream()
-                .map(p -> new StateOption(p.getId(), p.getName())).collect(Collectors.toList()));
+                for (Room room : status.getBody().getHome().getRooms()) {
+                    NARoom naRoom = home.getRoom(room.getId());
+                    naRoom.setAnticipating(room.getAnticipating());
+                    naRoom.setHeatingPowerRequest(room.getHeatingPowerRequest());
+                    naRoom.setThermMeasuredTemperature(room.getThermMeasuredTemperature());
+                    naRoom.setOpenWindow(room.getOpenWindow());
+                    SetpointMode localmode = SetpointMode.fromName(room.getThermSetpointMode());
+                    naRoom.setThermSetpointMode(localmode);
+                    naRoom.setThermSetpointStartTime(room.getThermSetpointStartTime());
+                    naRoom.setThermSetpointEndTime(room.getThermSetpointEndTime());
+                    naRoom.setThermSetpointTemperature(Double.valueOf(room.getThermSetpointTemperature()));
+                }
+                ChannelUID channelUID = new ChannelUID(getThing().getUID(), GROUP_HOME_ENERGY, CHANNEL_PLANNING);
+                descriptionProvider.setStateOptions(channelUID, home.getThermSchedules().stream()
+                        .map(p -> new StateOption(p.getId(), p.getName())).collect(Collectors.toList()));
+            } catch (NetatmoException e) {
+            }
+        });
         return home;
     }
 
@@ -108,7 +113,9 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
         } else {
             String channelName = channelUID.getIdWithoutGroup();
             if (CHANNEL_PLANNING.equals(channelName)) {
-                tryApiCall(() -> apiBridge.getEnergyApi().switchSchedule(config.id, command.toString()));
+                apiBridge.getEnergyApi().ifPresent(api -> {
+                    tryApiCall(() -> api.switchSchedule(config.id, command.toString()));
+                });
             } else if (channelName.equals(CHANNEL_SETPOINT_MODE)) {
                 SetpointMode targetMode = SetpointMode.valueOf(command.toString());
                 if (targetMode == SetpointMode.MANUAL) {
@@ -123,7 +130,9 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
     }
 
     public void callSetThermMode(String homeId, SetpointMode targetMode) {
-        tryApiCall(() -> apiBridge.getEnergyApi().setThermMode(homeId, targetMode.getDescriptor()));
+        apiBridge.getEnergyApi().ifPresent(api -> {
+            tryApiCall(() -> api.setThermMode(homeId, targetMode.getDescriptor()));
+        });
     }
 
     public int getSetpointDefaultDuration() {

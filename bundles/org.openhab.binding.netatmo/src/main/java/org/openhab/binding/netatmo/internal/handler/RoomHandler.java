@@ -24,7 +24,6 @@ import java.util.Objects;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
-import org.openhab.binding.netatmo.internal.api.EnergyApi;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureClass;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
@@ -109,16 +108,16 @@ public class RoomHandler extends NetatmoDeviceHandler {
     }
 
     public void callSetRoomThermMode(String homeId, String roomId, SetpointMode targetMode) {
-        EnergyApi api = apiBridge.getEnergyApi();
-        tryApiCall(() -> api != null
-                ? api.setRoomThermpoint(homeId, roomId, targetMode,
-                        targetMode == SetpointMode.MAX ? getSetpointEndTimeFromNow(getSetpointDefaultDuration()) : 0, 0)
-                : false);
+        apiBridge.getEnergyApi().ifPresent(api -> {
+            tryApiCall(() -> api.setRoomThermpoint(homeId, roomId, targetMode,
+                    targetMode == SetpointMode.MAX ? getSetpointEndTimeFromNow(getSetpointDefaultDuration()) : 0, 0));
+        });
     }
 
     public void callSetRoomThermTemp(String homeId, String roomId, double temperature) {
-        EnergyApi api = apiBridge.getEnergyApi();
-        tryApiCall(() -> api != null ? api.setRoomThermpoint(homeId, roomId, SetpointMode.MANUAL,
-                getSetpointEndTimeFromNow(getSetpointDefaultDuration()), temperature) : false);
+        apiBridge.getEnergyApi().ifPresent(api -> {
+            tryApiCall(() -> api.setRoomThermpoint(homeId, roomId, SetpointMode.MANUAL,
+                    getSetpointEndTimeFromNow(getSetpointDefaultDuration()), temperature));
+        });
     }
 }

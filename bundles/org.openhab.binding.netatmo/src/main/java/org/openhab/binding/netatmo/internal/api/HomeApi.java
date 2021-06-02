@@ -21,7 +21,6 @@ import org.openhab.binding.netatmo.internal.api.NetatmoConstants.PresenceLightMo
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NAHomeData;
 import org.openhab.binding.netatmo.internal.api.dto.NAPing;
-import org.openhab.binding.netatmo.internal.api.dto.energy.Homestatus;
 
 /**
  *
@@ -58,12 +57,6 @@ public class HomeApi extends RestManager {
         String req = "homesdata?home_id=" + homeId;
         NAHomesDataResponse response = get(req, NAHomesDataResponse.class);
         return response.getBody().getHomes().get(0);
-    }
-
-    public Homestatus getHomeStatus(String homeId) throws NetatmoException {
-        String req = "homestatus?home_id=" + homeId;
-        Homestatus response = get(req, Homestatus.class);
-        return response;
     }
 
     public boolean setpersonsaway(String homeId, String personId) throws NetatmoException {
