@@ -29,12 +29,13 @@ import com.google.gson.annotations.SerializedName;
 
 @NonNullByDefault
 public class NAThing extends NAObject {
-    @SerializedName(value = "rf_status", alternate = { "wifi_status" })
+    @SerializedName(value = "rf_status", alternate = { "wifi_status", "rf_strength" })
     private int radioStatus;
     @SerializedName(value = "last_seen", alternate = { "last_therm_seen", "last_status_store", "last_plug_seen" })
     private long lastSeen;
-    private long setupDate;
+    @SerializedName(value = "firmware", alternate = { "firmware_revision" })
     private int firmware = -1;
+    private long setupDate;
     private List<MeasureType> dataType = List.of();
     private @NonNullByDefault({}) ModuleType type;
     private @Nullable Boolean reachable;

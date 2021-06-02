@@ -28,16 +28,16 @@ import org.openhab.core.thing.Thing;
 import org.openhab.core.types.State;
 
 /**
- * The {@link RoomPropsChannelHelper} handle specific behavior
+ * The {@link RoomChannelHelper} handle specific behavior
  * of the room
  *
  * @author Markus Dillmann - Initial contribution
  *
  */
 @NonNullByDefault
-public class RoomPropsChannelHelper extends AbstractChannelHelper {
+public class RoomChannelHelper extends AbstractChannelHelper {
 
-    public RoomPropsChannelHelper(Thing thing, TimeZoneProvider timeZoneProvider) {
+    public RoomChannelHelper(Thing thing, TimeZoneProvider timeZoneProvider) {
         super(thing, timeZoneProvider, GROUP_ROOM_PROPERTIES);
     }
 

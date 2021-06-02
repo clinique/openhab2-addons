@@ -13,6 +13,7 @@
 package org.openhab.binding.netatmo.internal.channelhelper;
 
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toStringType;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
@@ -47,6 +48,9 @@ public class BatteryHelper extends AbstractChannelHelper {
                 return new DecimalType(percent);
             } else if (CHANNEL_LOW_BATTERY.equals(channelId)) {
                 return OnOffType.from(percent < 20);
+            } else if (CHANNEL_BATTERY_STATUS.equals(channelId)) {
+                String status = module.getBatteryState();
+                return toStringType(status);
             }
         }
         return null;

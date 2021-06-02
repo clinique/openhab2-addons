@@ -13,19 +13,17 @@
 package org.openhab.binding.netatmo.internal.handler;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
+import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
-import org.openhab.binding.netatmo.internal.api.dto.NAThing;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
-import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
 
 /**
@@ -53,17 +51,12 @@ public class PlugHandler extends NetatmoDeviceHandler {
 
     @Override
     protected NAPlug updateReadings() throws NetatmoException {
-        return (NAPlug) Objects.requireNonNullElse(getHomeHandler().getHome().getModule(config.id), new NAPlug());
+        NAHome localHome = getHomeHandler().getHome();
+        if (localHome != null) {
+            return (NAPlug) Objects.requireNonNullElse(localHome.getModule(config.id), new NAPlug());
+        }
+        return new NAPlug();
+
     }
 
-    @Override
-    protected void updateProperties(NAThing naThing) {
-        NAPlug plug = (NAPlug) naThing;
-        int firmware = plug.getFirmware_revision();
-        if (firmware != -1) {
-            Map<String, String> properties = editProperties();
-            properties.put(Thing.PROPERTY_FIRMWARE_VERSION, Integer.toString(firmware));
-            updateProperties(properties);
-        }
-    }
 }

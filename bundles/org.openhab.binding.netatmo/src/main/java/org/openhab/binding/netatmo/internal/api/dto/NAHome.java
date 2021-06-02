@@ -36,7 +36,6 @@ public class NAHome extends NADevice {
     private List<NAHomeEvent> events = List.of();
     private List<NAThermProgram> schedules = List.of();
     private List<NAWelcome> cameras = List.of();
-
     private List<NARoom> rooms = List.of();
     private @Nullable SetpointMode thermMode;
     private long thermModeEndtime = 0;
@@ -95,10 +94,6 @@ public class NAHome extends NADevice {
     public List<NARoom> getRooms() {
         return rooms;
     }
-
-    // public @Nullable NARoom getRoom(String key) {
-    // return rooms.get(key);
-    // }
 
     public @Nullable NARoom getRoom(String id) {
         return rooms.stream().filter(r -> r.getId().equals(id)).findFirst().orElse(null);

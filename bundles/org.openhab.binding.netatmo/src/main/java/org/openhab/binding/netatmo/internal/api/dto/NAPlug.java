@@ -31,10 +31,9 @@ import org.openhab.core.types.UnDefType;
  */
 
 @NonNullByDefault
-public class NAPlug extends NAEnergyModule {
+public class NAPlug extends NAModule {
     private @Nullable OpenClosedType plugConnectedBoiler;
     private Map<String, @Nullable Integer> lastBilan = Map.of();
-    private int wifi_strength;
 
     public State getPlugConnectedBoiler() {
         OpenClosedType connected = plugConnectedBoiler;
@@ -51,11 +50,4 @@ public class NAPlug extends NAEnergyModule {
         return null;
     }
 
-    public int getWifiStrength() {
-        return this.wifi_strength;
-    }
-
-    public void setWifiStrength(int wifi_strength) {
-        this.wifi_strength = wifi_strength;
-    }
 }

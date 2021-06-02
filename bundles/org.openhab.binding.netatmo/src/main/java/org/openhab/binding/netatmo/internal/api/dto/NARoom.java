@@ -12,6 +12,8 @@
  */
 package org.openhab.binding.netatmo.internal.api.dto;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 
 /**
@@ -19,13 +21,13 @@ import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
  * @author Bernhard Kreuz - Initial contribution
  *
  */
-
+@NonNullByDefault
 public class NARoom extends NAModule {
     private boolean anticipating;
     private int heatingPowerRequest;
     private boolean openWindow;
     private double thermMeasuredTemperature;
-    private SetpointMode thermSetpointMode;
+    private @Nullable SetpointMode thermSetpointMode;
     private double thermSetpointTemperature;
     private long thermSetpointStartTime;
     private long thermSetpointEndTime = -1;
@@ -90,7 +92,8 @@ public class NARoom extends NAModule {
      * @return the thermSetpointMode
      */
     public SetpointMode getThermSetpointMode() {
-        return thermSetpointMode;
+        SetpointMode mode = this.thermSetpointMode;
+        return mode == null ? SetpointMode.UNKNOWN : mode;
     }
 
     /**

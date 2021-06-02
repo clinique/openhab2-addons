@@ -12,33 +12,26 @@
  */
 package org.openhab.binding.netatmo.internal.handler;
 
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_PLANNING;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_SETPOINT_MODE;
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_HOME_ENERGY;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
+import org.openhab.binding.netatmo.internal.api.EnergyApi;
 import org.openhab.binding.netatmo.internal.api.ModuleType;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
-import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
 import org.openhab.binding.netatmo.internal.api.dto.NARoom;
-import org.openhab.binding.netatmo.internal.api.dto.NRV;
-import org.openhab.binding.netatmo.internal.api.dto.energy.Homestatus;
-import org.openhab.binding.netatmo.internal.api.dto.energy.Module;
-import org.openhab.binding.netatmo.internal.api.dto.energy.Room;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.types.Command;
 import org.openhab.core.types.RefreshType;
-import org.openhab.core.types.StateOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,56 +47,23 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
 
     private final Logger logger = LoggerFactory.getLogger(HomeEnergyHandler.class);
 
-    private NAHome home = new NAHome();
+    private @Nullable NAHome home;
+    private List<NARoom> rooms = List.of();
 
     public HomeEnergyHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
             TimeZoneProvider timeZoneProvider, NetatmoDescriptionProvider descriptionProvider) {
         super(bridge, channelHelpers, apiBridge, timeZoneProvider, descriptionProvider);
     }
 
-    public NAHome getHome() {
-        return home;
-    }
-
     @Override
     protected NAHome updateReadings() throws NetatmoException {
-        apiBridge.getEnergyApi().ifPresent(api -> {
-            try {
-                home = api.getHomesData(config.id, ModuleType.NAPlug);
-                Homestatus status = api.getHomeStatus(home.getId());
-
-                Module localplug = status.getBody().getHome().getNAPlug();
-                NAPlug NAlocalplug = (NAPlug) home.getModule(localplug.getId());
-                NAlocalplug.setFirmware_revision(localplug.getFirmwareRevision());
-                NAlocalplug.setRfStrength(localplug.getRfStrength());
-                NAlocalplug.setWifiStrength(localplug.getWifiStrength());
-
-                for (Module module : status.getBody().getHome().getNRVs()) {
-                    NRV nrvmodule = (NRV) home.getModule(module.getId());
-                    nrvmodule.setFirmware_revision(module.getFirmwareRevision());
-                    nrvmodule.setRfStrength(module.getRfStrength());
-                    nrvmodule.setBatteryState(module.getBatteryState());
-                }
-
-                for (Room room : status.getBody().getHome().getRooms()) {
-                    NARoom naRoom = home.getRoom(room.getId());
-                    naRoom.setAnticipating(room.getAnticipating());
-                    naRoom.setHeatingPowerRequest(room.getHeatingPowerRequest());
-                    naRoom.setThermMeasuredTemperature(room.getThermMeasuredTemperature());
-                    naRoom.setOpenWindow(room.getOpenWindow());
-                    SetpointMode localmode = SetpointMode.fromName(room.getThermSetpointMode());
-                    naRoom.setThermSetpointMode(localmode);
-                    naRoom.setThermSetpointStartTime(room.getThermSetpointStartTime());
-                    naRoom.setThermSetpointEndTime(room.getThermSetpointEndTime());
-                    naRoom.setThermSetpointTemperature(Double.valueOf(room.getThermSetpointTemperature()));
-                }
-                ChannelUID channelUID = new ChannelUID(getThing().getUID(), GROUP_HOME_ENERGY, CHANNEL_PLANNING);
-                descriptionProvider.setStateOptions(channelUID, home.getThermSchedules().stream()
-                        .map(p -> new StateOption(p.getId(), p.getName())).collect(Collectors.toList()));
-            } catch (NetatmoException e) {
-            }
-        });
-        return home;
+        EnergyApi api = apiBridge.getRestManager(EnergyApi.class);
+        if (api != null) {
+            NAHome home = api.getHomesData(config.id, ModuleType.NAPlug);
+            this.rooms = home.getRooms();
+            return home;
+        }
+        throw new NetatmoException("No api available to access Welcome Home");
     }
 
     @Override
@@ -129,6 +89,15 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
         }
     }
 
+    @Override
+    protected void updateChildModules() {
+        super.updateChildModules();
+        if (naThing instanceof NAHome) {
+            NAHome localNaThing = (NAHome) naThing;
+            localNaThing.getRooms().forEach(entry -> notifyListener(entry.getId(), entry));
+        }
+    }
+
     public void callSetThermMode(String homeId, SetpointMode targetMode) {
         apiBridge.getEnergyApi().ifPresent(api -> {
             tryApiCall(() -> api.setThermMode(homeId, targetMode.getDescriptor()));
@@ -136,6 +105,14 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
     }
 
     public int getSetpointDefaultDuration() {
-        return home.getThermSetpointDefaultDuration();
+        NAHome localHome = getHome();
+        if (localHome != null) {
+            return home.getThermSetpointDefaultDuration();
+        }
+        return -1;
+    }
+
+    public @Nullable NAHome getHome() {
+        return home;
     }
 }

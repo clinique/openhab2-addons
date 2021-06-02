@@ -13,19 +13,17 @@
 package org.openhab.binding.netatmo.internal.handler;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
-import org.openhab.binding.netatmo.internal.api.dto.NAThing;
-import org.openhab.binding.netatmo.internal.api.dto.NRV;
+import org.openhab.binding.netatmo.internal.api.dto.NAHome;
+import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
-import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,26 +50,20 @@ public class NRVHandler extends NetatmoDeviceHandler {
         if (bridge != null && bridge.getStatus() == ThingStatus.ONLINE) {
             PlugHandler plughandler = (PlugHandler) bridge.getHandler();
             if (plughandler != null) {
-                return (HomeEnergyHandler) plughandler.getHomeHandler();
+                return plughandler.getHomeHandler();
             }
         }
         return null;
     }
 
     @Override
-    protected NRV updateReadings() throws NetatmoException {
-        logger.debug("updateReadings on valve");
-        return (NRV) Objects.requireNonNullElse(getHomeHandler().getHome().getModule(config.id), new NRV());
+    protected NAPlug updateReadings() throws NetatmoException {
+        NAHome localHome = getHomeHandler().getHome();
+        if (localHome != null) {
+            return (NAPlug) Objects.requireNonNullElse(localHome.getModule(config.id), new NAPlug());
+        }
+        return new NAPlug();
+
     }
 
-    @Override
-    protected void updateProperties(NAThing naThing) {
-        NRV nrv = (NRV) naThing;
-        int firmware = nrv.getFirmware_revision();
-        if (firmware != -1) {
-            Map<String, String> properties = editProperties();
-            properties.put(Thing.PROPERTY_FIRMWARE_VERSION, Integer.toString(firmware));
-            updateProperties(properties);
-        }
-    }
 }
