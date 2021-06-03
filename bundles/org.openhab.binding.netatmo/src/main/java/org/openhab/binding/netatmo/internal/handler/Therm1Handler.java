@@ -21,8 +21,6 @@ import org.openhab.binding.netatmo.internal.api.ApiBridge;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * {@link Therm1Handler} is the class used to handle the thermostat
@@ -34,8 +32,6 @@ import org.slf4j.LoggerFactory;
 @NonNullByDefault
 public class Therm1Handler extends NetatmoDeviceHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(Therm1Handler.class);
-
     public Therm1Handler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
             TimeZoneProvider timeZoneProvider, NetatmoDescriptionProvider descriptionProvider) {
         super(bridge, channelHelpers, apiBridge, timeZoneProvider, descriptionProvider);
@@ -45,36 +41,4 @@ public class Therm1Handler extends NetatmoDeviceHandler {
         NetatmoDeviceHandler handler = super.getBridgeHandler(getBridge());
         return handler != null ? (PlugHandler) handler : null;
     }
-
-    /*
-     * @Override
-     * public void handleCommand(ChannelUID channelUID, Command command) {
-     * if (command instanceof RefreshType) {
-     * super.handleCommand(channelUID, command);
-     * } else {
-     * NAThermostat currentData = (NAThermostat) naThing;
-     * PlugHandler handler = getPlugHandler();
-     * if (currentData != null && handler != null) {
-     * String channelName = channelUID.getIdWithoutGroup();
-     * String groupName = channelUID.getGroupId();
-     * if (channelName.equals(CHANNEL_SETPOINT_MODE)) {
-     * SetpointMode targetMode = SetpointMode.valueOf(command.toString());
-     * if (targetMode == SetpointMode.MANUAL) {
-     * updateState(channelUID, toStringType(currentData.getSetpointMode()));
-     * logger.info("Switch to 'Manual' is done by setting a setpoint temp, command ignored");
-     * } else {
-     * handler.callSetThermMode(config.id, targetMode);
-     * }
-     * } else if (GROUP_TH_SETPOINT.equals(groupName) && channelName.equals(CHANNEL_VALUE)) {
-     * QuantityType<?> quantity = commandToQuantity(command, MeasureClass.INTERIOR_TEMPERATURE);
-     * if (quantity != null) {
-     * handler.callSetThermTemp(config.id, quantity.doubleValue());
-     * } else {
-     * logger.warn("Incorrect command '{}' on channel '{}'", command, channelName);
-     * }
-     * }
-     * }
-     * }
-     * }
-     */
 }
