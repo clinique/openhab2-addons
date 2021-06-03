@@ -49,5 +49,4 @@ public class NAPlug extends NAModule {
         }
         return null;
     }
-
 }

@@ -20,7 +20,7 @@ import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
-import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
+import org.openhab.binding.netatmo.internal.api.dto.NAModule;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
@@ -57,13 +57,11 @@ public class NRVHandler extends NetatmoDeviceHandler {
     }
 
     @Override
-    protected NAPlug updateReadings() throws NetatmoException {
+    protected NAModule updateReadings() throws NetatmoException {
         NAHome localHome = getHomeHandler().getHome();
         if (localHome != null) {
-            return (NAPlug) Objects.requireNonNullElse(localHome.getModule(config.id), new NAPlug());
+            return (NAModule) Objects.requireNonNullElse(localHome.getModule(config.id), new NAModule());
         }
-        return new NAPlug();
-
+        return new NAModule();
     }
-
 }

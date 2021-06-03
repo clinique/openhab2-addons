@@ -56,7 +56,5 @@ public class PlugHandler extends NetatmoDeviceHandler {
             return (NAPlug) Objects.requireNonNullElse(localHome.getModule(config.id), new NAPlug());
         }
         return new NAPlug();
-
     }
-
 }

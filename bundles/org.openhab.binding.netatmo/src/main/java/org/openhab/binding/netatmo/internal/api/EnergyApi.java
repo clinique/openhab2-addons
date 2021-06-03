@@ -20,6 +20,7 @@ import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.dto.NADeviceDataBody;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NAHomeData;
+import org.openhab.binding.netatmo.internal.api.dto.NAHomeStatus;
 import org.openhab.binding.netatmo.internal.api.dto.NAPlug;
 
 /**
@@ -45,7 +46,7 @@ public class EnergyApi extends RestManager {
     public class NAHomesDataResponse extends ApiResponse<NAHomeData> {
     }
 
-    public class NAHomeStatusResponse extends ApiResponse<NAHome> {
+    public class NAHomeStatusResponse extends ApiResponse<NAHomeStatus> {
 
     }
 
@@ -67,11 +68,11 @@ public class EnergyApi extends RestManager {
         return response.getBody().getHomes().get(0);
     }
 
-    public NAHomeStatusResponse getHomeStatus(String homeId) throws NetatmoException {
+    public NAHome getHomeStatus(String homeId) throws NetatmoException {
         String req = URL_HOMESTATUS + "?home_id=" + homeId
                 + "&device_types=NAPlug&device_types=NATherm&device_types=NRV";
         NAHomeStatusResponse response = get(req, NAHomeStatusResponse.class);
-        return response;
+        return response.getBody().getHome();
     }
 
     // -- deprecated

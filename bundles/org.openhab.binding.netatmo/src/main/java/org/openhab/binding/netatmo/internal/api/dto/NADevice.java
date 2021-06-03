@@ -32,6 +32,10 @@ public class NADevice extends NAThing {
         return modules;
     }
 
+    public void setModules(NADynamicObjectMap modules) {
+        this.modules = modules;
+    }
+
     public @Nullable NAThing getModule(String key) {
         return modules.get(key);
     }

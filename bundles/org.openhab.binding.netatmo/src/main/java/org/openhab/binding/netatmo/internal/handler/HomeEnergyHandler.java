@@ -12,7 +12,8 @@
  */
 package org.openhab.binding.netatmo.internal.handler;
 
-import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_PLANNING;
+import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_SETPOINT_MODE;
 
 import java.util.List;
 
@@ -61,6 +62,13 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
         if (api != null) {
             NAHome home = api.getHomesData(config.id, ModuleType.NAPlug);
             this.rooms = home.getRooms();
+            NAHome status = api.getHomeStatus(config.id);
+            this.rooms = status.getRooms();
+            // could not find out how to persist retrieved /homesdata and /homestatus so that the information later is
+            // accesssible by the other handlers
+            this.home = home;
+            this.home.setRooms(this.rooms);
+            this.home.setModules(status.getModules());
             return home;
         }
         throw new NetatmoException("No api available to access Welcome Home");

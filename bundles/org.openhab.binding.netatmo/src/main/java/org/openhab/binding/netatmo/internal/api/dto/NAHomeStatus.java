@@ -12,21 +12,16 @@
  */
 package org.openhab.binding.netatmo.internal.api.dto;
 
-import java.util.List;
-
-import org.eclipse.jdt.annotation.NonNullByDefault;
-
 /**
  *
- * @author Bernhard Kreuz - Initial contribution
+ * @author Gaël L'hopital - Initial contribution
  *
  */
 
-@NonNullByDefault
 public class NAHomeStatus {
-    private List<NAHome> homes = List.of();
+    private NAHome home;
 
-    public List<NAHome> getHomes() {
-        return homes;
+    public NAHome getHome() {
+        return home;
     }
 }
