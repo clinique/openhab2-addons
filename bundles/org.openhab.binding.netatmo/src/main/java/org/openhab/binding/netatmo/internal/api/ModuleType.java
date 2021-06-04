@@ -133,7 +133,7 @@ public enum ModuleType {
             Set.of(RoomChannelHelper.class, RoomTempChannelHelper.class, RoomSetpointChannelHelper.class),
             List.of(GROUP_ROOM_PROPERTIES, GROUP_TH_SETPOINT, GROUP_ROOM_TEMPERATURE), NARoom.class),
     NRV(NRVHandler.class, RefreshPolicy.CONFIG, NAHomeEnergy, null, Set.of(BatteryHelper.class),
-            List.of(GROUP_BATTERY, GROUP_SIGNAL), NAPlug.class),
+            List.of(GROUP_ENERGY_BATTERY, GROUP_SIGNAL), NAPlug.class),
     // Left for future implementation
     // NACamDoorTag : self explaining
     // NSD : smoke detector

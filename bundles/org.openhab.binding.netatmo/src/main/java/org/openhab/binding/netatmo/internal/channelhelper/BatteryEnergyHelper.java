@@ -13,40 +13,39 @@
 package org.openhab.binding.netatmo.internal.channelhelper;
 
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.*;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toStringType;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.dto.NAModule;
 import org.openhab.binding.netatmo.internal.api.dto.NAThing;
 import org.openhab.core.i18n.TimeZoneProvider;
-import org.openhab.core.library.types.DecimalType;
-import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.types.State;
 
 /**
- * The {@link BatteryHelper} handle specific behavior
- * of modules using batteries
+ * The {@link BatteryEnergyHelper} handle specific behavior
+ * of energy modules which only supply a battery state 
+ * 
+ * should be combined later with the standard helpers but for now helpers only accept a single group
  *
- * @author Gaël L'hopital - Initial contribution
+ * @author Markus Dillmann - Initial contribution
  *
  */
 @NonNullByDefault
-public class BatteryHelper extends AbstractChannelHelper {
+public class BatteryEnergyHelper extends AbstractChannelHelper {
 
-    public BatteryHelper(Thing thing, TimeZoneProvider timeZoneProvider) {
-        super(thing, timeZoneProvider, GROUP_BATTERY);
+    public BatteryEnergyHelper(Thing thing, TimeZoneProvider timeZoneProvider) {
+        super(thing, timeZoneProvider, GROUP_ENERGY_BATTERY);
     }
 
     @Override
     protected @Nullable State internalGetProperty(NAThing naThing, String channelId) {
         if (naThing instanceof NAModule) {
             NAModule module = (NAModule) naThing;
-            int percent = module.getBatteryPercent();
-            if (CHANNEL_VALUE.equals(channelId)) {
-                return new DecimalType(percent);
-            } else if (CHANNEL_LOW_BATTERY.equals(channelId)) {
-                return OnOffType.from(percent < 20);
+            if (CHANNEL_BATTERY_STATUS.equals(channelId)) {
+                String status = module.getBatteryState();
+                return toStringType(status);
             }
         }
         return null;

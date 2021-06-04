@@ -17,10 +17,6 @@
 		<channels>
 			<channel id="value" typeId="system.battery-level"/>
 			<channel id="low-battery" typeId="system.low-battery"/>
-			<channel id="status" typeId="string-ro">
-				<label>Status</label>
-				<description>Status of battery</description>
-			</channel>
 		</channels>
 	</channel-group-type>
 

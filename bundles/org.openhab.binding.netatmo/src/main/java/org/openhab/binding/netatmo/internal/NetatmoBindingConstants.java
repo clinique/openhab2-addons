@@ -81,6 +81,7 @@ public class NetatmoBindingConstants {
     public static final String GROUP_HOME_ENERGY = "energy";
     public static final String GROUP_SIGNAL = "signal";
     public static final String GROUP_BATTERY = "battery";
+    public static final String GROUP_ENERGY_BATTERY = "energy-battery";
     public static final String GROUP_HOME_SECURITY = "home-security";
     public static final String GROUP_WELCOME = "welcome";
     public static final String GROUP_PRESENCE = "presence";

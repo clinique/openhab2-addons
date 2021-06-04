@@ -102,4 +102,14 @@
 		</channels>
 	</channel-group-type>
 
+	<channel-group-type id="energy-battery">
+		<label>Battery</label>
+		<channels>
+			<channel id="status" typeId="string-ro">
+				<label>Status</label>
+				<description>Status of battery</description>
+			</channel>
+		</channels>
+	</channel-group-type>
+
 </thing:thing-descriptions>
