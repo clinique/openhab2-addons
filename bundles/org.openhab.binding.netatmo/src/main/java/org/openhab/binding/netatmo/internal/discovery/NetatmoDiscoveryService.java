@@ -86,29 +86,19 @@ public class NetatmoDiscoveryService extends AbstractDiscoveryService implements
             List<NAHome> result = apiBridge.getHomeApi().getHomeList(null);
             result.forEach(home -> {
                 List<NAPerson> persons = home.getKnownPersons();
-                // ThingUID homeUID = findThingUID(persons == null ? ModuleType.NAHomeEnergy :
-                // ModuleType.NAHomeSecurity,
-                // home.getId(), null);
-                // addDiscoveredThing(homeUID, home.getId(), home.getNonNullName(), null);
                 ThingUID homeUID = createDiscoveredThing(null, home,
                         persons == null ? ModuleType.NAHomeEnergy : ModuleType.NAHomeSecurity);
                 home.getModules().values().stream().filter(module -> module.getBridge() == null).forEach(module -> {
                     ThingUID moduleUID = createDiscoveredThing(homeUID, module, module.getType());
-                    // ThingUID moduleUID = findThingUID(module.getType(), module.getId(), homeUID);
-                    // addDiscoveredThing(moduleUID, module.getId(), module.getNonNullName(), homeUID);
                     localBridges.put(module.getId(), moduleUID);
                 });
                 home.getRooms().forEach(room -> {
                     ThingUID moduleUID = createDiscoveredThing(homeUID, room);
-                    // ThingUID moduleUID = findThingUID(module.getType(), module.getId(), homeUID);
-                    // addDiscoveredThing(moduleUID, module.getId(), module.getNonNullName(), homeUID);
                     localBridges.put(room.getId(), moduleUID);
                 });
                 home.getModules().values().stream().filter(module -> module.getBridge() != null).forEach(module -> {
                     ThingUID bridgeUID = localBridges.get(module.getBridge());
                     if (bridgeUID != null) {
-                        // ThingUID moduleUID = findThingUID(module.getType(), module.getId(), bridgeUID);
-                        // addDiscoveredThing(moduleUID, module.getId(), module.getNonNullName(), homeUID);
                         createDiscoveredThing(bridgeUID, module, module.getType());
                     }
                 });
@@ -160,15 +150,4 @@ public class NetatmoDiscoveryService extends AbstractDiscoveryService implements
         thingDiscovered(resultBuilder.build());
         return moduleUID;
     }
-
-    // private void searchHomeCoach(AircareApi api) {
-    // try {
-    // NADeviceDataBody<NAMain> result = api.getHomeCoachDataBody(null);
-    // for (NAMain homeCoach : result.getDevices().values()) {
-    // discoverHomeCoach(homeCoach);
-    // }
-    // } catch (NetatmoException e) {
-    // logger.warn("Error retrieving thermostat(s)", e);
-    // }
-    // }
 }
