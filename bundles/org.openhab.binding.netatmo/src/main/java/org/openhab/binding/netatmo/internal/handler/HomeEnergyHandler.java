@@ -22,6 +22,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
 import org.openhab.binding.netatmo.internal.api.EnergyApi;
+import org.openhab.binding.netatmo.internal.api.HomeApi;
 import org.openhab.binding.netatmo.internal.api.ModuleType;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
@@ -48,27 +49,28 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
 
     private final Logger logger = LoggerFactory.getLogger(HomeEnergyHandler.class);
 
-    private @Nullable NAHome home;
+    private NAHome home;
     private List<NARoom> rooms = List.of();
 
     public HomeEnergyHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
             TimeZoneProvider timeZoneProvider, NetatmoDescriptionProvider descriptionProvider) {
         super(bridge, channelHelpers, apiBridge, timeZoneProvider, descriptionProvider);
+        home = new NAHome();
     }
 
     @Override
     protected NAHome updateReadings() throws NetatmoException {
         EnergyApi api = apiBridge.getRestManager(EnergyApi.class);
-        if (api != null) {
-            NAHome home = api.getHomesData(config.id, ModuleType.NAPlug);
-            this.rooms = home.getRooms();
+        HomeApi homeapi = apiBridge.getRestManager(HomeApi.class);
+        if (api != null && homeapi != null) {
+            home = homeapi.getHomesData(config.id, ModuleType.NAPlug);
+            rooms = home.getRooms();
             NAHome status = api.getHomeStatus(config.id);
-            this.rooms = status.getRooms();
+            rooms = status.getRooms();
             // could not find out how to persist retrieved /homesdata and /homestatus so that the information later is
             // accesssible by the other handlers
-            this.home = home;
-            this.home.setRooms(this.rooms);
-            this.home.setModules(status.getModules());
+            home.setRooms(rooms);
+            home.setModules(status.getModules());
             return home;
         }
         throw new NetatmoException("No api available to access Welcome Home");
@@ -102,7 +104,9 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
         super.updateChildModules();
         if (naThing instanceof NAHome) {
             NAHome localNaThing = (NAHome) naThing;
-            localNaThing.getRooms().forEach(entry -> notifyListener(entry.getId(), entry));
+            if (localNaThing != null) {
+                localNaThing.getRooms().forEach(entry -> notifyListener(entry.getId(), entry));
+            }
         }
     }
 
