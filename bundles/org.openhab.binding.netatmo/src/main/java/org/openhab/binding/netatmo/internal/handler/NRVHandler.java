@@ -25,8 +25,6 @@ import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ThingStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * {@link NRVHandler} is the class used to handle the valve
@@ -37,8 +35,6 @@ import org.slf4j.LoggerFactory;
  */
 @NonNullByDefault
 public class NRVHandler extends NetatmoDeviceHandler {
-
-    private final Logger logger = LoggerFactory.getLogger(NRVHandler.class);
 
     public NRVHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
             TimeZoneProvider timeZoneProvider, NetatmoDescriptionProvider descriptionProvider) {
