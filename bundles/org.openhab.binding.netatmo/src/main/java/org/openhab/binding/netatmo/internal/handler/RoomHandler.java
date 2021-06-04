@@ -68,7 +68,14 @@ public class RoomHandler extends NetatmoDeviceHandler {
 
     @Override
     protected NARoom updateReadings() throws NetatmoException {
-        return (NARoom) Objects.requireNonNullElse(getHomeHandler().getHome().getRoom(config.id), new NARoom());
+        HomeEnergyHandler handler = getHomeHandler();
+        if (handler != null) {
+            NAHome localHome = handler.getHome();
+            if (localHome != null) {
+                return (NARoom) Objects.requireNonNullElse(localHome.getRoom(config.id), new NARoom());
+            }
+        }
+        return new NARoom();
     }
 
     @Override
@@ -78,24 +85,28 @@ public class RoomHandler extends NetatmoDeviceHandler {
         } else {
             NARoom currentData = (NARoom) naThing;
             HomeEnergyHandler handler = getHomeHandler();
-            NAHome home = handler.getHome();
-            if (currentData != null && handler != null) {
-                String channelName = channelUID.getIdWithoutGroup();
-                String groupName = channelUID.getGroupId();
-                if (channelName.equals(CHANNEL_SETPOINT_MODE)) {
-                    SetpointMode targetMode = SetpointMode.valueOf(command.toString());
-                    if (targetMode == SetpointMode.MANUAL) {
-                        // updateState(channelUID, toStringType(currentData.getSetpointMode()));
-                        logger.info("Switch to 'Manual' is done by setting a setpoint temp, command ignored");
-                    } else {
-                        callSetRoomThermMode(home.getId(), config.id, targetMode);
-                    }
-                } else if (GROUP_TH_SETPOINT.equals(groupName) && channelName.equals(CHANNEL_VALUE)) {
-                    QuantityType<?> quantity = commandToQuantity(command, MeasureClass.INTERIOR_TEMPERATURE);
-                    if (quantity != null) {
-                        callSetRoomThermTemp(home.getId(), config.id, quantity.doubleValue());
-                    } else {
-                        logger.warn("Incorrect command '{}' on channel '{}'", command, channelName);
+            if (handler != null) {
+                NAHome home = handler.getHome();
+                if (currentData != null && home != null) {
+                    String channelName = channelUID.getIdWithoutGroup();
+                    String groupName = channelUID.getGroupId();
+                    if (channelName.equals(CHANNEL_SETPOINT_MODE)) {
+                        SetpointMode targetMode = SetpointMode.valueOf(command.toString());
+                        if (targetMode == SetpointMode.MANUAL) {
+                            // updateState(channelUID, toStringType(currentData.getSetpointMode()));
+                            logger.info("Switch to 'Manual' is done by setting a setpoint temp, command ignored");
+                        } else {
+                            callSetRoomThermMode(home.getId(), config.id, targetMode);
+                        }
+                    } else if (GROUP_TH_SETPOINT.equals(groupName) && channelName.equals(CHANNEL_VALUE)) {
+                        QuantityType<?> quantity = commandToQuantity(command, MeasureClass.INTERIOR_TEMPERATURE);
+                        if (quantity != null) {
+                            callSetRoomThermTemp(home.getId(), config.id, quantity.doubleValue());
+                            updateState(channelUID, quantity);
+                            handler.expireData();
+                        } else {
+                            logger.warn("Incorrect command '{}' on channel '{}'", command, channelName);
+                        }
                     }
                 }
             }

@@ -51,9 +51,12 @@ public class PlugHandler extends NetatmoDeviceHandler {
 
     @Override
     protected NAPlug updateReadings() throws NetatmoException {
-        NAHome localHome = getHomeHandler().getHome();
-        if (localHome != null) {
-            return (NAPlug) Objects.requireNonNullElse(localHome.getModule(config.id), new NAPlug());
+        HomeEnergyHandler handler = getHomeHandler();
+        if (handler != null) {
+            NAHome localHome = handler.getHome();
+            if (localHome != null) {
+                return (NAPlug) Objects.requireNonNullElse(localHome.getModule(config.id), new NAPlug());
+            }
         }
         return new NAPlug();
     }
