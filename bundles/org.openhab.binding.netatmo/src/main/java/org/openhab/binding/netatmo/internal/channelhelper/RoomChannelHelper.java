@@ -16,14 +16,15 @@ import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANN
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_ROOM_HEATING_POWER;
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.CHANNEL_ROOM_WINDOW_OPEN;
 import static org.openhab.binding.netatmo.internal.NetatmoBindingConstants.GROUP_ROOM_PROPERTIES;
+import static org.openhab.binding.netatmo.internal.utils.ChannelTypeUtils.toQuantityType;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.dto.NARoom;
 import org.openhab.binding.netatmo.internal.api.dto.NAThing;
 import org.openhab.core.i18n.TimeZoneProvider;
-import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
+import org.openhab.core.library.unit.Units;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.types.State;
 
@@ -50,7 +51,7 @@ public class RoomChannelHelper extends AbstractChannelHelper {
             case CHANNEL_ROOM_ANTICIPATING:
                 return OnOffType.from(room.isAnticipating());
             case CHANNEL_ROOM_HEATING_POWER:
-                return new DecimalType(room.getHeatingPowerRequest());
+                return toQuantityType(room.getHeatingPowerRequest(), Units.PERCENT);
         }
         return null;
     }
