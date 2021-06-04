@@ -25,7 +25,7 @@ import org.openhab.core.types.State;
 
 /**
  * The {@link BatteryEnergyHelper} handle specific behavior
- * of energy modules which only supply a battery state 
+ * of energy modules which only supply a battery state
  * 
  * should be combined later with the standard helpers but for now helpers only accept a single group
  *
