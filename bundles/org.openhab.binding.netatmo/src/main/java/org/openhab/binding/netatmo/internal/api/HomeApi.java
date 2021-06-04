@@ -53,8 +53,11 @@ public class HomeApi extends RestManager {
         return response.getBody().getHomes();
     }
 
-    public NAHome getHomesData(String homeId) throws NetatmoException {
+    public NAHome getHomesData(String homeId, @Nullable ModuleType type) throws NetatmoException {
         String req = "homesdata?home_id=" + homeId;
+        if (type != null) {
+            req += "&gateway_types=" + type.name();
+        }
         NAHomesDataResponse response = get(req, NAHomesDataResponse.class);
         return response.getBody().getHomes().get(0);
     }
