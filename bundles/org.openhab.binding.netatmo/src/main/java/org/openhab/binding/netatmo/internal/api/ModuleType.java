@@ -27,7 +27,6 @@ import org.openhab.binding.netatmo.internal.api.dto.NAThermostat;
 import org.openhab.binding.netatmo.internal.api.dto.NAThing;
 import org.openhab.binding.netatmo.internal.api.dto.NAWelcome;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
-import org.openhab.binding.netatmo.internal.channelhelper.BatteryEnergyHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.BatteryHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.CameraChannelHelper;
 import org.openhab.binding.netatmo.internal.channelhelper.Co2ChannelHelper;
@@ -133,7 +132,7 @@ public enum ModuleType {
     NARoom(RoomHandler.class, RefreshPolicy.CONFIG, NAHomeEnergy, null,
             Set.of(RoomChannelHelper.class, RoomTempChannelHelper.class, RoomSetpointChannelHelper.class),
             List.of(GROUP_ROOM_PROPERTIES, GROUP_TH_SETPOINT, GROUP_ROOM_TEMPERATURE), NARoom.class),
-    NRV(NRVHandler.class, RefreshPolicy.CONFIG, NAHomeEnergy, null, Set.of(BatteryEnergyHelper.class),
+    NRV(NRVHandler.class, RefreshPolicy.CONFIG, NAHomeEnergy, null, Set.of(BatteryHelper.class),
             List.of(GROUP_ENERGY_BATTERY, GROUP_SIGNAL), NAPlug.class),
     // Left for future implementation
     // NACamDoorTag : self explaining
