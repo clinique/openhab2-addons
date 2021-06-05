@@ -27,7 +27,6 @@ import org.openhab.binding.netatmo.internal.api.ModuleType;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
-import org.openhab.binding.netatmo.internal.api.dto.NARoom;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.Bridge;
@@ -49,13 +48,11 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
 
     private final Logger logger = LoggerFactory.getLogger(HomeEnergyHandler.class);
 
-    private NAHome home;
-    private List<NARoom> rooms = List.of();
+    private NAHome home = new NAHome();
 
     public HomeEnergyHandler(Bridge bridge, List<AbstractChannelHelper> channelHelpers, ApiBridge apiBridge,
             TimeZoneProvider timeZoneProvider, NetatmoDescriptionProvider descriptionProvider) {
         super(bridge, channelHelpers, apiBridge, timeZoneProvider, descriptionProvider);
-        home = new NAHome();
     }
 
     @Override
@@ -64,12 +61,10 @@ public class HomeEnergyHandler extends NetatmoDeviceHandler {
         HomeApi homeapi = apiBridge.getRestManager(HomeApi.class);
         if (api != null && homeapi != null) {
             home = homeapi.getHomesData(config.id, ModuleType.NAPlug);
-            rooms = home.getRooms();
             NAHome status = api.getHomeStatus(config.id);
-            rooms = status.getRooms();
             // could not find out how to persist retrieved /homesdata and /homestatus so that the information later is
             // accesssible by the other handlers
-            home.setRooms(rooms);
+            home.setRooms(status.getRooms());
             home.setModules(status.getModules());
             return home;
         }
