@@ -61,6 +61,7 @@ public class AuthenticationApi extends RestManager {
         req += String.format(TOKEN_REQ, configuration.username, configuration.password, String.join(" ", scopes));
 
         NAAccessTokenResponse authorization = post(req, NAAccessTokenResponse.class);
+        logger.debug("auth response:" + authorization.toString());
         apiHandler.onAccessTokenResponse(authorization.getAccessToken(), authorization.getScope());
 
         scheduleTokenRefresh(authorization.getRefreshToken(), 5);
@@ -72,6 +73,7 @@ public class AuthenticationApi extends RestManager {
             req += String.format(TOKEN_REF, refreshToken);
             try {
                 NAAccessTokenResponse answer = post(req, NAAccessTokenResponse.class);
+                logger.debug("refresh token response:" + answer.toString());
                 apiHandler.onAccessTokenResponse(answer.getAccessToken(), answer.getScope());
                 scheduleTokenRefresh(answer.getRefreshToken(), Math.round(answer.getExpiresIn() * 0.8));
             } catch (NetatmoException e) {
