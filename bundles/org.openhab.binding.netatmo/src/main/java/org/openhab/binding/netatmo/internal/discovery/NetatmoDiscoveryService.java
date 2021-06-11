@@ -89,7 +89,9 @@ public class NetatmoDiscoveryService extends AbstractDiscoveryService implements
                 ThingUID homeUID = createDiscoveredThing(null, home, home.getType());
                 home.getModules().values().stream().filter(module -> module.getBridge() == null)
                         .forEach(foundBridge -> {
-                            ThingUID bridgeUID = createDiscoveredThing(homeUID, foundBridge, foundBridge.getType());
+                            ThingUID bridgeUID = createDiscoveredThing(
+                                    (foundBridge.getType() == ModuleType.NAMain ? null : homeUID), foundBridge,
+                                    foundBridge.getType());
                             home.getModules().values().stream()
                                     .filter(module -> foundBridge.getId().equalsIgnoreCase(module.getBridge()))
                                     .forEach(foundChild -> {
