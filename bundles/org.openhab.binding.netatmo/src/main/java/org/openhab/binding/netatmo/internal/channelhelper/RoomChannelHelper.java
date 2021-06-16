@@ -21,7 +21,7 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.api.dto.NARoom;
 import org.openhab.binding.netatmo.internal.api.dto.NAThing;
-import org.openhab.core.library.types.OnOffType;
+import org.openhab.core.library.types.OpenClosedType;
 import org.openhab.core.library.unit.Units;
 import org.openhab.core.types.State;
 
@@ -44,9 +44,9 @@ public class RoomChannelHelper extends AbstractChannelHelper {
         NARoom room = (NARoom) naThing;
         switch (channelId) {
             case CHANNEL_ROOM_WINDOW_OPEN:
-                return OnOffType.from(room.isOpenWindow());
+                return (room.isOpenWindow() ? OpenClosedType.OPEN : OpenClosedType.CLOSED);
             case CHANNEL_ANTICIPATING:
-                return OnOffType.from(room.isAnticipating());
+                return (room.isAnticipating() ? OpenClosedType.OPEN : OpenClosedType.CLOSED);
             case CHANNEL_ROOM_HEATING_POWER:
                 return toQuantityType(room.getHeatingPowerRequest(), Units.PERCENT);
         }
