@@ -120,6 +120,9 @@ public class HomeHandler extends NetatmoEventDeviceHandler {
             try {
                 NAHome status = api.getHomeStatus(config.id);
                 status.getRooms().keySet().forEach(id -> home.getModules().remove(id));
+                Boolean reachable = (status.getRooms().isEmpty() ? false : true);
+                home.getRooms().values().forEach(r -> r.setReachable(reachable));
+                home.getModules().values().forEach(r -> r.setReachable(reachable));
                 home.getRooms().putAll(status.getRooms()); // Rooms are better handled with status data
                 status.getModules().keySet().forEach(id -> home.getModules().remove(id));
                 home.getModules().putAll(status.getModules()); // Energy modules are better handled with status data
