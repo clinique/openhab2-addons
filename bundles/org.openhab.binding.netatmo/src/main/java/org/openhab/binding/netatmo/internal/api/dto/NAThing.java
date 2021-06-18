@@ -49,6 +49,10 @@ public class NAThing extends NAObject {
         return localReachable != null ? localReachable : true;
     }
 
+    public void setReachable(Boolean localReachable) {
+        this.reachable = localReachable;
+    }
+
     public @Nullable NADashboard getDashboardData() {
         return dashboardData;
     }
