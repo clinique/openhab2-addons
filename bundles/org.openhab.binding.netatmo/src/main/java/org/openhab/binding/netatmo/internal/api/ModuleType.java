@@ -125,13 +125,13 @@ public enum ModuleType {
     // NAHomeEnergy(HomeEnergyHandler.class, RefreshPolicy.AUTO, null, List.of(),
     // List.of(HomeEnergyChannelHelper.class),
     // List.of(GROUP_HOME_ENERGY), null),
-    NAPlug(NetatmoDeviceHandler.class, RefreshPolicy.PARENT, FeatureArea.ENERGY, NAHome, List.of(),
+    NAPlug(NetatmoDeviceHandler.class, RefreshPolicy.CONFIG, FeatureArea.ENERGY, NAHome, List.of(),
             List.of(PlugChannelHelper.class, DeviceChannelHelper.class),
             List.of(GROUP_PLUG, GROUP_DEVICE, GROUP_SIGNAL), NAPlug.class),
     NATherm1(NetatmoDeviceHandler.class, RefreshPolicy.CONFIG, FeatureArea.ENERGY, NAHome, List.of(),
             List.of(Therm1PropsChannelHelper.class, BatteryHelper.class),
             List.of(GROUP_TH_PROPERTIES, GROUP_SIGNAL, GROUP_ENERGY_BATTERY), NAThermostat.class),
-    NARoom(RoomHandler.class, RefreshPolicy.PARENT, FeatureArea.ENERGY, NAHome, List.of(),
+    NARoom(RoomHandler.class, RefreshPolicy.CONFIG, FeatureArea.ENERGY, NAHome, List.of(),
             List.of(RoomChannelHelper.class, RoomTempChannelHelper.class, RoomSetpointChannelHelper.class),
             List.of(GROUP_ROOM_PROPERTIES, GROUP_TH_SETPOINT, GROUP_ROOM_TEMPERATURE), NARoom.class),
     NRV(NetatmoDeviceHandler.class, RefreshPolicy.CONFIG, FeatureArea.ENERGY, NAHome, List.of(),
@@ -233,5 +233,4 @@ public enum ModuleType {
     public FeatureArea getFeatures() {
         return features;
     }
-
 }
