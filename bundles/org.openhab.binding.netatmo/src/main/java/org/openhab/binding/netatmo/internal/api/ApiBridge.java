@@ -104,7 +104,7 @@ public class ApiBridge {
             @Reference TimeZoneProvider timeZoneProvider, ComponentContext componentContext) {
         this.httpClient = httpClientFactory.getCommonHttpClient();
         this.httpHeaders.put(HttpHeader.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-        this.connectApi = new AuthenticationApi(this, oAuthFactory, configuration, scheduler);
+        this.connectApi = new AuthenticationApi(this, oAuthFactory, configuration/* , scheduler */);
 
         gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapterFactory(new StrictEnumTypeAdapterFactory())

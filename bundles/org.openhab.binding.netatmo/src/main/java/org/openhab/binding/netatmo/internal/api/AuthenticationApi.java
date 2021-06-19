@@ -16,7 +16,6 @@ import static org.openhab.core.auth.oauth2client.internal.Keyword.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
@@ -26,8 +25,6 @@ import org.openhab.binding.netatmo.internal.api.NetatmoConstants.FeatureArea;
 import org.openhab.binding.netatmo.internal.api.dto.NAAccessTokenResponse;
 import org.openhab.binding.netatmo.internal.config.NetatmoBindingConfiguration;
 import org.openhab.core.auth.client.oauth2.OAuthFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Allows access to the AutomowerConnectApi
@@ -39,16 +36,19 @@ class AuthenticationApi extends RestManager {
     private static final String ALL_SCOPES = FeatureArea.allScopes().stream().map(s -> s.name().toLowerCase())
             .collect(Collectors.joining(" "));
 
-    private final Logger logger = LoggerFactory.getLogger(AuthenticationApi.class);
+    // private final Logger logger = LoggerFactory.getLogger(AuthenticationApi.class);
     private final NetatmoBindingConfiguration configuration;
-    private final ScheduledExecutorService scheduler;
+    // private final ScheduledExecutorService scheduler;
     // private @Nullable ScheduledFuture<?> tokenRefreshTask;
 
-    AuthenticationApi(ApiBridge apiClient, OAuthFactory oAuthFactory, NetatmoBindingConfiguration configuration,
-            ScheduledExecutorService scheduler) {
+    AuthenticationApi(ApiBridge apiClient, OAuthFactory oAuthFactory,
+            NetatmoBindingConfiguration configuration/*
+                                                      * ,
+                                                      * ScheduledExecutorService scheduler
+                                                      */) {
         super(apiClient/* , FeatureArea.NONE */);
         this.configuration = configuration;
-        this.scheduler = scheduler;
+        // this.scheduler = scheduler;
     }
 
     void authenticate() throws NetatmoException {
