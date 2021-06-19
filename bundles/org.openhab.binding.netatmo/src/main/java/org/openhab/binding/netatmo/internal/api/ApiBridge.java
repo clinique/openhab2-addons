@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -41,7 +42,6 @@ import org.eclipse.jetty.client.util.InputStreamContentProvider;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
-import org.openhab.binding.netatmo.internal.api.NetatmoConstants.Scope;
 import org.openhab.binding.netatmo.internal.config.NetatmoBindingConfiguration;
 import org.openhab.binding.netatmo.internal.deserialization.NADynamicObjectMap;
 import org.openhab.binding.netatmo.internal.deserialization.NADynamicObjectMapDeserializer;
@@ -95,7 +95,9 @@ public class ApiBridge {
     private NetatmoBindingConfiguration configuration = new NetatmoBindingConfiguration();
     private Map<Class<? extends RestManager>, Object> managers = new HashMap<>();
     private ConnectionStatus connectionStatus = ConnectionStatus.Unknown();
-    private List<Scope> grantedScopes = List.of();
+    // private List<Scope> grantedScopes = List.of();
+
+    private @Nullable ScheduledFuture<?> pendingReconnect;
 
     @Activate
     public ApiBridge(@Reference OAuthFactory oAuthFactory, @Reference HttpClientFactory httpClientFactory,
@@ -137,20 +139,29 @@ public class ApiBridge {
     }
 
     public void openConnection() {
+        freeReconnectJob();
         try {
             configuration.checkIfValid();
             connectApi.authenticate();
             setConnectionStatus(ConnectionStatus.Success());
         } catch (NetatmoException e) {
             setConnectionStatus(ConnectionStatus.Failed("Will retry to connect Netatmo API, this one failed : %s", e));
-            scheduler.schedule(() -> openConnection(), configuration.reconnectInterval, TimeUnit.SECONDS);
+            pendingReconnect = scheduler.schedule(() -> openConnection(), configuration.reconnectInterval,
+                    TimeUnit.SECONDS);
+        }
+    }
+
+    private void freeReconnectJob() {
+        if (pendingReconnect != null) {
+            pendingReconnect.cancel(true);
+            pendingReconnect = null;
         }
     }
 
     private void setConnectionStatus(ConnectionStatus status) {
         connectionStatus = status;
         if (!connectionStatus.isConnected()) {
-            onAccessTokenResponse("", List.of());
+            onAccessTokenResponse(null, 0/* , List.of() */);
         }
         listeners.forEach(listener -> listener.notifyStatusChange(status));
     }
@@ -161,12 +172,12 @@ public class ApiBridge {
             try {
                 Constructor<?> constructor = typeOfRest.getConstructor(ApiBridge.class);
                 T tentative = (T) constructor.newInstance(this);
-                if (!grantedScopes.containsAll(tentative.getRequiredScopes())) {
-                    throw new NetatmoException("Required scopes missing to access : " + typeOfRest);
-                }
+                // if (!grantedScopes.containsAll(tentative.getRequiredScopes())) {
+                // throw new NetatmoException("Required scopes missing to access : " + typeOfRest);
+                // }
                 managers.put(typeOfRest, tentative);
             } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
-                    | InvocationTargetException | NetatmoException e) {
+                    | InvocationTargetException /* | NetatmoException */ e) {
                 logger.error("Error invoking RestManager constructor for class {} : {}", typeOfRest, e.getMessage());
             }
         }
@@ -251,9 +262,16 @@ public class ApiBridge {
         }
     }
 
-    void onAccessTokenResponse(String accessToken, List<Scope> grantedScopes) {
-        this.grantedScopes = grantedScopes;
-        httpHeaders.put(HttpHeader.AUTHORIZATION, "Bearer " + accessToken);
+    void onAccessTokenResponse(@Nullable String accessToken/* , List<Scope> grantedScopes */, long expiresIn) {
+        // this.grantedScopes = grantedScopes;
+        if (accessToken != null) {
+            httpHeaders.put(HttpHeader.AUTHORIZATION, String.format("Bearer %s", accessToken));
+            freeReconnectJob();
+            pendingReconnect = scheduler.schedule(() -> openConnection(), Math.round(expiresIn * 0.8),
+                    TimeUnit.SECONDS);
+        } else {
+            httpHeaders.remove(HttpHeader.AUTHORIZATION);
+        }
     }
 
     public void addConnectionListener(ConnectionListener listener) {

@@ -20,7 +20,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.binding.netatmo.internal.api.NetatmoConstants.FeatureArea;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.PresenceLightMode;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NAPing;
@@ -35,7 +34,7 @@ import org.openhab.binding.netatmo.internal.api.dto.NAPing;
 public class HomeApi extends RestManager {
 
     public HomeApi(ApiBridge apiClient) {
-        super(apiClient, FeatureArea.NONE);
+        super(apiClient/* , FeatureArea.NONE */);
     }
 
     public class NAHomesDataResponse extends ApiResponse<ListBodyResponse<NAHome>> {

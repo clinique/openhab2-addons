@@ -15,15 +15,12 @@ package org.openhab.binding.netatmo.internal.api;
 import static org.openhab.binding.netatmo.internal.api.NetatmoConstants.*;
 
 import java.net.URI;
-import java.util.Set;
 
 import javax.ws.rs.core.UriBuilder;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jetty.http.HttpMethod;
-import org.openhab.binding.netatmo.internal.api.NetatmoConstants.FeatureArea;
-import org.openhab.binding.netatmo.internal.api.NetatmoConstants.Scope;
 
 /**
  * Base class for all various rest managers
@@ -37,7 +34,7 @@ public abstract class RestManager {
     private static final UriBuilder APP_URI_BUILDER = UriBuilder.fromUri(URL_APP).path(PATH_API);
     protected static final URI OAUTH_URI = API_BASE_BUILDER.clone().path(PATH_OAUTH).build();
 
-    private final Set<Scope> requiredScopes;
+    // private final Set<Scope> requiredScopes;
     protected final ApiBridge apiHandler;
 
     // public RestManager(ApiBridge apiHandler) {
@@ -49,9 +46,9 @@ public abstract class RestManager {
     // this.requiredScopes = requiredScopes;
     // }
 
-    public RestManager(ApiBridge apiHandler, FeatureArea features) {
+    public RestManager(ApiBridge apiHandler/* , FeatureArea features */) {
         this.apiHandler = apiHandler;
-        this.requiredScopes = features.getScopes();
+        // this.requiredScopes = features.getScopes();
     }
 
     public <T extends ApiResponse<?>> T get(UriBuilder uriBuilder, Class<T> classOfT) throws NetatmoException {
@@ -84,7 +81,7 @@ public abstract class RestManager {
         return APP_URI_BUILDER.clone();
     }
 
-    public Set<Scope> getRequiredScopes() {
-        return requiredScopes;
-    }
+    // public Set<Scope> getRequiredScopes() {
+    // return requiredScopes;
+    // }
 }

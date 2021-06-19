@@ -21,7 +21,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.binding.netatmo.internal.api.NetatmoConstants.FeatureArea;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureLimit;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureScale;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.MeasureType;
@@ -46,7 +45,7 @@ public class WeatherApi extends RestManager {
     }
 
     public WeatherApi(ApiBridge apiClient) {
-        super(apiClient, FeatureArea.WEATHER);
+        super(apiClient/* , FeatureArea.WEATHER */);
     }
 
     /**

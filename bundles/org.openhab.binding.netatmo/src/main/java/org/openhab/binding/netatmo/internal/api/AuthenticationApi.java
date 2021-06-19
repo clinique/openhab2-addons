@@ -17,7 +17,6 @@ import static org.openhab.core.auth.oauth2client.internal.Keyword.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
@@ -43,10 +42,11 @@ class AuthenticationApi extends RestManager {
     private final Logger logger = LoggerFactory.getLogger(AuthenticationApi.class);
     private final NetatmoBindingConfiguration configuration;
     private final ScheduledExecutorService scheduler;
+    // private @Nullable ScheduledFuture<?> tokenRefreshTask;
 
     AuthenticationApi(ApiBridge apiClient, OAuthFactory oAuthFactory, NetatmoBindingConfiguration configuration,
             ScheduledExecutorService scheduler) {
-        super(apiClient, FeatureArea.NONE);
+        super(apiClient/* , FeatureArea.NONE */);
         this.configuration = configuration;
         this.scheduler = scheduler;
     }
@@ -62,15 +62,20 @@ class AuthenticationApi extends RestManager {
     private void requestToken(String tokenRequest) throws NetatmoException {
         NAAccessTokenResponse answer = apiHandler.executeUri(OAUTH_URI, HttpMethod.POST, NAAccessTokenResponse.class,
                 tokenRequest);
-        apiHandler.onAccessTokenResponse(answer.getAccessToken(), answer.getScope());
-        scheduler.schedule(() -> {
-            try {
-                requestToken(getPayload(REFRESH_TOKEN, Map.of(REFRESH_TOKEN, answer.getRefreshToken())));
-            } catch (NetatmoException e) {
-                logger.warn("Unable to refresh access token : {}, trying to reopen connection.", e.getMessage());
-                apiHandler.openConnection();
-            }
-        }, Math.round(answer.getExpiresIn() * 0.8), TimeUnit.SECONDS);
+        apiHandler.onAccessTokenResponse(answer.getAccessToken(), answer.getExpiresIn()/* , answer.getScope() */);
+        // if (tokenRefreshTask != null) {
+        // tokenRefreshTask.cancel(true);
+        // tokenRefreshTask = null;
+        // }
+        // tokenRefreshTask =
+        // scheduler.schedule(() -> {
+        // try {
+        // requestToken(getPayload(REFRESH_TOKEN, Map.of(REFRESH_TOKEN, answer.getRefreshToken())));
+        // } catch (NetatmoException e) {
+        // logger.warn("Unable to refresh access token : {}, trying to reopen connection.", e.getMessage());
+        // apiHandler.openConnection();
+        // }
+        // }, Math.round(answer.getExpiresIn() * 0.8), TimeUnit.SECONDS);
     }
 
     private String getPayload(String grantType, Map<String, @Nullable String> entries) {

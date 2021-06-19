@@ -243,12 +243,12 @@ public class NetatmoConstants {
             this.scopes = scopes;
         }
 
-        public Set<Scope> getScopes() {
-            return scopes;
-        }
+        // private Set<Scope> getScopes() {
+        // return scopes;
+        // }
 
         public static Set<Scope> allScopes() {
-            return EnumSet.allOf(FeatureArea.class).stream().map(FeatureArea::getScopes).flatMap(Set::stream)
+            return EnumSet.allOf(FeatureArea.class).stream().map(t -> t.scopes).flatMap(Set::stream)
                     .collect(Collectors.toSet());
         }
     }
