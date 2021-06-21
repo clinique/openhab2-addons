@@ -99,6 +99,10 @@ public class NAHome extends NADevice {
         return events;
     }
 
+    public void setEvents(List<NAHomeEvent> events) {
+        this.events = events;
+    }
+
     public NAObjectMap<NAWelcome> getCameras() {
         return cameras;
     }

@@ -85,6 +85,8 @@ public enum ModuleType {
     NOC(PresenceHandler.class, RefreshPolicy.PARENT, FeatureArea.SECURITY, NAHome, List.of(),
             List.of(CameraChannelHelper.class, PresenceChannelHelper.class),
             List.of(GROUP_WELCOME, GROUP_WELCOME_EVENT, GROUP_PRESENCE), NAWelcome.class),
+    NDB(PresenceHandler.class, RefreshPolicy.PARENT, FeatureArea.SECURITY, NAHome, List.of(),
+            List.of(CameraChannelHelper.class), List.of(GROUP_WELCOME, GROUP_WELCOME_EVENT), NAWelcome.class),
 
     // Weather group
     // NAHomeWeather(null, RefreshPolicy.NONE, null, List.of(), List.of(), List.of(), null),
@@ -140,7 +142,6 @@ public enum ModuleType {
     // NACamDoorTag : self explaining
     // NSD : smoke detector
     // NIS : indoor siren
-    // NDB : doorbell
     ;
 
     public enum RefreshPolicy {

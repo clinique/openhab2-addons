@@ -27,7 +27,6 @@ import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
 import org.openhab.binding.netatmo.internal.api.EnergyApi;
 import org.openhab.binding.netatmo.internal.api.HomeApi;
-import org.openhab.binding.netatmo.internal.api.ModuleType;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.FeatureArea;
 import org.openhab.binding.netatmo.internal.api.NetatmoConstants.SetpointMode;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
@@ -36,7 +35,6 @@ import org.openhab.binding.netatmo.internal.api.dto.NAEvent;
 import org.openhab.binding.netatmo.internal.api.dto.NAHome;
 import org.openhab.binding.netatmo.internal.api.dto.NAHomeEvent;
 import org.openhab.binding.netatmo.internal.api.dto.NAPerson;
-import org.openhab.binding.netatmo.internal.api.dto.NAThing;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.Channel;
@@ -115,6 +113,10 @@ public class HomeHandler extends NetatmoEventDeviceHandler {
     protected NAHome updateReadings() throws NetatmoException {
         home = homeApi.getHomeList(config.id, null).iterator().next();
         NAHome homeData = homeApi.getHomeData(config.id).iterator().next();
+        // copy over camera-data to home
+        home.getCameras().putAll(homeData.getCameras()); // Camera modules are better handled with /gethomedata
+        home.setEvents(homeData.getEvents());
+
         home.setPlace(homeData.getPlace());
         energyApi.ifPresent(api -> {
             try {
@@ -175,6 +177,7 @@ public class HomeHandler extends NetatmoEventDeviceHandler {
                         .forEach(person -> person.setCameras(localNaThing.getCameras()));
                 dataListeners.values().stream().filter(CameraHandler.class::isInstance).map(CameraHandler.class::cast)
                         .forEach(person -> person.setPersons(localNaThing.getKnownPersons()));
+                localNaThing.getCameras().forEach((k, v) -> notifyListener(k, v));
                 localNaThing.getEvents().stream().filter(e -> e.getTime().isAfter(lastEventTime.get()))
                         .sorted(Comparator.comparing(NAHomeEvent::getTime)).forEach(event -> {
                             String personId = event.getPersonId();
@@ -234,11 +237,11 @@ public class HomeHandler extends NetatmoEventDeviceHandler {
         return home.getKnownPersons();
     }
 
-    public List<NAThing> getCameras() {
-        return home.getModules().values().stream()
-                .filter(module -> module.getType() == ModuleType.NACamera || module.getType() == ModuleType.NOC)
-                .collect(Collectors.toList());
-    }
+    // public List<NAThing> getCameras() {
+    // return home.getModules().values().stream()
+    // .filter(module -> module.getType() == ModuleType.NACamera || module.getType() == ModuleType.NOC)
+    // .collect(Collectors.toList());
+    // }
 
     public List<NAHomeEvent> getLastEventOf(String personId) {
         List<NAHomeEvent> events = new ArrayList<>();
