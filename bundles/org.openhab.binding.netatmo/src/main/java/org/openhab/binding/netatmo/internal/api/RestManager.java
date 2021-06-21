@@ -63,7 +63,7 @@ public abstract class RestManager {
         return executeUri(uriBuilder, HttpMethod.POST, classOfT, payload);
     }
 
-    public <T extends ApiResponse<?>> T executeUri(UriBuilder uriBuilder, HttpMethod method, Class<T> classOfT,
+    private <T extends ApiResponse<?>> T executeUri(UriBuilder uriBuilder, HttpMethod method, Class<T> classOfT,
             @Nullable String payload) throws NetatmoException {
         T response = apiHandler.executeUri(uriBuilder.build(), method, classOfT, payload);
         if (response instanceof ApiResponse.Ok) {
