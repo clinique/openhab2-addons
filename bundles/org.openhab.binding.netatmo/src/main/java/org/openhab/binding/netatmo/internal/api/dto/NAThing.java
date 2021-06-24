@@ -88,4 +88,8 @@ public class NAThing extends NAObject {
     public @Nullable String getRoomId() {
         return roomId;
     }
+
+    public void setReachable(Boolean localReachable) {
+        this.reachable = localReachable;
+    }
 }

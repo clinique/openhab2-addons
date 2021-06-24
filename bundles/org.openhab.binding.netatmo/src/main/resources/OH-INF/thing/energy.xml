@@ -41,7 +41,7 @@
 		<channels>
 			<channel id="window-open" typeId="contact">
 				<label>Window Status</label>
-				<description>Indicates whether window open deteced or not</description>
+				<description>Indicates whether window open detected or not</description>
 			</channel>
 			<channel id="anticipating" typeId="contact">
 				<label>Anticipated heating</label>
