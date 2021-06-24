@@ -36,6 +36,18 @@ public enum EventType {
     @SerializedName("outdoor") // When the Outdoor Camera detects a human, a car or an animal
     OUTDOOR(Set.of(ModuleType.NOC, ModuleType.NDB)),
 
+    @SerializedName("human") // When the doorbell detects a human
+    HUMAN(Set.of(ModuleType.NDB)),
+
+    @SerializedName("rtc") // When the doorbell rtc
+    RTC(Set.of(ModuleType.NDB)),
+
+    @SerializedName("incoming_call") // Doorbell incoming call
+    INCOMING_CALL(Set.of(ModuleType.NDB)),
+
+    @SerializedName("missed_call") // Call from doorbell not answered
+    MISSED_CALL(Set.of(ModuleType.NDB)),
+
     @SerializedName("daily_summary") // When the Outdoor Camera video summary of the last 24 hours is available
     DAILY_SUMMARY(Set.of(ModuleType.NOC)),
 
