@@ -22,9 +22,11 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.netatmo.internal.NetatmoDescriptionProvider;
 import org.openhab.binding.netatmo.internal.api.ApiBridge;
+import org.openhab.binding.netatmo.internal.api.EventType;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
 import org.openhab.binding.netatmo.internal.api.dto.NAEvent;
 import org.openhab.binding.netatmo.internal.api.dto.NAHomeEvent;
+import org.openhab.binding.netatmo.internal.api.dto.NAOutdoorEvent;
 import org.openhab.binding.netatmo.internal.api.dto.NAPerson;
 import org.openhab.binding.netatmo.internal.api.dto.NAWelcome;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
@@ -100,23 +102,38 @@ public class CameraHandler extends NetatmoEventDeviceHandler {
     public void setEvent(NAEvent event) {
         logger.debug("Updating camera with event : {}", event.toString());
         updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_TYPE, toStringType(event.getEventType()));
-        updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_MESSAGE, toStringType(event.getMessage()));
-        updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_TIME, new DateTimeType(event.getTime()));
-        updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_PERSON_ID, toStringType(event.getPersonId()));
-        updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_SUBTYPE,
-                event.getSubTypeDescription().map(d -> toStringType(d)).orElse(UnDefType.NULL));
-
-        event.getSnapshot().ifPresent(snapshot -> {
-            String url = snapshot.getUrl();
-            updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_SNAPSHOT, toRawType(url));
-            updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_SNAPSHOT_URL, toStringType(url));
-        });
-
-        if (event instanceof NAHomeEvent) {
+        // outdoor event need different handling
+        if ((event instanceof NAHomeEvent) && (event.getEventType() == EventType.OUTDOOR)) {
             NAHomeEvent homeEvent = (NAHomeEvent) event;
-            updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_VIDEO_STATUS, toStringType(homeEvent.getVideoStatus()));
-            updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_VIDEO_URL,
-                    toStringType(getStreamURL(homeEvent.getVideoId())));
+            NAOutdoorEvent outdoorEvent = homeEvent.getOutdoorEvents().get(0);
+            updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_MESSAGE, toStringType(outdoorEvent.getMessage()));
+            updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_TIME, new DateTimeType(outdoorEvent.getTime()));
+            outdoorEvent.getSnapshot().ifPresent(snapshot -> {
+                String url = snapshot.getUrl();
+                updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_SNAPSHOT, toRawType(url));
+                updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_SNAPSHOT_URL, toStringType(url));
+            });
+
+        } else {
+            updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_MESSAGE, toStringType(event.getMessage()));
+            updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_TIME, new DateTimeType(event.getTime()));
+            updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_PERSON_ID, toStringType(event.getPersonId()));
+            updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_SUBTYPE,
+                    event.getSubTypeDescription().map(d -> toStringType(d)).orElse(UnDefType.NULL));
+
+            event.getSnapshot().ifPresent(snapshot -> {
+                String url = snapshot.getUrl();
+                updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_SNAPSHOT, toRawType(url));
+                updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_SNAPSHOT_URL, toStringType(url));
+            });
+
+            if (event instanceof NAHomeEvent) {
+                NAHomeEvent homeEvent = (NAHomeEvent) event;
+                updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_VIDEO_STATUS,
+                        toStringType(homeEvent.getVideoStatus()));
+                updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_VIDEO_URL,
+                        toStringType(getStreamURL(homeEvent.getVideoId())));
+            }
         }
     }
 

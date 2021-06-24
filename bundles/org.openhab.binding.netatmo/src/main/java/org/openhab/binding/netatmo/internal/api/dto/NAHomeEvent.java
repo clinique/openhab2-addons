@@ -13,6 +13,7 @@
 package org.openhab.binding.netatmo.internal.api.dto;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
@@ -37,6 +38,7 @@ public class NAHomeEvent extends NAEvent {
     private @Nullable String videoId;
     private VideoStatus videoStatus = VideoStatus.UNKNOWN;
     private boolean isArrival;
+    private List<NAOutdoorEvent> event_list = List.of();
 
     @Override
     public ZonedDateTime getTime() {
@@ -54,6 +56,10 @@ public class NAHomeEvent extends NAEvent {
 
     public VideoStatus getVideoStatus() {
         return videoStatus;
+    }
+
+    public List<NAOutdoorEvent> getOutdoorEvents() {
+        return event_list;
     }
 
     @Override
