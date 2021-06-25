@@ -26,8 +26,8 @@ import org.openhab.binding.netatmo.internal.api.EventType;
 import org.openhab.binding.netatmo.internal.api.NetatmoException;
 import org.openhab.binding.netatmo.internal.api.dto.NAEvent;
 import org.openhab.binding.netatmo.internal.api.dto.NAHomeEvent;
-import org.openhab.binding.netatmo.internal.api.dto.NAOutdoorEvent;
 import org.openhab.binding.netatmo.internal.api.dto.NAObject;
+import org.openhab.binding.netatmo.internal.api.dto.NAOutdoorEvent;
 import org.openhab.binding.netatmo.internal.api.dto.NAPerson;
 import org.openhab.binding.netatmo.internal.api.dto.NAWelcome;
 import org.openhab.binding.netatmo.internal.channelhelper.AbstractChannelHelper;
@@ -37,7 +37,6 @@ import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.types.Command;
 import org.openhab.core.types.StateOption;
-import org.openhab.core.types.UnDefType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,7 +93,7 @@ public class CameraHandler extends DeviceWithEventHandler {
                 updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_SNAPSHOT, toRawType(url));
                 updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_SNAPSHOT_URL, toStringType(url));
             });
-
+        }
         event.getSnapshot().ifPresent(snapshot -> {
             String url = snapshot.getUrl();
             updateIfLinked(GROUP_WELCOME_EVENT, CHANNEL_EVENT_SNAPSHOT, toRawType(url));
